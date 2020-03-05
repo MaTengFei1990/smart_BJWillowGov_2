@@ -6,18 +6,18 @@ import android.os.Environment;
 
 public class Values {
 
-	public static final String SERVIXE_SHOUYE = "http://xds.bjylfw.cn/xdsapp";     // 北京绿地  正式
-	public static final String SERVICE_URL = "http://xds.bjylfw.cn/xdsapi/";
-	public static final String SERVICE_URL_PC = "http://xds.bjylfw.cn:8014/";         //北京绿地  正式
+//	public static final String SERVIXE_SHOUYE = "http://xds.bjylfw.cn/xdsapp";     // 北京绿地  正式
+//	public static final String SERVICE_URL = "http://xds.bjylfw.cn/xdsapi/";
+//	public static final String SERVICE_URL_PC = "http://xds.bjylfw.cn:8014/";         //北京绿地  正式
 
 
-//	public static final String SERVIXE_SHOUYE = "http://10.2.9.165:8081/xx.html";     // 北京绿地 测试
-//	public static final String SERVICE_URL = "http://10.2.9.165:8081/";     		  //北京绿地 测试
-//	public static final String SERVICE_URL_PC = "http://10.2.9.152:8668/";            //北京绿地 测试
+	public static final String SERVIXE_SHOUYE = "http://10.2.9.165:8081/xx.html";     // 北京绿地 测试
+	public static final String SERVICE_URL = "http://10.2.9.165:8081/";     		  //北京绿地 测试
+	public static final String SERVICE_URL_PC = "http://10.2.9.152:8668/";            //北京绿地 测试
 
 	//集成表单需要的接口；
-	public static final String SERVICE_URL_FORM = "http://xds.bjylfw.cn";// 北京绿地 正式
-//	public static final String SERVICE_URL_FORM = "http://49.4.11.238:3012";//北京绿地 测试
+//	public static final String SERVICE_URL_FORM = "http://xds.bjylfw.cn";// 北京绿地 正式
+	public static final String SERVICE_URL_FORM = "http://49.4.11.238:3012";//北京绿地 测试
 	public static final String SERVICE_URL_ADMIN_FORM = SERVICE_URL_FORM + "/admin";//
 
 	public static final String SERVICE_URL_VOICE = "39.106.172.189";//

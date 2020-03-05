@@ -6,8 +6,8 @@ android {
         applicationId "com.hollysmart.bjwillowgov"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 40
-        versionName "1.0.8"
+        versionCode 1
+        versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         multiDexEnabled true
@@ -49,10 +49,10 @@ android {
     }
     signingConfigs {
         debug {
-            storeFile file('greenspace.jks')
-            storePassword "greenspace"
-            keyAlias "greenspace"
-            keyPassword "greenspace"
+            storeFile file('bjwillowgov.jks')
+            storePassword "bjwillowgov"
+            keyAlias "bjwillowgov"
+            keyPassword "bjwillowgov"
         }
     }
     compileOptions {
