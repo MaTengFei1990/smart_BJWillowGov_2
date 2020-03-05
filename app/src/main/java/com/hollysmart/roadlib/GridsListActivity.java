@@ -51,7 +51,10 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RoadListActivity extends StyleAnimActivity {
+/***
+ * 网格类表；
+ */
+public class GridsListActivity extends StyleAnimActivity {
 
     @Override
     public int layoutResID() {

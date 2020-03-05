@@ -71,7 +71,7 @@ import com.hollysmart.formlib.activitys.EditPicActivity;
 import com.hollysmart.imgdownLoad.DownLoadImageService;
 import com.hollysmart.imgdownLoad.ImageDownLoadCallBack;
 import com.hollysmart.popuwindow.MoreWindow;
-import com.hollysmart.roadlib.RoadListActivity;
+import com.hollysmart.roadlib.GridsListActivity;
 import com.hollysmart.service.DownloadService;
 import com.hollysmart.style.App_Cai;
 import com.hollysmart.style.StyleAnimActivity;
@@ -443,7 +443,7 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
         }
 
 
-        Intent intent = new Intent(mContext, RoadListActivity.class);
+        Intent intent = new Intent(mContext, GridsListActivity.class);
         intent.putExtra("exter", (Serializable) map);
         intent.putExtra("ischeck", true);
         startActivity(intent);
@@ -499,7 +499,7 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
                     }
 
 
-                    Intent intent = new Intent(mContext, RoadListActivity.class);
+                    Intent intent = new Intent(mContext, GridsListActivity.class);
                     intent.putExtra("exter", (Serializable) map);
                     intent.putExtra("ischeck", false);
                     intent.putExtra("PcToken", PcToken);

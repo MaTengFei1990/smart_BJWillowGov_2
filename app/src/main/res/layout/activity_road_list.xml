@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="道路列表"
+            android:text="网格列表"
             android:textColor="@color/baise"
             android:textSize="@dimen/tv_size_big"/>
 

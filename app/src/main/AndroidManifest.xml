@@ -43,7 +43,7 @@
         <activity android:name="com.hollysmart.roadlib.TreeDetailsActivity" />
         <activity android:name="com.hollysmart.roadlib.TreeListActivity" />
         <activity android:name="com.hollysmart.roadlib.RoadDetailsActivity" />
-        <activity android:name="com.hollysmart.roadlib.RoadListActivity" />
+        <activity android:name="com.hollysmart.roadlib.GridsListActivity" />
         <activity android:name="com.hollysmart.formlib.ResListShowOnMapActivity" />
         <activity android:name="com.hollysmart.formlib.ListShowOnMapActivity" />
         <activity android:name="com.hollysmart.formlib.ResDataListActivity" />
