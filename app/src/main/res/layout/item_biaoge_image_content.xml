@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@color/baise"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_bitian"
+                android:layout_width="8dp"
+                android:layout_height="wrap_content"
+                android:text="*"
+                android:layout_centerVertical="true"
+                android:textColor="@color/huise_hint"
+                android:textSize="@dimen/text_zhong" />
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/huise_hint"
+                android:textSize="@dimen/text_zhong" />
+
+
+            <TextView
+                android:id="@+id/tv_tishi"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="该项必填"
+                android:textColor="@color/hongse_text"
+                android:textSize="@dimen/text_zhong" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_hint_tishi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/huise_hint"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="3dp"
+            android:hint="请依次上传道路左、中、右三张照片"
+            android:textSize="@dimen/text_xiao" />
+
+
+        <HorizontalScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="10dp" >
+
+            <com.hollysmart.views.linearlayoutforlistview.MyLinearLayoutForListView
+                android:id="@+id/ll_jingdian_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal" />
+        </HorizontalScrollView>
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/huise_line"/>
+
+</LinearLayout>

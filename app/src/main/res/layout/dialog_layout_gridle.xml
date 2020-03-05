@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/heise_text"
+        android:padding="5dp"
+        android:textSize="20dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="树木采集规范"
+
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/heise_text"
+        android:padding="5dp"
+        android:textSize="@dimen/text_da"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+
+        android:text="1、从道路右侧，最外侧开始，从起点到终点，S形采集；"
+
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/heise_text"
+        android:textSize="@dimen/text_da"
+        android:padding="5dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:text="2、每条道路只能有一个人采集，不允许两人或者多人登录同一个账号同时采集一条路；"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/heise_text"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:textSize="@dimen/text_da"
+        android:padding="5dp"
+        android:text="3、提交任务之前，每条道路上的行道树必须采集完毕，不允许漏采，因为提交任务之后系统不支持补采操作；"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/heise_text"
+        android:textSize="@dimen/text_da"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:padding="5dp"
+        android:text="4、系统自动生成连续的树木编号，删除树木会导致断号现象，所以，请谨慎使用删除树木功能。"
+        />
+
+
+    <Button
+        android:id="@+id/btn_iKnow"
+        android:layout_width="285dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/bottomsheel_shape_bg"
+        android:text="我知道了"
+        android:textColor="@color/baise"
+        android:textSize="@dimen/text_zhong" />
+
+</LinearLayout>
