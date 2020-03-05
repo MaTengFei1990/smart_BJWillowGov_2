@@ -1,4 +1,4 @@
-package com.hollysmart.roadlib;
+package com.hollysmart.gridslib;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,7 +25,6 @@ import com.hollysmart.beans.JDPicInfo;
 import com.hollysmart.beans.ResModelBean;
 import com.hollysmart.beans.cgformRuleBean;
 import com.hollysmart.db.DictionaryDao;
-import com.hollysmart.db.LastTreeResDataDao;
 import com.hollysmart.db.ResDataDao;
 import com.hollysmart.db.ResModelDao;
 import com.hollysmart.db.UserInfo;
@@ -34,11 +33,8 @@ import com.hollysmart.formlib.adapters.BiaoGeRecyclerAdapter2;
 import com.hollysmart.formlib.apis.SaveResDataAPI;
 import com.hollysmart.formlib.beans.DongTaiFormBean;
 import com.hollysmart.formlib.beans.FormModelBean;
-import com.hollysmart.formlib.beans.LastTreeDataBean;
-import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.bjwillowgov.R;
-import com.hollysmart.roadlib.apis.GetTreeNumAPI;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.CCM_Bitmap;
@@ -62,12 +58,12 @@ import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TreeDetailsActivity extends StyleAnimActivity {
+public class RoadDetailsActivity extends StyleAnimActivity {
 
 
     @Override
     public int layoutResID() {
-        return R.layout.activity_tree_details;
+        return R.layout.activity_road_details;
     }
 
 
@@ -99,15 +95,9 @@ public class TreeDetailsActivity extends StyleAnimActivity {
     private boolean sportEditFlag = false; // ture 新添加 false 修改
 
 
-    private ResDataBean tree_resDataBean;
-    private ResDataBean roadBean;
-    private ProjectBean projectBean;
-
-    private String PcToken;
+    private ResDataBean resDataBean;
 
     private boolean ischeck;
-    private boolean isNewAdd;
-
 
     @Override
     public void findView() {
@@ -129,73 +119,32 @@ public class TreeDetailsActivity extends StyleAnimActivity {
         isLogin();
         setLpd();
 
-        tree_resDataBean = (ResDataBean) getIntent().getSerializableExtra("resDataBean");
-        roadBean = (ResDataBean) getIntent().getSerializableExtra("roadbean");
+        resDataBean = (ResDataBean) getIntent().getSerializableExtra("resDataBean");
         resFromBeanLsit = (List<DongTaiFormBean>) getIntent().getSerializableExtra("formBeanList");
         formPicMap = (HashMap<String, List<JDPicInfo>>) getIntent().getSerializableExtra("formPicMap");
         sportEditFlag = getIntent().getBooleanExtra("sportEditFlag", false);
         ischeck = getIntent().getBooleanExtra("ischeck", false);
-        isNewAdd = getIntent().getBooleanExtra("isNewAdd", false);
-        projectBean = (ProjectBean) getIntent().getSerializableExtra("projectBean");
-        PcToken =  getIntent().getStringExtra("PcToken");
 
         if (ischeck) {
             findViewById(R.id.tv_shure).setVisibility(View.GONE);
 
         }
-        if (!isNewAdd) {
-            picAdd2From(formPicMap, resFromBeanLsit);
-        }
 
+        picAdd2From(formPicMap, resFromBeanLsit);
 
-        tv_title.setText("树木信息");
+        tv_title.setText("道路信息");
 
         resModelDao = new ResModelDao(mContext);
         dictionaryDao = new DictionaryDao(mContext);
 
-        showRes = resModelDao.getDatById(tree_resDataBean.getFd_resmodelid());
+        if (resDataBean != null) {
 
-        initDatas(tree_resDataBean.getFd_resmodelid());
-
-
-
-
-    }
-
-    private void setTreeNumber() {
-        if (isNewAdd) {
-
-            new GetTreeNumAPI(PcToken, roadBean, new GetTreeNumAPI.GetTreeNumAPIIF() {
-                @Override
-                public void getTreeNumber(boolean isOk, String TreeNumber) {
-
-                    if (isOk) {
-
-
-                        for (DongTaiFormBean dongTaiFormBean : formBeanList) {
-
-                            if( dongTaiFormBean.getJavaField().equals("number")){
-
-                                dongTaiFormBean.setPropertyLabel(TreeNumber);
-
-                            }
-
-                        }
-
-                        biaoGeRecyclerAdapter.notifyDataSetChanged();
-
-
-
-                    }
-
-
-
-                }
-            }).request();
-
-
-
+            showRes = resModelDao.getDatById(resDataBean.getFd_resmodelid());
+            initDatas(resDataBean.getFd_resmodelid());
         }
+
+
+
     }
 
     private void setLpd() {
@@ -206,6 +155,11 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
 
     private void picAdd2From(HashMap<String, List<JDPicInfo>> formPicMap, List<DongTaiFormBean> formBeans) {
+
+        if (formBeans == null || formBeans.size() == 0) {
+
+            return;
+        }
 
         for (int i = 0; i < formBeans.size(); i++) {
             DongTaiFormBean formBean = formBeans.get(i);
@@ -243,6 +197,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
                 }
 
 
+
             }
 
         }
@@ -250,7 +205,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
     }
 
-    private void initDatas(final String resmodelid) {
+    private void initDatas(final String  resmodelid) {
 
         //先判断有无网络
         int netWorkStart = Utils.getNetWorkStart(mContext);
@@ -258,8 +213,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
         if (Utils.NETWORK_NONE == netWorkStart) {
             //无网络
-            showLocalData(resmodelid);
-            setTreeNumber();
+            showLocalData( resmodelid);
 
         } else {
             //有网络
@@ -269,7 +223,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
                     HashMap<String, List<DictionaryBean>> stringListHashMap = getlocalDicItems(resFromBeanLsit);
 
-                    if ((isOk && (version > showRes.getfVersion())||(version==showRes.getfVersion())) || (stringListHashMap == null || stringListHashMap.size() == 0)) {//有更新获取网络数据
+                    if ((isOk && (version > showRes.getfVersion()||(version ==(showRes.getfVersion()))))||(stringListHashMap==null||stringListHashMap.size()==0)) {//有更新获取网络数据
                         // 获取表单数据
 
                         new GetResModelAPI(userInfo.getAccess_token(), showRes.getId(), new GetResModelAPI.GetResModelIF() {
@@ -295,12 +249,12 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
                                         DongTaiFormBean dongTaiFormBean = formBeanList.get(i);
 
-                                        if (dongTaiFormBean.getShowType().equals("list")||dongTaiFormBean.getShowType().equals("checkbox")) {
+                                        if (dongTaiFormBean.getShowType().equals("list")||dongTaiFormBean.getShowType().equals("multistageList")) {
 
                                             if (!Utils.isEmpty(dongTaiFormBean.getDictText())) {
                                                 if (!showTypelist.contains(dongTaiFormBean.getDictText())) {
                                                     showTypelist.add(dongTaiFormBean.getDictText());
-                                                    if (showTypelist.size() == 1) {
+                                                    if (showTypelist.size()==1) {
                                                         showType = dongTaiFormBean.getDictText();
                                                     } else {
                                                         showType = showType + "," + dongTaiFormBean.getDictText();
@@ -325,14 +279,13 @@ public class TreeDetailsActivity extends StyleAnimActivity {
                                                 cocalmap.putAll(map);
 
                                                 if (resFromBeanLsit != null && resFromBeanLsit.size() > 0) {
-                                                    compar(formBeanList, resFromBeanLsit);
-//                                                    formBeanList.clear();
-//                                                    formBeanList.addAll(resFromBeanLsit);
+                                                    formBeanList.clear();
+                                                    formBeanList.addAll(resFromBeanLsit);
 
 
                                                 }
 
-                                                biaoGeRecyclerAdapter = new BiaoGeRecyclerAdapter2(mContext, formBeanList, ischeck,roadBean,tree_resDataBean,projectBean);
+                                                biaoGeRecyclerAdapter = new BiaoGeRecyclerAdapter2(mContext, formBeanList,ischeck);
 
                                                 recy_view.setAdapter(biaoGeRecyclerAdapter);
 
@@ -350,8 +303,6 @@ public class TreeDetailsActivity extends StyleAnimActivity {
                                                 UpdateData();
                                                 biaoGeRecyclerAdapter.setMap(map);
 
-                                                setTreeNumber();
-
                                             }
 
                                         }
@@ -360,7 +311,6 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
                                 } else {
                                     showLocalData(resmodelid);
-                                    setTreeNumber();
                                 }
 
 
@@ -370,9 +320,11 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
                     } else {
                         showLocalData(resmodelid);
-
-                        setTreeNumber();
                     }
+
+
+
+
 
 
                 }
@@ -388,7 +340,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
      * 显示本地的数据
      */
 
-    private void showLocalData(String resmodelid) {
+    private void showLocalData(String  resmodelid) {
 
         //获取本地表单
 
@@ -406,7 +358,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
         //获取本地字典
         for (DongTaiFormBean dongTaiFormBean : formBeanList) {
 
-            if (dongTaiFormBean.getShowType().equals("list") || dongTaiFormBean.getShowType().equals("multistageList")||dongTaiFormBean.getShowType().equals("checkbox")) {
+            if (dongTaiFormBean.getShowType().equals("list")||dongTaiFormBean.getShowType().equals("multistageList")) {
 
                 if (!Utils.isEmpty(dongTaiFormBean.getDictText())) {
 
@@ -422,7 +374,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
         }
 
 
-        biaoGeRecyclerAdapter = new BiaoGeRecyclerAdapter2(mContext, formBeanList, ischeck,roadBean,tree_resDataBean,projectBean);
+        biaoGeRecyclerAdapter = new BiaoGeRecyclerAdapter2(mContext, formBeanList,ischeck);
         recy_view.setAdapter(biaoGeRecyclerAdapter);
         recy_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -438,68 +390,14 @@ public class TreeDetailsActivity extends StyleAnimActivity {
         biaoGeRecyclerAdapter.setMap(cocalmap);
 
 
-    }
-
-    /**
-     *
-     * @param forms 表单数据
-     * @param ress 资源数据；
-     */
-
-    private  void compar(List < DongTaiFormBean > forms, List < DongTaiFormBean > ress){
-
-        if (forms == null || forms.size() == 0) {
-
-            return ;
-        }
-        if (ress == null || ress.size() == 0) {
-
-            return ;
-        }
-
-        for (int i = 0; i < forms.size(); i++) {
-
-            DongTaiFormBean form = forms.get(i);
-
-
-            for (int j = 0; j < ress.size(); j++) {
-
-                DongTaiFormBean data = ress.get(j);
-
-                String fromJfield = form.getJavaField();
-                String dataJfield = data.getJavaField();
-
-                if (fromJfield.equals(dataJfield)) {
-                    form.setPropertyLabel(data.getPropertyLabel());
-
-                    List<JDPicInfo> pics = data.getPic();
-                    if (pics != null && pics.size() > 0) {
-                        form.setPic(data.getPic());
-
-                    }
-
-
-                }
-
-
-            }
-        }
-
-
-
-
-
-
-
-
-
-
-
 
     }
 
 
-    private List<DongTaiFormBean> comparis(List<DongTaiFormBean> oldFormList, List<DongTaiFormBean> newFormList, ResDataBean resDataBean) {
+
+
+
+    private List<DongTaiFormBean>  comparis(List<DongTaiFormBean> oldFormList,List<DongTaiFormBean> newFormList, ResDataBean resDataBean) {
 
         if (oldFormList == null || oldFormList.size() == 0) {
 
@@ -517,13 +415,13 @@ public class TreeDetailsActivity extends StyleAnimActivity {
             DongTaiFormBean formBean = oldFormList.get(s);
 
             if (formBean.getJavaField().equals("name")) {
-                isNewForm = true;
+                isNewForm=true;
             }
             if (formBean.getJavaField().equals("number")) {
-                isNewForm = true;
+                isNewForm=true;
             }
             if (formBean.getJavaField().equals("location")) {
-                isNewForm = true;
+                isNewForm=true;
             }
         }
 
@@ -537,7 +435,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
                 DongTaiFormBean oldBean = oldFormList.get(i);
 
-                if (oldBean.getShowType().equals("list")) {
+                if (oldBean.getShowType().equals("list") ) {
 
                     List<DongTaiFormBean> oldChildList = oldBean.getCgformFieldList();
 
@@ -602,6 +500,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
                         }
 
 
+
                         if (oldBean.getShowType().equals("switch") && newBean.getShowType().equals("switch")) {
 
                             List<DongTaiFormBean> oldChildList = oldBean.getCgformFieldList();
@@ -648,13 +547,16 @@ public class TreeDetailsActivity extends StyleAnimActivity {
                                 newBean.setPropertyLabel(resDataBean.getFd_resname());
                             }
                             if (newBean.getJavaField().equals("location")) {
-                                newBean.setPropertyLabel(resDataBean.getLatitude() + "," + resDataBean.getLongitude());
+                                newBean.setPropertyLabel(resDataBean.getLatitude() +","+ resDataBean.getLongitude());
 
                             }
                         }
 
 
+
                     }
+
+
 
 
                 }
@@ -668,7 +570,13 @@ public class TreeDetailsActivity extends StyleAnimActivity {
         }
 
 
+
+
+
+
+
     }
+
 
 
     /***
@@ -684,7 +592,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
         //获取本地字典
         for (DongTaiFormBean dongTaiFormBean : formBeans) {
 
-            if (dongTaiFormBean.getShowType().equals("list")) {
+            if (dongTaiFormBean.getShowType().equals("list")||dongTaiFormBean.getShowType().equals("multistageList")) {
 
                 if (!Utils.isEmpty(dongTaiFormBean.getDictText())) {
 
@@ -723,12 +631,12 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
             DongTaiFormBean dongTaiFormBean = formBeanList.get(i);
 
-            if (dongTaiFormBean.getShowType().equals("list")) {
+            if (dongTaiFormBean.getShowType().equals("list")||dongTaiFormBean.getShowType().equals("multistageList")) {
 
                 if (!Utils.isEmpty(dongTaiFormBean.getDictText())) {
                     if (!showTypelist.contains(dongTaiFormBean.getDictText())) {
                         showTypelist.add(dongTaiFormBean.getDictText());
-                        if (showTypelist.size() == 1) {
+                        if (showTypelist.size()==1) {
                             showType = dongTaiFormBean.getDictText();
                         } else {
                             showType = showType + "," + dongTaiFormBean.getDictText();
@@ -767,7 +675,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
                     }
 
-                    biaoGeRecyclerAdapter = new BiaoGeRecyclerAdapter2(mContext, formBeanList, ischeck,roadBean,tree_resDataBean,projectBean);
+                    biaoGeRecyclerAdapter = new BiaoGeRecyclerAdapter2(mContext, formBeanList,ischeck);
 
                     recy_view.setAdapter(biaoGeRecyclerAdapter);
 
@@ -793,13 +701,14 @@ public class TreeDetailsActivity extends StyleAnimActivity {
     }
 
 
+
     /****
      * 更新本地的数据，然后在展示数据；
      */
 
     private void UpdateData() {
         Set<String> keys = cocalmap.keySet();
-        for (String key : keys) {
+        for(String key :keys){
 
             List<DictionaryBean> dataType = dictionaryDao.getDataType(key);
 
@@ -815,6 +724,15 @@ public class TreeDetailsActivity extends StyleAnimActivity {
             dictionaryDao.addOrUpdate(value);
 
         }
+
+
+
+
+
+
+
+
+
 
 
     }
@@ -853,349 +771,246 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
             case R.id.tv_shure:
 
-//                labe:
-//                for (int i = 0; i < formBeanList.size(); i++) {
-//                    DongTaiFormBean dongTaiFormBean = formBeanList.get(i);
-//
-//
-//                    List<DongTaiFormBean> propertys = dongTaiFormBean.getCgformFieldList();
-//
-//
-//                    List<cgformRuleBean> cgformRuleList = dongTaiFormBean.getCgformRuleList();
-//
-//                    if (cgformRuleList != null && cgformRuleList.size() > 0) {
-//                        cgformRuleBean cgformRuleBean = cgformRuleList.get(0);
-//                        String par = cgformRuleBean.getPattern();
-//                        if (!Utils.isEmpty(par)) {
-//                            Pattern p = Pattern.compile(par);
-//                            if (!Utils.isEmpty(dongTaiFormBean.getPropertyLabel())) {
-//                                Matcher m = p.matcher(dongTaiFormBean.getPropertyLabel());
-//                                if (!m.matches()) {
-//                                    smoothMoveToPosition(recy_view, dongTaiFormBean.getPosition());
-//                                    dongTaiFormBean.setPropertyLabel("");
-//                                    break;
-//                                }
-//
-//                            }
-//
-//                        }
-//                    }
-//
-//                    if (dongTaiFormBean.getFieldMustInput()) {
-//
-//                        if (Utils.isEmpty(dongTaiFormBean.getPropertyLabel())) {
-//
-//                            if ((dongTaiFormBean.getShowType().equals("image")) && (dongTaiFormBean.getPic() != null && dongTaiFormBean.getPic().size() > 0)) {
-//                                dongTaiFormBean.setShowTiShi(false);
-//                            } else {
-//
-//                                dongTaiFormBean.setShowTiShi(true);
-//                                smoothMoveToPosition(recy_view, dongTaiFormBean.getPosition());
-//                                break;
-//                            }
-//
-//
-//                        } else {
-//                            dongTaiFormBean.setShowTiShi(false);
-//                        }
-//
-//                    }
-//
-//
-//                    if (propertys != null && propertys.size() > 0) {
-//
-//
-//                        if (propertys != null && (!Utils.isEmpty(dongTaiFormBean.getPropertyLabel()) && dongTaiFormBean.getPropertyLabel().equals("1"))) {
-//
-//                            for (int j = 0; j < propertys.size(); j++) {
-//
-//
-//                                DongTaiFormBean dongTaiFormBean1 = propertys.get(j);
-//
-//                                List<cgformRuleBean> cgformRuleList2 = dongTaiFormBean1.getCgformRuleList();
-//
-//                                if (cgformRuleList2 != null && cgformRuleList2.size() > 0) {
-//                                    cgformRuleBean cgformRuleBean = cgformRuleList2.get(0);
-//                                    String par = cgformRuleBean.getPattern();
-//                                    if (!Utils.isEmpty(par)) {
-//                                        Pattern p = Pattern.compile(par);
-//                                        if (!Utils.isEmpty(dongTaiFormBean1.getPropertyLabel())) {
-//                                            Matcher m = p.matcher(dongTaiFormBean1.getPropertyLabel());
-//                                            if (!m.matches()) {
-//                                                smoothMoveToPosition(recy_view, dongTaiFormBean1.getPosition());
-//                                                dongTaiFormBean1.setPropertyLabel("");
-//                                                break labe;
-//                                            }
-//
-//                                        }
-//                                    }
-//                                }
-//
-//                                if (dongTaiFormBean1.getFieldMustInput()) {
-//
-//                                    if (Utils.isEmpty(dongTaiFormBean1.getPropertyLabel())) {
-//
-//
-//                                        if ((dongTaiFormBean1.getShowType().equals("image")) && (dongTaiFormBean1.getPic() != null && dongTaiFormBean1.getPic().size() > 0)) {
-//                                            dongTaiFormBean1.setShowTiShi(false);
-//                                            if (dongTaiFormBean1.getPic().size() == 1) {
-//                                                if (dongTaiFormBean1.getPic().get(0).getIsAddFlag() == 1) {
-//                                                    dongTaiFormBean1.setShowTiShi(true);
-//                                                    smoothMoveToPosition(recy_view, dongTaiFormBean1.getPosition());
-//                                                    break labe;
-//                                                } else {
-//                                                    dongTaiFormBean1.setShowTiShi(false);
-//                                                }
-//                                            }
-//
-//                                        } else {
-//
-//                                            dongTaiFormBean1.setShowTiShi(true);
-//                                            smoothMoveToPosition(recy_view, dongTaiFormBean1.getPosition());
-//                                            break labe;
-//                                        }
-//
-//
-//                                    } else {
-//                                        dongTaiFormBean1.setShowTiShi(false);
-//                                    }
-//
-//                                }
-//
-//
-//                            }
-//                        }
-//
-//
-//                    } else {
-//
-//
-//                        if (cgformRuleList != null && cgformRuleList.size() > 0) {
-//                            cgformRuleBean cgformRuleBean = cgformRuleList.get(0);
-//                            String par = cgformRuleBean.getPattern();
-//                            if (!Utils.isEmpty(par)) {
-//                                Pattern p = Pattern.compile(par);
-//                                if (!Utils.isEmpty(dongTaiFormBean.getPropertyLabel())) {
-//                                    Matcher m = p.matcher(dongTaiFormBean.getPropertyLabel());
-//                                    if (!m.matches()) {
-//                                        smoothMoveToPosition(recy_view, dongTaiFormBean.getPosition());
-//                                        dongTaiFormBean.setPropertyLabel("");
-//                                        break;
-//                                    }
-//
-//                                }
-//                            }
-//                        }
-//
-//                        if (dongTaiFormBean.getFieldMustInput()) {
-//
-//                            if (Utils.isEmpty(dongTaiFormBean.getPropertyLabel())) {
-//
-//                                if ((dongTaiFormBean.getShowType().equals("image")) && (dongTaiFormBean.getPic() != null && dongTaiFormBean.getPic().size() > 0)) {
-//                                    dongTaiFormBean.setShowTiShi(false);
-//                                } else {
-//
-//                                    dongTaiFormBean.setShowTiShi(true);
-//                                    smoothMoveToPosition(recy_view, dongTaiFormBean.getPosition());
-//                                    break;
-//                                }
-//
-//
-//                            } else {
-//                                dongTaiFormBean.setShowTiShi(false);
-//                            }
-//
-//                        }
-//
-//
-//                    }
-//
-//
-//                }
-//                biaoGeRecyclerAdapter.notifyDataSetChanged();
-//
-//                boolean allEdit = false;
-//
-//                labe:
-//                for (DongTaiFormBean dongTaiFormBean : formBeanList) {
-//
-//                    if (dongTaiFormBean.getFieldMustInput()) {
-//
-//                        if (Utils.isEmpty(dongTaiFormBean.getPropertyLabel())) {
-//
-//
-//                            if (dongTaiFormBean.getShowType().equals("image")) {
-//
-//                                if (dongTaiFormBean.getPic() == null || dongTaiFormBean.getPic().size() == 0) {
-//                                    allEdit = false;
-//                                    break;
-//                                }
-//
-//
-//                            } else {
-//
-//                                allEdit = false;
-//                                break;
-//
-//                            }
-//
-//
-//                        }
-//                    }
-//
-//
-//                    List<DongTaiFormBean> propertys = dongTaiFormBean.getCgformFieldList();
-//
-//                    if ((propertys != null && propertys.size() > 0) && (!Utils.isEmpty(dongTaiFormBean.getPropertyLabel()) && dongTaiFormBean.getPropertyLabel().equals("1"))) {
-//
-//                        for (DongTaiFormBean dongTaiFormBean1 : propertys) {
-//
-//                            if (dongTaiFormBean1.getFieldMustInput()) {
-//
-//                                if (Utils.isEmpty(dongTaiFormBean1.getPropertyLabel())) {
-//
-//                                    if (dongTaiFormBean1.getShowType().equals("image")) {
-//
-//                                        if (dongTaiFormBean1.getPic() == null || dongTaiFormBean1.getPic().size() == 0) {
-//                                            allEdit = false;
-//                                            break labe;
-//                                        }
-//
-//
-//                                    } else {
-//
-//                                        allEdit = false;
-//                                        break labe;
-//
-//                                    }
-//
-//                                }
-//
-//
-//                            }
-//
-//                        }
-//
-//
-//                    }
-//
-//                    allEdit = true;
-//                }
+                labe: for (int i = 0; i < formBeanList.size(); i++) {
+                    DongTaiFormBean dongTaiFormBean = formBeanList.get(i);
 
-//                boolean evergreen = false;
-//                boolean deciduous = false;
-//
-//                for (DongTaiFormBean dongTaiFormBean1 : formBeanList) {
-//
-//
-//                    if (dongTaiFormBean1.getJavaField().equals("tree_deciduousSpecifications")) {
-//
-//                        if (Utils.isEmpty(dongTaiFormBean1.getPropertyLabel())) {
-//                            deciduous = false;
-//                        } else {
-//                            deciduous = true;
-//                        }
-//
-//                    }
-//                    if (dongTaiFormBean1.getJavaField().equals("tree_evergreenSpecifications")) {
-//
-//                        if (Utils.isEmpty(dongTaiFormBean1.getPropertyLabel())) {
-//                            evergreen = false;
-//                        } else {
-//                            evergreen = true;
-//                        }
-//
-//                    }
-//
-//
-//                }
-//
-//
-//                if (evergreen && deciduous) {
-//                    allEdit = false;
-//                    Utils.showDialog(mContext, "落叶树规格和常绿树规格只能选填一项");
-//                }
-//                if (!evergreen && !deciduous) {
-//                    allEdit = false;
-//                    Utils.showDialog(mContext, "落叶树规格和常绿树规格必须选填一项");
-//                }
-//
-//
-//
-//                boolean degerTree = false;
-//                boolean degerTreePic = false;
-//
-//                for (DongTaiFormBean dongTaiFormBean1 : formBeanList) {
-//
-//
-//                    if (dongTaiFormBean1.getJavaField().equals("tree_dangerous")) {
-//
-//                        if (Utils.isEmpty(dongTaiFormBean1.getPropertyLabel())) {
-//                            degerTree = false;
-//                        } else {
-//                            degerTree = true;
-//                        }
-//
-//                    }
-//                    if (dongTaiFormBean1.getJavaField().equals("tree_images")) {
-//                        List<JDPicInfo> pics = dongTaiFormBean1.getPic();
-//
-//                        if (pics!=null&&pics.size()>0) {
-//                            degerTreePic = true;
-//                        } else {
-//                            degerTreePic = false;
-//                        }
-//
-//                    }
-//
-//
-//                }
-//
-//
-//                if (evergreen && deciduous) {
-//                    allEdit = false;
-//                    Utils.showDialog(mContext, "落叶树规格和常绿树规格只能选填一项");
-//                }
-//                if (!evergreen && !deciduous) {
-//                    allEdit = false;
-//                    Utils.showDialog(mContext, "落叶树规格和常绿树规格必须选填一项");
-//                }
-//
-//
-//                if (degerTree && !degerTreePic) {
-//                    allEdit = false;
-//                    Utils.showDialog(mContext, "请上传树木照片");
-//                }
-//
-//
-//                if (allEdit) {
-//
-//                    submitForm();
-//
-//
-//                }
 
-                upLoadForms(formBeanList);
+                    List<DongTaiFormBean> propertys = dongTaiFormBean.getCgformFieldList();
+
+
+                    List<cgformRuleBean> cgformRuleList = dongTaiFormBean.getCgformRuleList();
+
+                    if (cgformRuleList != null && cgformRuleList.size() > 0) {
+                        cgformRuleBean cgformRuleBean = cgformRuleList.get(0);
+                        String par = cgformRuleBean.getPattern();
+                        Pattern p = Pattern.compile(par);
+                        if (!Utils.isEmpty(dongTaiFormBean.getPropertyLabel())) {
+                            Matcher m = p.matcher(dongTaiFormBean.getPropertyLabel());
+                            if (!m.matches()) {
+                                smoothMoveToPosition(recy_view, dongTaiFormBean.getPosition());
+                                dongTaiFormBean.setPropertyLabel("");
+                                break;
+                            }
+
+                        }
+                    }
+
+                    if (dongTaiFormBean.getFieldMustInput()) {
+
+                        if (Utils.isEmpty(dongTaiFormBean.getPropertyLabel())) {
+
+                            if ((dongTaiFormBean.getShowType().equals("image")) && (dongTaiFormBean.getPic() != null && dongTaiFormBean.getPic().size() >0)) {
+                                dongTaiFormBean.setShowTiShi(false);
+                            } else {
+
+                                dongTaiFormBean.setShowTiShi(true);
+                                smoothMoveToPosition(recy_view, dongTaiFormBean.getPosition());
+                                break;
+                            }
+
+
+                        } else {
+                            dongTaiFormBean.setShowTiShi(false);
+                        }
+
+                    }
+
+
+                    if (propertys != null && propertys.size() > 0) {
+
+
+                        if (propertys != null && (!Utils.isEmpty(dongTaiFormBean.getPropertyLabel()) && dongTaiFormBean.getPropertyLabel().equals("1"))) {
+
+                            for (int j = 0; j < propertys.size(); j++) {
+
+
+                                DongTaiFormBean dongTaiFormBean1 = propertys.get(j);
+
+                                List<cgformRuleBean> cgformRuleList2 = dongTaiFormBean1.getCgformRuleList();
+
+                                if (cgformRuleList2 != null && cgformRuleList2.size() > 0) {
+                                    cgformRuleBean cgformRuleBean = cgformRuleList2.get(0);
+                                    String par = cgformRuleBean.getPattern();
+                                    Pattern p = Pattern.compile(par);
+                                    if (!Utils.isEmpty(dongTaiFormBean1.getPropertyLabel())) {
+                                        Matcher m = p.matcher(dongTaiFormBean1.getPropertyLabel());
+                                        if (!m.matches()) {
+                                            smoothMoveToPosition(recy_view, dongTaiFormBean1.getPosition());
+                                            dongTaiFormBean1.setPropertyLabel("");
+                                            break labe;
+                                        }
+
+                                    }
+                                }
+
+                                if (dongTaiFormBean1.getFieldMustInput()) {
+
+                                    if (Utils.isEmpty(dongTaiFormBean1.getPropertyLabel())) {
+
+
+                                        if ((dongTaiFormBean1.getShowType().equals("image")) && (dongTaiFormBean1.getPic() != null && dongTaiFormBean1.getPic().size() >0)) {
+                                            dongTaiFormBean1.setShowTiShi(false);
+                                            if (dongTaiFormBean1.getPic().size() == 1) {
+                                                if (dongTaiFormBean1.getPic().get(0).getIsAddFlag() == 1) {
+                                                    dongTaiFormBean1.setShowTiShi(true);
+                                                    smoothMoveToPosition(recy_view, dongTaiFormBean1.getPosition());
+                                                    break labe;
+                                                } else {
+                                                    dongTaiFormBean1.setShowTiShi(false);
+                                                }
+                                            }
+
+                                        } else {
+
+                                            dongTaiFormBean1.setShowTiShi(true);
+                                            smoothMoveToPosition(recy_view, dongTaiFormBean1.getPosition());
+                                            break labe;
+                                        }
+
+
+                                    } else {
+                                        dongTaiFormBean1.setShowTiShi(false);
+                                    }
+
+                                }
+
+
+                            }
+                        }
+
+
+
+
+                    } else {
+
+
+                        if (cgformRuleList != null && cgformRuleList.size() > 0) {
+                            cgformRuleBean cgformRuleBean = cgformRuleList.get(0);
+                            String par = cgformRuleBean.getPattern();
+                            Pattern p = Pattern.compile(par);
+                            if (!Utils.isEmpty(dongTaiFormBean.getPropertyLabel())) {
+                                Matcher m = p.matcher(dongTaiFormBean.getPropertyLabel());
+                                if (!m.matches()) {
+                                    smoothMoveToPosition(recy_view,dongTaiFormBean.getPosition());
+                                    dongTaiFormBean.setPropertyLabel("");
+                                    break;
+                                }
+
+                            }
+                        }
+
+                        if (dongTaiFormBean.getFieldMustInput()) {
+
+                            if (Utils.isEmpty(dongTaiFormBean.getPropertyLabel())) {
+
+                                if ((dongTaiFormBean.getShowType().equals("image")) && (dongTaiFormBean.getPic() != null && dongTaiFormBean.getPic().size() >0)) {
+                                    dongTaiFormBean.setShowTiShi(false);
+                                } else {
+
+                                    dongTaiFormBean.setShowTiShi(true);
+                                    smoothMoveToPosition(recy_view, dongTaiFormBean.getPosition());
+                                    break;
+                                }
+
+
+                            } else {
+                                dongTaiFormBean.setShowTiShi(false);
+                            }
+
+                        }
+
+
+                    }
+
+
+                }
+                biaoGeRecyclerAdapter.notifyDataSetChanged();
+
+                boolean allEdit = false;
+
+                labe: for (DongTaiFormBean dongTaiFormBean : formBeanList) {
+
+                    if (dongTaiFormBean.getFieldMustInput()) {
+
+                        if (Utils.isEmpty(dongTaiFormBean.getPropertyLabel())) {
+
+
+                            if (dongTaiFormBean.getShowType().equals("image")) {
+
+                                if (dongTaiFormBean.getPic() == null || dongTaiFormBean.getPic().size() == 0) {
+                                    allEdit = false;
+                                    break;
+                                }
+
+
+                            }else {
+
+                                allEdit = false;
+                                break;
+
+                            }
+
+
+                        }
+                    }
+
+
+                    List<DongTaiFormBean> propertys = dongTaiFormBean.getCgformFieldList();
+
+                    if ((propertys != null && propertys.size() > 0)&&(!Utils.isEmpty(dongTaiFormBean.getPropertyLabel()) && dongTaiFormBean.getPropertyLabel().equals("1"))) {
+
+                        for (DongTaiFormBean dongTaiFormBean1 : propertys) {
+
+                            if (dongTaiFormBean1.getFieldMustInput()) {
+
+                                if (Utils.isEmpty(dongTaiFormBean1.getPropertyLabel())) {
+
+                                    if (dongTaiFormBean1.getShowType().equals("image")) {
+
+                                        if (dongTaiFormBean1.getPic() == null || dongTaiFormBean1.getPic().size() == 0) {
+                                            allEdit = false;
+                                            break labe;
+                                        }
+
+
+                                    }else {
+
+                                        allEdit = false;
+                                        break labe;
+
+                                    }
+
+                                }
+
+
+                            }
+
+                        }
+
+
+                    }
+
+                    allEdit = true;
+                }
+                if (allEdit) {
+
+                    submitForm();
+
+
+                }
 
                 break;
 
 
             case R.id.iv_back:
-//                if (!ischeck) {
-//                    showdialogs();
-//
-//                } else {
-//
-//                    finish();
-//                }
+                if (!ischeck) {
+                    showdialogs();
 
-                if (isNewAdd) {
-                    showNewAddDialogs();
-                }else if (!ischeck&&!isNewAdd) {
-                    showSeeDialogs();
-                }else {
+                } else {
+
                     finish();
                 }
+
                 break;
 
         }
@@ -1204,288 +1019,9 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
 
     /**
-     * 检查表单输入项是否合法
-     */
-    private boolean checkFormRule(DongTaiFormBean checkedFormBean) {
-        boolean checkresult=true;
-
-        List<cgformRuleBean> cgformRuleList = checkedFormBean.getCgformRuleList();
-
-        if (cgformRuleList != null && cgformRuleList.size() > 0) {
-            cgformRuleBean cgformRuleBean = cgformRuleList.get(0);
-            String par = cgformRuleBean.getPattern();
-            if (!Utils.isEmpty(par)) {
-                Pattern p = Pattern.compile(par);
-                if (!Utils.isEmpty(checkedFormBean.getPropertyLabel())) {
-                    Matcher m = p.matcher(checkedFormBean.getPropertyLabel());
-                    if (!m.matches()) {
-                        smoothMoveToPosition(recy_view, checkedFormBean.getPosition());
-                        checkedFormBean.setPropertyLabel("");
-                        checkresult = false;
-                    }
-
-                }
-
-            }
-        }
-
-        return checkresult;
-
-    }
-
-    /**
-     * 检查表单是否是必填项
-     */
-    private void checkFormMustInPut(DongTaiFormBean checkedFormBean) {
-
-        if (checkedFormBean.getFieldMustInput()) {
-
-            if (Utils.isEmpty(checkedFormBean.getPropertyLabel())) {
-
-                if ((checkedFormBean.getShowType().equals("image")) && (checkedFormBean.getPic() != null && checkedFormBean.getPic().size() > 0)) {
-                    checkedFormBean.setShowTiShi(false);
-                } else {
-
-                    checkedFormBean.setShowTiShi(true);
-//                    smoothMoveToPosition(recy_view, checkedFormBean.getPosition());
-                }
-
-
-            } else {
-                checkedFormBean.setShowTiShi(false);
-            }
-
-        }
-
-    }
-
-
-    private boolean checkIsAllEdit(List<DongTaiFormBean> allFormss){
-        boolean allEdit = true;
-
-        for (DongTaiFormBean dongTaiFormBean : allFormss) {
-
-            if (dongTaiFormBean.getFieldMustInput()) {
-
-                if (Utils.isEmpty(dongTaiFormBean.getPropertyLabel())) {
-
-                    if (dongTaiFormBean.getShowType().equals("image")) {
-
-                        if (dongTaiFormBean.getPic() == null || dongTaiFormBean.getPic().size() == 0) {
-                            allEdit = false;
-                            break;
-                        }
-
-
-                    } else {
-
-                        allEdit = false;
-                        break;
-
-                    }
-
-
-                }
-            }
-
-
-            List<DongTaiFormBean> childFormList = dongTaiFormBean.getCgformFieldList();
-
-            if ((childFormList != null && childFormList.size() > 0) && (!Utils.isEmpty(dongTaiFormBean.getPropertyLabel()) && dongTaiFormBean.getPropertyLabel().equals("1"))) {
-
-                 boolean edit = checkIsAllEdit(childFormList);
-
-                allEdit = edit;
-
-            }
-
-        }
-
-
-        return allEdit;
-
-
-    }
-
-
-    private void upLoadForms(List<DongTaiFormBean> upLoadFormss) {
-
-        if (upLoadFormss == null || upLoadFormss.size() ==0) {
-            return;
-
-        }
-
-
-        for (DongTaiFormBean dongTaiFormBean : upLoadFormss) {
-
-
-            checkFormMustInPut(dongTaiFormBean);
-
-            if (dongTaiFormBean.isShowTiShi()) {
-                smoothMoveToPosition(recy_view, dongTaiFormBean.getPosition());
-                biaoGeRecyclerAdapter.notifyDataSetChanged();
-                return;
-            }
-
-            boolean checkResult = checkFormRule(dongTaiFormBean);
-
-            if (!checkResult) {
-
-                smoothMoveToPosition(recy_view, dongTaiFormBean.getPosition());
-                dongTaiFormBean.setPropertyLabel("");
-
-            }
-
-
-            List<DongTaiFormBean> childFormList = dongTaiFormBean.getCgformFieldList();
-
-
-            if (childFormList == null || childFormList.size() ==0) {
-                continue;
-
-            }else {
-
-                if((!Utils.isEmpty(dongTaiFormBean.getPropertyLabel()) && dongTaiFormBean.getPropertyLabel().equals("1"))){
-
-                    upLoadForms(childFormList);
-                }
-            }
-
-        }
-
-        biaoGeRecyclerAdapter.notifyDataSetChanged();
-
-        boolean allEdit = false;
-
-        allEdit = checkIsAllEdit(formBeanList);
-
-        boolean evergreen = false;
-        boolean deciduous = false;
-
-        for (DongTaiFormBean dongTaiFormBean1 : formBeanList) {
-
-
-            if (dongTaiFormBean1.getJavaField().equals("tree_deciduousSpecifications")) {
-
-                if (Utils.isEmpty(dongTaiFormBean1.getPropertyLabel())) {
-                    deciduous = false;
-                } else {
-                    deciduous = true;
-                }
-
-            }
-            if (dongTaiFormBean1.getJavaField().equals("tree_evergreenSpecifications")) {
-
-                if (Utils.isEmpty(dongTaiFormBean1.getPropertyLabel())) {
-                    evergreen = false;
-                } else {
-                    evergreen = true;
-                }
-
-            }
-
-
-        }
-
-
-        if (evergreen && deciduous) {
-            allEdit = false;
-            Utils.showDialog(mContext, "落叶树规格和常绿树规格只能选填一项");
-        }
-        if (!evergreen && !deciduous) {
-            allEdit = false;
-            Utils.showDialog(mContext, "落叶树规格和常绿树规格必须选填一项");
-        }
-
-
-
-        boolean degerTree = false;
-        boolean degerTreePic = false;
-
-        for (DongTaiFormBean dongTaiFormBean1 : formBeanList) {
-
-
-            if (dongTaiFormBean1.getJavaField().equals("tree_dangerous")) {
-
-                if (Utils.isEmpty(dongTaiFormBean1.getPropertyLabel())) {
-                    degerTree = false;
-                } else {
-                    degerTree = true;
-                }
-
-            }
-            if (dongTaiFormBean1.getJavaField().equals("tree_images")) {
-                List<JDPicInfo> pics = dongTaiFormBean1.getPic();
-
-                if (pics!=null&&pics.size()>0) {
-                    degerTreePic = true;
-                } else {
-                    degerTreePic = false;
-                }
-
-            }
-
-
-        }
-
-
-        if (evergreen && deciduous) {
-            allEdit = false;
-            Utils.showDialog(mContext, "落叶树规格和常绿树规格只能选填一项");
-        }
-        if (!evergreen && !deciduous) {
-            allEdit = false;
-            Utils.showDialog(mContext, "落叶树规格和常绿树规格必须选填一项");
-        }
-
-
-        if (degerTree && !degerTreePic) {
-            allEdit = false;
-            Utils.showDialog(mContext, "请上传树木照片");
-        }
-
-
-        if (allEdit) {
-
-            submitForm();
-
-
-        }
-
-
-    }
-
-
-    /**
      * 弹出对话框。
      */
-    private void showNewAddDialogs() {
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        builder.setTitle("重要提示：");
-        builder.setMessage("未保存数据将丢失；该树木编号也将丢失，可能会造成断号现象；建议您编辑之后保存该条数据！！！！");
-        builder.setNegativeButton("继续退出", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                finish();
-
-
-            }
-        });
-
-        builder.setPositiveButton("再次编辑", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-
-            }
-        });
-        builder.create().show();
-    }
-    /**
-     * 弹出对话框。
-     */
-    private void showSeeDialogs() {
+    private void showdialogs() {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         builder.setTitle("未保存数据将丢失！");
         builder.setNegativeButton("继续退出", new DialogInterface.OnClickListener() {
@@ -1501,10 +1037,11 @@ public class TreeDetailsActivity extends StyleAnimActivity {
     }
 
 
+
     /**
      * 上传form表单；
      */
-    private void submitForm() {
+    private void submitForm(){
 
         for (int i = 0; i < formBeanList.size(); i++) {
 
@@ -1512,27 +1049,97 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
             if (formBean.getJavaField().equals("name")) {
 
-                tree_resDataBean.setFd_resname(formBean.getPropertyLabel());
+                resDataBean.setFd_resname(formBean.getPropertyLabel());
+                resDataBean.setRescode(formBean.getPropertyLabel());
             }
-            if (formBean.getJavaField().equals("number")) {
-
-                tree_resDataBean.setRescode(formBean.getPropertyLabel());
-                tree_resDataBean.setFd_resname(formBean.getPropertyLabel());
-            }
+//            if (formBean.getJavaField().equals("number")) {
+//
+//                resDataBean.setRescode(formBean.getPropertyLabel());
+//            }
             if (formBean.getJavaField().equals("location")) {
 
                 String propertyLabel = formBean.getPropertyLabel();
 
-                if (!Utils.isEmpty(propertyLabel)) {
-                    tree_resDataBean.setFd_resposition(propertyLabel);
+                if (!Utils.isEmpty(propertyLabel)&& formBean.getShowType().equals("marker")) {
+                    resDataBean.setFd_resposition(propertyLabel);
                     String[] split = propertyLabel.split(",");
 
-                    GPS gps = baiDu2GaoDe(new Double(split[0]), new Double(split[1]));
+                    GPS gps = baiDu2GaoDe(new Double(split[0]),new Double(split[1]));
 
-                    tree_resDataBean.setLatitude(gps.getLat() + "");
-                    tree_resDataBean.setLongitude(gps.getLon() + "");
-                    tree_resDataBean.setFd_resposition(gps.getLat() + "," + gps.getLon());
+                    resDataBean.setLatitude(gps.getLat() + "");
+                    resDataBean.setLongitude(gps.getLon() + "");
+                    resDataBean.setFd_resposition(gps.getLat() + "," + gps.getLon());
                     formBean.setPropertyLabel(gps.getLat() + "," + gps.getLon());
+                }
+                if (!Utils.isEmpty(propertyLabel)&& formBean.getShowType().equals("plane")) {
+                    String[] gpsGroups = propertyLabel.split("\\|");
+
+                    String strplanes = "";
+
+                    for (int j = 0; j < gpsGroups.length; j++) {
+
+                        String firstGps = gpsGroups[j];
+
+                        String[] split = firstGps.split(",");
+
+                        GPS gps = baiDu2GaoDe(new Double(split[0]),new Double(split[1]));
+
+                        if (Utils.isEmpty(strplanes)) {
+                            strplanes = gps.getLat() + "," + gps.getLon();
+                        } else {
+                            strplanes = strplanes + "|" + gps.getLat() + "," + gps.getLon();
+                        }
+
+                        if (j == 0) {
+                            resDataBean.setLatitude(gps.getLat() + "");
+                            resDataBean.setLongitude(gps.getLon() + "");
+                            resDataBean.setFd_resposition(gps.getLat() + "," + gps.getLon());
+
+                        }
+
+
+
+                    }
+
+                    formBean.setPropertyLabel(strplanes);
+
+
+
+
+
+
+                }
+                if (!Utils.isEmpty(propertyLabel)&& formBean.getShowType().equals("line")) {
+                    String[] gpsGroups = propertyLabel.split("\\|");
+
+                    String strplanes = "";
+
+                    for (int j = 0; j < gpsGroups.length; j++) {
+
+                        String firstGps = gpsGroups[j];
+
+                        String[] split = firstGps.split(",");
+
+                        GPS gps = baiDu2GaoDe(new Double(split[0]),new Double(split[1]));
+
+                        if (Utils.isEmpty(strplanes)) {
+                            strplanes = gps.getLat() + "," + gps.getLon();
+                        } else {
+                            strplanes = strplanes + "|" + gps.getLat() + "," + gps.getLon();
+                        }
+
+                        if (j == 0) {
+                            resDataBean.setLatitude(gps.getLat() + "");
+                            resDataBean.setLongitude(gps.getLon() + "");
+                            resDataBean.setFd_resposition(gps.getLat() + "," + gps.getLon());
+
+                        }
+
+
+
+                    }
+
+                    formBean.setPropertyLabel(strplanes);
                 }
 
 
@@ -1541,9 +1148,11 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
         }
 
-        addDB(tree_resDataBean);
+        addDB(resDataBean);
 
-        uploadResData(tree_resDataBean.getId());
+        uploadResData(resDataBean.getId());
+
+
 
 
     }
@@ -1630,16 +1239,12 @@ public class TreeDetailsActivity extends StyleAnimActivity {
         resDataBean.setFormData(formBeanStr);
 
 
+
+
         ResDataDao resDataDao = new ResDataDao(mContext);
 
         resDataDao.addOrUpdate(resDataBean);
 
-
-        LastTreeResDataDao lastTreeResDataDao = new LastTreeResDataDao(mContext);
-        LastTreeDataBean lastTreeDataBean = new LastTreeDataBean();
-        lastTreeDataBean.setId(resDataBean.getId());
-        lastTreeDataBean.setFormData(resDataBean.getFormData());
-        lastTreeResDataDao.addOrUpdate(lastTreeDataBean);
 
 
     }
@@ -1653,7 +1258,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
         final TaskPool taskPool = new TaskPool();
 
-        final OnNetRequestListener listener = new OnNetRequestListener() {
+        final OnNetRequestListener listener= new OnNetRequestListener() {
             @Override
             public void onFinish() {
                 lpd.cancel();
@@ -1686,31 +1291,31 @@ public class TreeDetailsActivity extends StyleAnimActivity {
                         if (sportEditFlag) {
                             Utils.showDialog(mContext, "新增成功");
 
-                            final Timer t = new Timer();
+                            final Timer t =new Timer();
                             t.schedule(new TimerTask() {
                                 @Override
                                 public void run() {
                                     setResult(1);
-                                    addDB(tree_resDataBean);
-                                    TreeDetailsActivity.this.finish();
+                                    addDB(resDataBean);
+                                    RoadDetailsActivity.this.finish();
 
                                 }
-                            }, 2000);
+                            },2000);
 
 
                         } else {
                             Utils.showDialog(mContext, "修改成功");
 
-                            final Timer t = new Timer();
+                            final Timer t =new Timer();
                             t.schedule(new TimerTask() {
                                 @Override
                                 public void run() {
                                     setResult(1);
-                                    addDB(tree_resDataBean);
-                                    TreeDetailsActivity.this.finish();
+                                    addDB(resDataBean);
+                                    RoadDetailsActivity.this.finish();
 
                                 }
-                            }, 2000);
+                            },2000);
                         }
                     }
                 } else {
@@ -1725,15 +1330,16 @@ public class TreeDetailsActivity extends StyleAnimActivity {
         };
 
 
+
         getFormPicMap(formBeanList);
         for (Map.Entry<String, List<JDPicInfo>> entry : formPicMap.entrySet()) {
             List<JDPicInfo> picInfoList = entry.getValue();
 
             for (JDPicInfo jdPicInfo : picInfoList) {
 
-                if (!Utils.isEmpty(jdPicInfo.getFilePath()) && jdPicInfo.getIsAddFlag() != 1 && (Utils.isEmpty(jdPicInfo.getImageUrl()))) {
+                if (!Utils.isEmpty(jdPicInfo.getFilePath()) && jdPicInfo.getIsAddFlag() != 1&&(Utils.isEmpty(jdPicInfo.getImageUrl()))) {
 
-                    taskPool.addTask(new PicYasuo(jdPicInfo, mContext, listener));
+                    taskPool.addTask(new PicYasuo(jdPicInfo,mContext,listener));
                     taskPool.addTask(new UpLoadFormPicAPI(userInfo.getAccess_token(), jdPicInfo, listener));
                 }
             }
@@ -1742,7 +1348,8 @@ public class TreeDetailsActivity extends StyleAnimActivity {
         }
 
 
-        taskPool.addTask(new SaveResDataAPI(userInfo.getAccess_token(), tree_resDataBean, formPicMap, listener));
+        taskPool.addTask(new SaveResDataAPI(userInfo.getAccess_token(),resDataBean,formPicMap,listener));
+
 
 
         if (sportEditFlag) {
@@ -1765,7 +1372,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
             if (formBean.getPic() != null && formBean.getPic().size() > 0) {
                 formPicMap.put(formBean.getJavaField(), formBean.getPic());
 
-            } else {
+            }else {
 
 //                if (formBean.getShowType().equals("image")) {
 //
@@ -1807,7 +1414,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
                     if (childbean.getPic() != null && childbean.getPic().size() > 0) {
                         formPicMap.put(childbean.getJavaField(), childbean.getPic());
 
-                    } else {
+                    }else {
 
                         if (childbean.getShowType().equals("image")) {
 
@@ -1838,6 +1445,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
 
                     }
+
 
 
                 }
@@ -1921,14 +1529,14 @@ public class TreeDetailsActivity extends StyleAnimActivity {
                 if (resultCode == 1) {
                     String picPath = data.getStringExtra("picPath");
 
-                    takePhotoFormBean = (DongTaiFormBean) data.getSerializableExtra("bean");
+                    takePhotoFormBean= (DongTaiFormBean) data.getSerializableExtra("bean");
 //                    Uri mUri;
 //                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 //                        mUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileprovider", new File(picPath));
 //                    } else {
 //                        mUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileprovider", new File(picPath));
 //                    }
-//                    startPhotoZoom(mUri, takePhotoFormBean);
+//                    startPhotoZoom(mUri,takePhotoFormBean);
 
 
                     String picName = System.currentTimeMillis() + ".jpg";
@@ -1942,7 +1550,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
                     List<JDPicInfo> localpiclist = takePhotoFormBean.getPic();
 
-                    if (localpiclist != null && localpiclist.size() > 0) {
+                    if (localpiclist != null && localpiclist.size()> 0) {
 
                         picList.addAll(localpiclist);
 
@@ -1982,13 +1590,13 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
                 } else if (resultCode == 2) {
                     List<ImageItem> picPaths = (List<ImageItem>) data.getSerializableExtra("picPath");
-                    DongTaiFormBean formBean = (DongTaiFormBean) data.getSerializableExtra("bean");
+                    DongTaiFormBean formBean= (DongTaiFormBean) data.getSerializableExtra("bean");
 
                     List<JDPicInfo> picList = new ArrayList<>();
                     for (ImageItem item : picPaths) {
                         String cameraPath = item.imagePath;
 
-                        String cameraName = item.imageId + System.currentTimeMillis() + ".jpg";
+                        String cameraName =item.imageId+ System.currentTimeMillis() + ".jpg";
 
                         JDPicInfo picBean = new JDPicInfo(0, cameraName, cameraPath, null, 0, "false");
                         picList.add(picBean);
@@ -1997,7 +1605,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
                     List<JDPicInfo> localpiclist = formBean.getPic();
 
-                    if (localpiclist != null && localpiclist.size() > 0) {
+                    if (localpiclist != null && localpiclist.size()> 0) {
 
                         picList.addAll(localpiclist);
 
@@ -2036,7 +1644,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
                 break;
 
             case 3:
-                setPicToView(data, takePhotoFormBean);
+                setPicToView(data,takePhotoFormBean);
 
                 break;
 
@@ -2044,21 +1652,21 @@ public class TreeDetailsActivity extends StyleAnimActivity {
     }
 
     Uri uritempFile;
-    private String tempPicFilePath = Values.SDCARD_FILE(Values.SDCARD_PIC);
+    private String tempPicFilePath= Values.SDCARD_FILE(Values.SDCARD_PIC) ;
 
     /**
      * 保存裁剪之后的图片数据
      *
      * @param picdata
      */
-    private void setPicToView(Intent picdata, DongTaiFormBean formBean) {
+    private void setPicToView(Intent picdata,DongTaiFormBean formBean) {
         if (!Utils.isEmpty(uritempFile.toString())) {
 
             try {
                 String picName = System.currentTimeMillis() + ".jpg";
                 Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uritempFile));
 
-                String path = tempPicFilePath;
+                String path = tempPicFilePath ;
 
                 CCM_Bitmap.getBitmapToFile(bitmap, path + picName);
                 JDPicInfo bean = new JDPicInfo(0, picName, path + picName, null, 0, "false");
@@ -2071,7 +1679,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
                 List<JDPicInfo> localpiclist = formBean.getPic();
 
-                if (localpiclist != null && localpiclist.size() > 0) {
+                if (localpiclist != null && localpiclist.size()> 0) {
 
                     picList.addAll(localpiclist);
 
@@ -2108,6 +1716,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
                 biaoGeRecyclerAdapter.notifyDataSetChanged();
 
 
+
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -2120,7 +1729,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
      *
      * @param uri
      */
-    public void startPhotoZoom(Uri uri, DongTaiFormBean formBean) {
+    public void startPhotoZoom(Uri uri,DongTaiFormBean formBean) {
         /*
          * 至于下面这个Intent的ACTION是怎么知道的，大家可以看下自己路径下的如下网页
          * yourself_sdk_path/docs/reference/android/content/Intent.html
@@ -2147,14 +1756,4 @@ public class TreeDetailsActivity extends StyleAnimActivity {
         startActivityForResult(intent, 3);
     }
 
-    @Override
-    public void onBackPressed() {
-        if (isNewAdd) {
-            showNewAddDialogs();
-        }else if (!ischeck&&!isNewAdd) {
-            showSeeDialogs();
-        }else {
-            finish();
-        }
-    }
 }

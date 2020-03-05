@@ -1,13 +1,11 @@
-package com.hollysmart.roadlib.apis;
+package com.hollysmart.gridslib.apis;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.hollysmart.db.UserInfo;
-import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.utils.Mlog;
-import com.hollysmart.utils.Utils;
 import com.hollysmart.utils.taskpool.INetModel;
 import com.hollysmart.value.Values;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -21,50 +19,44 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.MediaType;
 
-/**
- * Created by Lenovo on 2019/4/18.
- */
+public class SearchListAPI implements INetModel {
 
-public class FindListPage2API implements INetModel {
 
 
     private UserInfo userInfo;
-    private ProjectBean projectBean;
-    private DatadicListCountIF datadicListCountIF;
-    private String resmodelid;
-    private String fd_parentid;
-    private int pageNo;
-    private int  pageSize;
+    private DataSearchListIF dataSearchList;
+    private String  type; // 1 tree   2 road
+    private String  searchContent;
+    private ResDataBean  resDataBean;
 
-    public FindListPage2API(int pageNo , int pageSize, UserInfo userInfo, String resmodelid, ProjectBean projectBean, String fd_parentid, DatadicListCountIF datadicListCountIF) {
-        this.pageNo = pageNo;
-        this.pageSize = pageSize;
+
+    public SearchListAPI(UserInfo userInfo,String type,String searchContent,ResDataBean resDataBean, DataSearchListIF dataSearchList) {
         this.userInfo = userInfo;
-        this.resmodelid = resmodelid;
-        this.projectBean = projectBean;
-        this.fd_parentid = fd_parentid;
-        this.datadicListCountIF = datadicListCountIF;
+        this.type = type;
+        this.resDataBean = resDataBean;
+        this.searchContent = searchContent;
+        this.dataSearchList = dataSearchList;
     }
 
     @Override
     public void request() {
         JSONObject object = new JSONObject();
         try {
-            object.put("pageNo", pageNo+"");
-            object.put("pageSize", pageSize+"");
-            object.put("fd_restaskid",projectBean.getId()) ;
-            object.put("fd_resmodelid", resmodelid);
-            object.put("fd_sort", "-1");      //    1 正序    -1 倒序
 
-            if (!Utils.isEmpty(fd_parentid)) {
-                object.put("fd_parentid", fd_parentid);
+            if ("1".equals(type)) {
+                object.put("fdTreeNumber",searchContent );
 
+            }else {
+                object.put("fdRoadName",searchContent );
             }
+
+            object.put("fd_restaskid", resDataBean.getFdTaskId()) ;
+            object.put("fd_resmodelid", resDataBean.getFd_resmodelid());
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String urlStr = Values.SERVICE_URL_FORM + "/admin/api/resdata/findListPage";
+        String urlStr = Values.SERVICE_URL_FORM + "/admin/api/resdata/searchList";
         OkHttpUtils.postString().url(urlStr)
                 .content(object.toString()).addHeader("Authorization", userInfo.getAccess_token())
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))
@@ -72,12 +64,12 @@ public class FindListPage2API implements INetModel {
             @Override
             public void onError(Call call, Exception e, int id) {
                 e.printStackTrace();
-                datadicListCountIF.datadicListResult(false, null,0);
+                dataSearchList.dataSearchList(false, null);
             }
 
             @Override
             public void onResponse(String response, int id) {
-                Mlog.d("findListPage......... = " + response);
+                Mlog.d("getSearchList......... = " + response);
                 response = response.replace("\"\"", "null");
                 try {
                     JSONObject object = new JSONObject(response);
@@ -85,30 +77,33 @@ public class FindListPage2API implements INetModel {
                     if (status == 200) {
 
                         JSONObject jsData = object.getJSONObject("data");
+
                         Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm").create();
                         List<ResDataBean> menuBeanList = mGson.fromJson(jsData.getString("list"),
                                 new TypeToken<List<ResDataBean>>() {}.getType());
 
-                        for (ResDataBean resDataBean : menuBeanList) {
-                            resDataBean.setFdTaskId(projectBean.getId());
-                            resDataBean.setFd_resmodelid(resmodelid);
+
+                        for (ResDataBean DataBean : menuBeanList) {
+                            DataBean.setFdTaskId(resDataBean.getFdTaskId());
+                            DataBean.setFd_resmodelid(resDataBean.getFd_resmodelid());
+                            DataBean.setFd_resmodelname(resDataBean.getFd_resmodelname());
                         }
 
-                        int allcount = jsData.getInt("count");
 
-                        datadicListCountIF.datadicListResult(true,menuBeanList,allcount);
+
+                        dataSearchList.dataSearchList(true, menuBeanList);
                     } else {
-                        datadicListCountIF.datadicListResult(false, null,0);
+                        dataSearchList.dataSearchList(false, null);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    datadicListCountIF.datadicListResult(false, null,0);
+                    dataSearchList.dataSearchList(false, null);
                 }
             }
         });
     }
 
-    public interface DatadicListCountIF {
-        void datadicListResult(boolean isOk, List<ResDataBean> menuBeanList, int allCount);
+    public interface DataSearchListIF {
+        void dataSearchList(boolean isOk, List<ResDataBean> menuBeanList);
     }
 }

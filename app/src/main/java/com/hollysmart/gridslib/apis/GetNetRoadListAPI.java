@@ -1,11 +1,10 @@
-package com.hollysmart.roadlib.apis;
+package com.hollysmart.gridslib.apis;
 
 import com.hollysmart.db.UserInfo;
+import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.utils.Mlog;
-import com.hollysmart.utils.Utils;
 import com.hollysmart.utils.taskpool.INetModel;
-import com.hollysmart.utils.taskpool.OnNetRequestListener;
 import com.hollysmart.value.Values;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -24,21 +23,19 @@ import okhttp3.MediaType;
  * Created by Lenovo on 2019/4/18.
  */
 
-public class GetNetTreeListCountAPI implements INetModel {
+public class GetNetRoadListAPI implements INetModel {
 
 
     private UserInfo userInfo;
-    private ResDataBean roadBean;
-    private OnNetRequestListener onNetRequestListener;
-    private String  parentId;
-    private String  resmodelid;
+    private ProjectBean projectBean;
+    private DatadicListIF datadicListIF;
+    private String resmodelid;
 
-
-    public GetNetTreeListCountAPI(UserInfo userInfo, String resmodelid, ResDataBean roadBean, OnNetRequestListener onNetRequestListener) {this.userInfo = userInfo;
-        this.roadBean = roadBean;
-        this.onNetRequestListener = onNetRequestListener;
-        this.parentId = roadBean.getId();
+    public GetNetRoadListAPI(UserInfo userInfo,String resmodelid, ProjectBean projectBean, DatadicListIF datadicListIF) {
+        this.userInfo = userInfo;
         this.resmodelid = resmodelid;
+        this.projectBean = projectBean;
+        this.datadicListIF = datadicListIF;
     }
 
     @Override
@@ -47,13 +44,8 @@ public class GetNetTreeListCountAPI implements INetModel {
         try {
             object.put("pageNo", "1");
             object.put("pageSize", "1000");
-            object.put("fd_restaskid", roadBean.getFdTaskId()) ;
+            object.put("fd_restaskid",projectBean.getId()) ;
             object.put("fd_resmodelid", resmodelid);
-
-            if (!Utils.isEmpty(parentId)) {
-
-                object.put("fd_parentid", parentId);
-            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -65,12 +57,12 @@ public class GetNetTreeListCountAPI implements INetModel {
             @Override
             public void onError(Call call, Exception e, int id) {
                 e.printStackTrace();
-                onNetRequestListener.OnNext();
+                datadicListIF.datadicListResult(false, null);
             }
 
             @Override
             public void onResponse(String response, int id) {
-                Mlog.d("GetNetTreeList......... = " + response);
+                Mlog.d("datadicList......... = " + response);
                 response = response.replace("\"\"", "null");
                 try {
                     JSONObject object = new JSONObject(response);
@@ -78,6 +70,10 @@ public class GetNetTreeListCountAPI implements INetModel {
                     if (status == 200) {
 
                         JSONObject jsData = object.getJSONObject("data");
+//                        Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm").create();
+//                        List<ResDataBean> menuBeanList = mGson.fromJson(jsData.getString("list"),
+//                                new TypeToken<List<ResDataBean>>() {}.getType());
+
 
                         JSONArray list = jsData.getJSONArray("list");
                         List<ResDataBean> menuBeanList = new ArrayList<>();
@@ -98,15 +94,14 @@ public class GetNetTreeListCountAPI implements INetModel {
 
                             menuBeanList.add(resDataBean);
                         }
-                        roadBean.setChildTreeCount(menuBeanList.size());
 
-                        onNetRequestListener.OnNext();
+                        datadicListIF.datadicListResult(true, menuBeanList);
                     } else {
-                        onNetRequestListener.OnNext();
+                        datadicListIF.datadicListResult(false, null);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    onNetRequestListener.OnNext();
+                    datadicListIF.datadicListResult(false, null);
                 }
             }
         });

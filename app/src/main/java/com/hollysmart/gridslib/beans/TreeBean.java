@@ -1,4 +1,4 @@
-package com.hollysmart.roadlib.beans;
+package com.hollysmart.gridslib.beans;
 
 import java.io.Serializable;
 

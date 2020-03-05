@@ -1,9 +1,9 @@
-package com.hollysmart.roadlib.apis;
+package com.hollysmart.gridslib.apis;
 
 import com.hollysmart.db.UserInfo;
-import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.utils.Mlog;
+import com.hollysmart.utils.Utils;
 import com.hollysmart.utils.taskpool.INetModel;
 import com.hollysmart.value.Values;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -23,19 +23,21 @@ import okhttp3.MediaType;
  * Created by Lenovo on 2019/4/18.
  */
 
-public class GetNetRoadListAPI implements INetModel {
+public class GetNetTreeListAPI implements INetModel {
 
 
     private UserInfo userInfo;
-    private ProjectBean projectBean;
+    private ResDataBean roadBean;
     private DatadicListIF datadicListIF;
-    private String resmodelid;
+    private String  parentId;
+    private String  resmodelid;
 
-    public GetNetRoadListAPI(UserInfo userInfo,String resmodelid, ProjectBean projectBean, DatadicListIF datadicListIF) {
-        this.userInfo = userInfo;
-        this.resmodelid = resmodelid;
-        this.projectBean = projectBean;
+
+    public GetNetTreeListAPI(UserInfo userInfo,String resmodelid, ResDataBean roadBean, DatadicListIF datadicListIF) {this.userInfo = userInfo;
+        this.roadBean = roadBean;
         this.datadicListIF = datadicListIF;
+        this.parentId = roadBean.getId();
+        this.resmodelid = resmodelid;
     }
 
     @Override
@@ -43,9 +45,14 @@ public class GetNetRoadListAPI implements INetModel {
         JSONObject object = new JSONObject();
         try {
             object.put("pageNo", "1");
-            object.put("pageSize", "1000");
-            object.put("fd_restaskid",projectBean.getId()) ;
+            object.put("pageSize", "10000");
+            object.put("fd_restaskid", roadBean.getFdTaskId()) ;
             object.put("fd_resmodelid", resmodelid);
+
+            if (!Utils.isEmpty(parentId)) {
+
+                object.put("fd_parentid", parentId);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -62,7 +69,7 @@ public class GetNetRoadListAPI implements INetModel {
 
             @Override
             public void onResponse(String response, int id) {
-                Mlog.d("datadicList......... = " + response);
+                Mlog.d("GetNetTreeList......... = " + response);
                 response = response.replace("\"\"", "null");
                 try {
                     JSONObject object = new JSONObject(response);
@@ -70,10 +77,6 @@ public class GetNetRoadListAPI implements INetModel {
                     if (status == 200) {
 
                         JSONObject jsData = object.getJSONObject("data");
-//                        Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm").create();
-//                        List<ResDataBean> menuBeanList = mGson.fromJson(jsData.getString("list"),
-//                                new TypeToken<List<ResDataBean>>() {}.getType());
-
 
                         JSONArray list = jsData.getJSONArray("list");
                         List<ResDataBean> menuBeanList = new ArrayList<>();

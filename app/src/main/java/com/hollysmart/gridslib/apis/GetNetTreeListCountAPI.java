@@ -1,10 +1,11 @@
-package com.hollysmart.roadlib.apis;
+package com.hollysmart.gridslib.apis;
 
 import com.hollysmart.db.UserInfo;
 import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.Utils;
 import com.hollysmart.utils.taskpool.INetModel;
+import com.hollysmart.utils.taskpool.OnNetRequestListener;
 import com.hollysmart.value.Values;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -23,19 +24,19 @@ import okhttp3.MediaType;
  * Created by Lenovo on 2019/4/18.
  */
 
-public class GetNetTreeListAPI implements INetModel {
+public class GetNetTreeListCountAPI implements INetModel {
 
 
     private UserInfo userInfo;
     private ResDataBean roadBean;
-    private DatadicListIF datadicListIF;
+    private OnNetRequestListener onNetRequestListener;
     private String  parentId;
     private String  resmodelid;
 
 
-    public GetNetTreeListAPI(UserInfo userInfo,String resmodelid, ResDataBean roadBean, DatadicListIF datadicListIF) {this.userInfo = userInfo;
+    public GetNetTreeListCountAPI(UserInfo userInfo, String resmodelid, ResDataBean roadBean, OnNetRequestListener onNetRequestListener) {this.userInfo = userInfo;
         this.roadBean = roadBean;
-        this.datadicListIF = datadicListIF;
+        this.onNetRequestListener = onNetRequestListener;
         this.parentId = roadBean.getId();
         this.resmodelid = resmodelid;
     }
@@ -45,7 +46,7 @@ public class GetNetTreeListAPI implements INetModel {
         JSONObject object = new JSONObject();
         try {
             object.put("pageNo", "1");
-            object.put("pageSize", "10000");
+            object.put("pageSize", "1000");
             object.put("fd_restaskid", roadBean.getFdTaskId()) ;
             object.put("fd_resmodelid", resmodelid);
 
@@ -64,7 +65,7 @@ public class GetNetTreeListAPI implements INetModel {
             @Override
             public void onError(Call call, Exception e, int id) {
                 e.printStackTrace();
-                datadicListIF.datadicListResult(false, null);
+                onNetRequestListener.OnNext();
             }
 
             @Override
@@ -97,14 +98,15 @@ public class GetNetTreeListAPI implements INetModel {
 
                             menuBeanList.add(resDataBean);
                         }
+                        roadBean.setChildTreeCount(menuBeanList.size());
 
-                        datadicListIF.datadicListResult(true, menuBeanList);
+                        onNetRequestListener.OnNext();
                     } else {
-                        datadicListIF.datadicListResult(false, null);
+                        onNetRequestListener.OnNext();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    datadicListIF.datadicListResult(false, null);
+                    onNetRequestListener.OnNext();
                 }
             }
         });

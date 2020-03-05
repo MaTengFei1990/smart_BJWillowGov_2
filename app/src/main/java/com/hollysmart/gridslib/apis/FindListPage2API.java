@@ -1,10 +1,9 @@
-package com.hollysmart.roadlib.apis;
+package com.hollysmart.gridslib.apis;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.hollysmart.db.UserInfo;
-import com.hollysmart.formlib.ResListShowOnMapActivity;
 import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.utils.Mlog;
@@ -14,11 +13,9 @@ import com.hollysmart.value.Values;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
@@ -28,32 +25,18 @@ import okhttp3.MediaType;
  * Created by Lenovo on 2019/4/18.
  */
 
-public class FindListPageAPI implements INetModel {
+public class FindListPage2API implements INetModel {
 
 
     private UserInfo userInfo;
     private ProjectBean projectBean;
-    private DatadicListIF datadicListIF;
     private DatadicListCountIF datadicListCountIF;
     private String resmodelid;
     private String fd_parentid;
     private int pageNo;
     private int  pageSize;
 
-    public FindListPageAPI(UserInfo userInfo, String resmodelid, ProjectBean projectBean,String fd_parentid, DatadicListIF datadicListIF) {
-        this.pageNo = 1;
-        if (Utils.isEmpty(fd_parentid)) {
-            this.pageSize = 1000;
-        }else {
-            this.pageSize = 20;
-        }
-        this.userInfo = userInfo;
-        this.resmodelid = resmodelid;
-        this.projectBean = projectBean;
-        this.fd_parentid = fd_parentid;
-        this.datadicListIF = datadicListIF;
-    }
-    public FindListPageAPI(int pageNo ,int pageSize,UserInfo userInfo, String resmodelid, ProjectBean projectBean,String fd_parentid, DatadicListCountIF datadicListCountIF) {
+    public FindListPage2API(int pageNo , int pageSize, UserInfo userInfo, String resmodelid, ProjectBean projectBean, String fd_parentid, DatadicListCountIF datadicListCountIF) {
         this.pageNo = pageNo;
         this.pageSize = pageSize;
         this.userInfo = userInfo;
@@ -71,6 +54,7 @@ public class FindListPageAPI implements INetModel {
             object.put("pageSize", pageSize+"");
             object.put("fd_restaskid",projectBean.getId()) ;
             object.put("fd_resmodelid", resmodelid);
+            object.put("fd_sort", "-1");      //    1 正序    -1 倒序
 
             if (!Utils.isEmpty(fd_parentid)) {
                 object.put("fd_parentid", fd_parentid);
@@ -88,13 +72,7 @@ public class FindListPageAPI implements INetModel {
             @Override
             public void onError(Call call, Exception e, int id) {
                 e.printStackTrace();
-                if (datadicListIF != null) {
-                    datadicListIF.datadicListResult(false, null);
-                }
-
-                if (datadicListCountIF != null) {
-                    datadicListCountIF.datadicListResult(false,null,0);
-                }
+                datadicListCountIF.datadicListResult(false, null,0);
             }
 
             @Override
@@ -116,44 +94,21 @@ public class FindListPageAPI implements INetModel {
                             resDataBean.setFd_resmodelid(resmodelid);
                         }
 
-                        if (datadicListIF != null) {
+                        int allcount = jsData.getInt("count");
 
-                            datadicListIF.datadicListResult(true, menuBeanList);
-                        }
-
-                        if (datadicListCountIF != null) {
-                            int allcount = jsData.getInt("count");
-                            datadicListCountIF.datadicListResult(true,menuBeanList,allcount);
-                        }
+                        datadicListCountIF.datadicListResult(true,menuBeanList,allcount);
                     } else {
-                        if (datadicListIF != null) {
-
-                            datadicListIF.datadicListResult(false, null);
-                        }
-
-                        if (datadicListCountIF != null) {
-                            datadicListCountIF.datadicListResult(false,null,0);
-                        }
+                        datadicListCountIF.datadicListResult(false, null,0);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    if (datadicListIF != null) {
-
-                        datadicListIF.datadicListResult(false, null);
-                    }
-
-                    if (datadicListCountIF != null) {
-                        datadicListCountIF.datadicListResult(false,null,0);
-                    }
+                    datadicListCountIF.datadicListResult(false, null,0);
                 }
             }
         });
     }
 
-    public interface DatadicListIF {
-        void datadicListResult(boolean isOk, List<ResDataBean> menuBeanList);
-    }
     public interface DatadicListCountIF {
-        void datadicListResult(boolean isOk, List<ResDataBean> menuBeanList,int allCount);
+        void datadicListResult(boolean isOk, List<ResDataBean> menuBeanList, int allCount);
     }
 }

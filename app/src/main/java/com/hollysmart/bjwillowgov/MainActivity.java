@@ -71,7 +71,7 @@ import com.hollysmart.formlib.activitys.EditPicActivity;
 import com.hollysmart.imgdownLoad.DownLoadImageService;
 import com.hollysmart.imgdownLoad.ImageDownLoadCallBack;
 import com.hollysmart.popuwindow.MoreWindow;
-import com.hollysmart.roadlib.GridsListActivity;
+import com.hollysmart.gridslib.GridsListActivity;
 import com.hollysmart.service.DownloadService;
 import com.hollysmart.style.App_Cai;
 import com.hollysmart.style.StyleAnimActivity;
@@ -123,9 +123,7 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
     private OtherMap otherMap;
     private ButtomDialogView buttomDialogView;
 
-    RegisterEngine registerEngine = null;
     boolean isAddressBook = false;
-    CallEngine callEngine = null;
 
     private BroadcastReceiver br = new BroadcastReceiver() {
 
@@ -150,90 +148,6 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
 
     };
 
-
-
-
-    Handler callHander = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-
-                case 0://incall
-                    Utils.showToast(mContext,"msg.what=====" + msg.what);
-                    Mlog.d( "callHander--------msg.what=="+msg.what );
-                    if (msg.arg1 == CallType.VIDEOCALL || msg.arg1 == CallType.UPLOADVIDEO || msg.arg1 == CallType.TRANSCRIBE || msg.arg1 == CallType.MONITORVIDEO || msg.arg1 == CallType.DISPATCH) {
-                    } else if (msg.arg1 == CallType.VOICECALL) {
-                        sendBroadcast(new Intent("com.gqt.accept"));
-                    } else if (msg.arg1 == CallType.CONFERENCE) {
-                        Toast.makeText(MainActivity.this, "conference incall", Toast.LENGTH_SHORT).show();
-                    }
-                    break;
-                case 1:
-                    Mlog.d( "callHander--------msg.what=="+msg.what );
-                    stopService(new Intent(MainActivity.this, MonitorServer.class));
-                    Toast.makeText(MainActivity.this, "state idle", Toast.LENGTH_SHORT).show();
-                    sendBroadcast(new Intent("com.gqt.hangup"));
-                    break;
-                //呼出trt312
-                case 2:
-                    Mlog.d( "callHander--------msg.what=="+msg.what );
-                    Utils.showToast(mContext,"msg.what=====" + msg.what);
-
-                    Map<String, String> member = null;
-                    String mname = "";
-                    if (isAddressBook) {
-                        member = GQTHelper.getInstance().getGroupEngine().getMember((String) msg.obj);
-                    }
-                    if (member != null) {
-                        mname = member.get("mname");
-                    } else {
-                        mname = (String) msg.obj;
-                    }
-                    if (msg.arg1 == CallType.VOICECALL) {
-                        Intent voiceIntent = new Intent(MainActivity.this, VoiceCallOutGoingActivity.class);
-                        voiceIntent.putExtra("num", mname);
-                        startActivity(voiceIntent);
-                    }
-
-                    new SharedPreferenceTools(MainActivity.this).putValues(mname);
-                    break;
-                //呼入
-                case 3:
-                    Mlog.d( "callHander--------msg.what=="+msg.what );
-                    Utils.showToast(mContext,"msg.what=====" + msg.what);
-                    String name = msg.getData().getString("name");
-                    String num = msg.getData().getString("num");
-                    if (msg.arg1 == CallType.VOICECALL) {
-                        Intent invoiceIntent = new Intent(MainActivity.this, VoiceCallComingActivity.class);
-                        invoiceIntent.putExtra("name", name);
-                        invoiceIntent.putExtra("num", num);
-                        startActivity(invoiceIntent);
-                    } else if (msg.arg1 == CallType.SENDONLY_VOICECALL) {
-                        GQTHelper.getInstance().getCallEngine().answerCall(CallType.VOICECALL, "");
-                    }
-                    break;
-                case 99:
-                    Utils.showToast(mContext,"msg.what=====" + msg.what);
-                    Toast.makeText(MainActivity.this, (String) msg.obj, Toast.LENGTH_SHORT).show();
-                    break;
-                case 98:
-                    switch ((Integer) msg.obj) {
-                        case 480:
-                            Toast.makeText(MainActivity.this, "用户不在线或无人接听", Toast.LENGTH_SHORT).show();
-                            break;
-
-                        default:
-                            break;
-                    }
-                    sendBroadcast(new Intent("com.gqt.hangup"));
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    };
 
 
 
@@ -751,37 +665,6 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
 
                     }
 
-
-                    registerEngine = GQTHelper.getInstance().getRegisterEngine();
-
-                    if (!registerEngine.isRegister()) {
-
-                        if (!Utils.isEmpty(voicepwd) &&! Utils.isEmpty(voiceuser)) {
-
-                            registerEngine.initRegisterInfo(voiceuser, voiceuser, Values.SERVICE_URL_VOICE, Values.SERVICE_URL_VOICE_PORT, null);
-
-                            registerEngine.register(MainActivity.this, new RegisterListener() {
-                                @Override
-                                public void onRegisterSuccess() {
-                                    Mlog.d("registerEngine.register--------onRegisterSuccess==");
-                                }
-
-                                @Override
-                                public void onRegisterFailded(String s) {
-
-                                    Mlog.d("registerEngine.register--------onRegisterFailded==" + s);
-
-                                }
-                            });
-                            GQTHelper.getInstance().getCallEngine().registerCallListener(new MyCallListener(callHander));
-
-                        }
-
-
-                    }
-                    callEngine = GQTHelper.getInstance().getCallEngine();
-
-                    GQTHelper.getInstance().getSetEngine().setOutGroupOnCallClosed(true);
 
                 } catch (JSONException e) {
                     e.printStackTrace();

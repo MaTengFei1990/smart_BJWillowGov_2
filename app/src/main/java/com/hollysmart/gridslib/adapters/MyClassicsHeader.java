@@ -1,4 +1,4 @@
-package com.hollysmart.roadlib.adapters;
+package com.hollysmart.gridslib.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
