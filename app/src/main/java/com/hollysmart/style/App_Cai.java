@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 
 import com.gqt.alarm.MyAlarmManager;
 import com.gqt.helper.GQTHelper;
@@ -33,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 
-public class App_Cai extends Application implements NetChecker.NetCallback{
+public class App_Cai extends MultiDexApplication implements NetChecker.NetCallback{
 
     private static App_Cai app_cai;
     private static Handler sHandler;

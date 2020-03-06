@@ -29,7 +29,7 @@
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.WRITE_APN_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_APN_SETTINGS" /> <!-- 允许程序打开网络套接字 -->
 
     <application
         android:name="com.hollysmart.style.App_Cai"
@@ -38,14 +38,23 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name="com.hollysmart.gridslib.SearchTreeActivity"></activity>
+        <activity android:name="com.hollysmart.formlib.activitys.GDMapActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+
+        </activity>
+        <activity android:name="com.hollysmart.gridslib.SearchTreeActivity" />
         <activity android:name="com.hollysmart.gridslib.SearchRoadActivity" />
         <activity android:name="com.hollysmart.gridslib.TreeDetailsActivity" />
         <activity android:name="com.hollysmart.gridslib.TreeListActivity" />
         <activity android:name="com.hollysmart.gridslib.RoadDetailsActivity" />
         <activity android:name="com.hollysmart.gridslib.GridsListActivity" />
         <activity android:name="com.hollysmart.formlib.ResListShowOnMapActivity" />
-        <activity android:name="com.hollysmart.formlib.ListShowOnMapActivity" />
         <activity android:name="com.hollysmart.formlib.ResDataListActivity" />
         <activity android:name="com.hollysmart.formlib.activitys.MapRangeActivity" />
         <activity
@@ -54,21 +63,21 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.hollysmart.bjwillowgov.VoiceCallComingActivity"
+            android:name=".VoiceCallComingActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.hollysmart.bjwillowgov.VoiceCallInCallActivity"
+            android:name=".VoiceCallInCallActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity android:name="com.hollysmart.bjwillowgov.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".MainActivity">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
 
         <meta-data
@@ -81,11 +90,11 @@
             android:process=":remote" />
 
         <activity
-            android:name="com.hollysmart.bjwillowgov.EditTextActivity"
+            android:name=".EditTextActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name="com.hollysmart.bjwillowgov.BigPicActivity"
+            android:name=".BigPicActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
@@ -140,8 +149,8 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name="com.hollysmart.bjwillowgov.ZhuanFaActivity" />
-        <activity android:name="com.hollysmart.bjwillowgov.MapActivity" />
+        <activity android:name=".ZhuanFaActivity" />
+        <activity android:name=".MapActivity" />
         <activity
             android:name="com.umeng.socialize.media.WBShareCallBackActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -163,7 +172,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.hollysmart.bjwillowgov.wxapi.WXEntryActivity"
+            android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
@@ -184,7 +193,7 @@
             android:name="com.tencent.connect.common.AssistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name="com.hollysmart.bjwillowgov.AboutUsActivity" />
+        <activity android:name=".AboutUsActivity" />
 
         <service android:name="com.gqt.video.SensorCheckService" />
 
@@ -204,17 +213,6 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.hollysmart.groupcall.GroupCallActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.hollysmart.groupcall.GroupIncomingNotifyActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Dialog" />
-        <activity
             android:name="com.hollysmart.formlib.activitys.NewAddFormResDataActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
@@ -222,6 +220,10 @@
             android:name="com.hollysmart.gridslib.RoadListShowOnMapActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="3277b63496de03282548a3466c5cb5a6" />
     </application>
 
 </manifest>
