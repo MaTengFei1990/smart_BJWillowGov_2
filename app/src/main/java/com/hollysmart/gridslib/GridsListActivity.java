@@ -142,7 +142,7 @@ public class GridsListActivity extends StyleAnimActivity {
 
     private void setLpd() {
         lpd = new LoadingProgressDialog();
-        lpd.setMessage("正在获取道路列表，请稍等...");
+        lpd.setMessage("正在获取表格列表，请稍等...");
         lpd.create(this, lpd.STYLE_SPINNER);
         lpd.setCancelable(false);
     }
