@@ -36,6 +36,7 @@ import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.gridslib.TreeDetailsActivity;
 import com.hollysmart.gridslib.apis.FindListPageAPI;
+import com.hollysmart.gridslib.beans.GridBean;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.GPSConverterUtils;
 import com.hollysmart.utils.Mlog;
@@ -70,12 +71,12 @@ public class TreeListAdapter extends CommonAdapter<ResDataBean> {
 
     boolean ischeck =false; //是否只能查看 true  只能查看不能编辑；
     private String TreeFormModelId;
-    private ResDataBean roadbean;
+    private GridBean roadbean;
     private ProjectBean projectBean;
 
     private SlideManager manager;
 
-    public TreeListAdapter(Context context, String TreeFormModelId, ProjectBean projectBean, ResDataBean roadbean, List<ResDataBean> mJingDians, boolean ischeck) {
+    public TreeListAdapter(Context context, String TreeFormModelId, ProjectBean projectBean, GridBean roadbean, List<ResDataBean> mJingDians, boolean ischeck) {
         super(context, mJingDians, R.layout.item_tree);
         this.context = context;
         inflater = LayoutInflater.from(context);
@@ -290,7 +291,7 @@ public class TreeListAdapter extends CommonAdapter<ResDataBean> {
                     public void onResDataDeleteResult(boolean isOk, String msg) {
 
                         if (isOk) {
-                            selectDB(roadbean.getFdTaskId());
+//                            selectDB(roadbean.getFdTaskId());
                         }
 
                     }

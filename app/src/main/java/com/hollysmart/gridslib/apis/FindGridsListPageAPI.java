@@ -30,58 +30,23 @@ public class FindGridsListPageAPI implements INetModel {
 
 
     private UserInfo userInfo;
-    private ProjectBean projectBean;
     private DatadicListIF datadicListIF;
-    private DatadicListCountIF datadicListCountIF;
-    private String resmodelid;
-    private String fd_parentid;
     private int pageNo;
     private int  pageSize;
 
-    public FindGridsListPageAPI(UserInfo userInfo, String resmodelid, ProjectBean projectBean, String fd_parentid, DatadicListIF datadicListIF) {
+    public FindGridsListPageAPI(UserInfo userInfo, DatadicListIF datadicListIF) {
         this.pageNo = 1;
-        if (Utils.isEmpty(fd_parentid)) {
-            this.pageSize = 1000;
-        }else {
-            this.pageSize = 20;
-        }
         this.userInfo = userInfo;
-        this.resmodelid = resmodelid;
-        this.projectBean = projectBean;
-        this.fd_parentid = fd_parentid;
         this.datadicListIF = datadicListIF;
-    }
-    public FindGridsListPageAPI(int pageNo , int pageSize, UserInfo userInfo, String resmodelid, ProjectBean projectBean, String fd_parentid, DatadicListCountIF datadicListCountIF) {
-        this.pageNo = pageNo;
-        this.pageSize = pageSize;
-        this.userInfo = userInfo;
-        this.resmodelid = resmodelid;
-        this.projectBean = projectBean;
-        this.fd_parentid = fd_parentid;
-        this.datadicListCountIF = datadicListCountIF;
     }
 
     @Override
     public void request() {
-        JSONObject object = new JSONObject();
-        try {
-            object.put("pageNo", pageNo+"");
-            object.put("pageSize", pageSize+"");
-            object.put("fd_restaskid",projectBean.getId()) ;
-            object.put("fd_resmodelid", resmodelid);
 
-            if (!Utils.isEmpty(fd_parentid)) {
-                object.put("fd_parentid", fd_parentid);
-
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        String urlStr = Values.SERVICE_URL_FORM + "/admin/api/resdata/findListPage";
-        OkHttpUtils.postString().url(urlStr)
-                .content(object.toString()).addHeader("Authorization", userInfo.getAccess_token())
-                .mediaType(MediaType.parse("application/json; charset=utf-8"))
+        String urlStr = Values.SERVICE_URL_PC + "/xdsapi/api/blocks/list";
+        OkHttpUtils.get().url(urlStr)
+                .addHeader("Authorization", userInfo.getAccess_token())
+                .addParams("officeid", userInfo.getOffice().getId())
                 .build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
@@ -90,9 +55,6 @@ public class FindGridsListPageAPI implements INetModel {
                     datadicListIF.datadicListResult(false, null);
                 }
 
-                if (datadicListCountIF != null) {
-                    datadicListCountIF.datadicListResult(false,null,0);
-                }
             }
 
             @Override
@@ -102,12 +64,12 @@ public class FindGridsListPageAPI implements INetModel {
                 try {
                     JSONObject object = new JSONObject(response);
                     int status = object.getInt("status");
-                    if (status == 200) {
+                    if (status == 1) {
 
-                        JSONObject jsData = object.getJSONObject("data");
                         Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm").create();
-                        List<GridBean> menuBeanList = mGson.fromJson(jsData.getString("list"),
-                                new TypeToken<List<GridBean>>() {}.getType());
+                        List<GridBean> menuBeanList = mGson.fromJson(object.getString("data"),
+                                new TypeToken<List<GridBean>>() {
+                                }.getType());
 
                         for (GridBean resDataBean : menuBeanList) {
 //                            resDataBean.setFdTaskId(projectBean.getId());
@@ -119,19 +81,12 @@ public class FindGridsListPageAPI implements INetModel {
                             datadicListIF.datadicListResult(true, menuBeanList);
                         }
 
-                        if (datadicListCountIF != null) {
-                            int allcount = jsData.getInt("count");
-                            datadicListCountIF.datadicListResult(true,menuBeanList,allcount);
-                        }
                     } else {
                         if (datadicListIF != null) {
 
                             datadicListIF.datadicListResult(false, null);
                         }
 
-                        if (datadicListCountIF != null) {
-                            datadicListCountIF.datadicListResult(false,null,0);
-                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -140,9 +95,6 @@ public class FindGridsListPageAPI implements INetModel {
                         datadicListIF.datadicListResult(false, null);
                     }
 
-                    if (datadicListCountIF != null) {
-                        datadicListCountIF.datadicListResult(false,null,0);
-                    }
                 }
             }
         });

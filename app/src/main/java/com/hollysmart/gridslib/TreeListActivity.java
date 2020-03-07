@@ -35,6 +35,7 @@ import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.gridslib.adapters.MyClassicsHeader;
 import com.hollysmart.gridslib.adapters.TreeListAdapter;
 import com.hollysmart.gridslib.apis.FindListPageAPI;
+import com.hollysmart.gridslib.beans.GridBean;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.CCM_DateTime;
@@ -126,7 +127,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
 
     private LoadingProgressDialog lpd;
 
-    private ResDataBean roadBean;
+    private GridBean roadBean;
     private String TreeFormModelId;
     private String PcToken;
 
@@ -143,7 +144,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
         PcToken = getIntent().getStringExtra("PcToken");
         TreeFormModelId = getIntent().getStringExtra("TreeFormModelId");
 
-        roadBean = (ResDataBean) getIntent().getSerializableExtra("roadBean");
+        roadBean = (GridBean) getIntent().getSerializableExtra("roadBean");
         projectBean = (ProjectBean) getIntent().getSerializableExtra("projectBean");
         setLpd();
         selectDB();

@@ -31,6 +31,7 @@ import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.gridslib.adapters.TreeListAdapter;
 import com.hollysmart.gridslib.apis.FindListPage2API;
+import com.hollysmart.gridslib.beans.GridBean;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.CCM_DateTime;
@@ -101,7 +102,7 @@ public class TreeList2Activity extends StyleAnimActivity implements FindListPage
 
     private LoadingProgressDialog lpd;
 
-    private ResDataBean roadBean;
+    private GridBean roadBean;
     private String TreeFormModelId;
 
     private ProjectBean projectBean;
@@ -120,7 +121,7 @@ public class TreeList2Activity extends StyleAnimActivity implements FindListPage
         ischeck = getIntent().getBooleanExtra("ischeck", false);
         TreeFormModelId = getIntent().getStringExtra("TreeFormModelId");
 
-        roadBean = (ResDataBean) getIntent().getSerializableExtra("roadBean");
+        roadBean = (GridBean) getIntent().getSerializableExtra("roadBean");
         projectBean = (ProjectBean) getIntent().getSerializableExtra("projectBean");
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);

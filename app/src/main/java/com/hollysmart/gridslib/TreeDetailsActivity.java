@@ -38,7 +38,8 @@ import com.hollysmart.formlib.beans.LastTreeDataBean;
 import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.bjwillowgov.R;
-import com.hollysmart.gridslib.apis.GetTreeNumAPI;
+//import com.hollysmart.gridslib.apis.GetTreeNumAPI;
+import com.hollysmart.gridslib.beans.GridBean;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.CCM_Bitmap;
@@ -100,7 +101,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
 
     private ResDataBean tree_resDataBean;
-    private ResDataBean roadBean;
+    private GridBean roadBean;
     private ProjectBean projectBean;
 
     private String PcToken;
@@ -130,7 +131,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
         setLpd();
 
         tree_resDataBean = (ResDataBean) getIntent().getSerializableExtra("resDataBean");
-        roadBean = (ResDataBean) getIntent().getSerializableExtra("roadbean");
+        roadBean = (GridBean) getIntent().getSerializableExtra("roadbean");
         resFromBeanLsit = (List<DongTaiFormBean>) getIntent().getSerializableExtra("formBeanList");
         formPicMap = (HashMap<String, List<JDPicInfo>>) getIntent().getSerializableExtra("formPicMap");
         sportEditFlag = getIntent().getBooleanExtra("sportEditFlag", false);
@@ -162,41 +163,41 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
     }
 
-    private void setTreeNumber() {
-        if (isNewAdd) {
-
-            new GetTreeNumAPI(PcToken, roadBean, new GetTreeNumAPI.GetTreeNumAPIIF() {
-                @Override
-                public void getTreeNumber(boolean isOk, String TreeNumber) {
-
-                    if (isOk) {
-
-
-                        for (DongTaiFormBean dongTaiFormBean : formBeanList) {
-
-                            if( dongTaiFormBean.getJavaField().equals("number")){
-
-                                dongTaiFormBean.setPropertyLabel(TreeNumber);
-
-                            }
-
-                        }
-
-                        biaoGeRecyclerAdapter.notifyDataSetChanged();
-
-
-
-                    }
-
-
-
-                }
-            }).request();
-
-
-
-        }
-    }
+//    private void setTreeNumber() {
+//        if (isNewAdd) {
+//
+//            new GetTreeNumAPI(PcToken, roadBean, new GetTreeNumAPI.GetTreeNumAPIIF() {
+//                @Override
+//                public void getTreeNumber(boolean isOk, String TreeNumber) {
+//
+//                    if (isOk) {
+//
+//
+//                        for (DongTaiFormBean dongTaiFormBean : formBeanList) {
+//
+//                            if( dongTaiFormBean.getJavaField().equals("number")){
+//
+//                                dongTaiFormBean.setPropertyLabel(TreeNumber);
+//
+//                            }
+//
+//                        }
+//
+//                        biaoGeRecyclerAdapter.notifyDataSetChanged();
+//
+//
+//
+//                    }
+//
+//
+//
+//                }
+//            }).request();
+//
+//
+//
+//        }
+//    }
 
     private void setLpd() {
         lpd = new LoadingProgressDialog();
@@ -259,7 +260,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
         if (Utils.NETWORK_NONE == netWorkStart) {
             //无网络
             showLocalData(resmodelid);
-            setTreeNumber();
+//            setTreeNumber();
 
         } else {
             //有网络
@@ -350,7 +351,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
                                                 UpdateData();
                                                 biaoGeRecyclerAdapter.setMap(map);
 
-                                                setTreeNumber();
+//                                                setTreeNumber();
 
                                             }
 
@@ -360,7 +361,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
                                 } else {
                                     showLocalData(resmodelid);
-                                    setTreeNumber();
+//                                    setTreeNumber();
                                 }
 
 
@@ -371,7 +372,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
                     } else {
                         showLocalData(resmodelid);
 
-                        setTreeNumber();
+//                        setTreeNumber();
                     }
 
 

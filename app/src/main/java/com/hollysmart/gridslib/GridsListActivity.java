@@ -297,7 +297,7 @@ public class GridsListActivity extends StyleAnimActivity {
                             TreeFormModelId = projectBean.getfTaskmodel().split(",")[0];
                             roadFormModelId = projectBean.getfTaskmodel().split(",")[1];
 
-                            new GetResModelAPI(userInfo.getAccess_token(), roadFormModelId, new GetResModelAPI.GetResModelIF() {
+                            new GetResModelAPI(userInfo.getAccess_token(), TreeFormModelId, new GetResModelAPI.GetResModelIF() {
                                 @Override
                                 public void ongetResModelIFResult(boolean isOk, ResModelBean resModelBen) {
 
@@ -502,7 +502,7 @@ public class GridsListActivity extends StyleAnimActivity {
 
     private void getdataList(){
 
-        new FindGridsListPageAPI(userInfo, roadFormModelId,projectBean,null, new FindGridsListPageAPI.DatadicListIF() {
+        new FindGridsListPageAPI(userInfo, new FindGridsListPageAPI.DatadicListIF() {
             @Override
             public void datadicListResult(boolean isOk, List<GridBean> netDataList) {
 
@@ -553,51 +553,7 @@ public class GridsListActivity extends StyleAnimActivity {
 
                 resDataManageAdapter.notifyDataSetChanged();
 
-
-                final TaskPool taskPool=new TaskPool();
-
-
-                OnNetRequestListener listener=new OnNetRequestListener() {
-                    @Override
-                    public void onFinish() {
-                        lpd.cancel();
-                        if (gridBeanList != null && gridBeanList.size() > 0) {
-                            lay_fragment_ProdutEmpty.setVisibility(View.GONE);
-                            lv_roadList.setVisibility(View.VISIBLE);
-                        }else {
-                            lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
-                            lv_roadList.setVisibility(View.GONE);
-                        }
-                        resDataManageAdapter.notifyDataSetChanged();
-                    }
-
-
-                    @Override
-                    public void OnNext() {
-
-                        taskPool.execute(this);
-                    }
-
-                    @Override
-                    public void OnResult(boolean isOk, String msg, Object object) {
-                        taskPool.execute(this);
-                    }
-                };
-
-                if (gridBeanList != null && gridBeanList.size() > 0) {
-
-                    for (int i = 0; i < gridBeanList.size(); i++) {
-
-                        GridBean resDataBean = gridBeanList.get(i);
-
-                        taskPool.addTask(new GetGridTreeCountAPI(userInfo, TreeFormModelId, resDataBean, listener));
-
-                    }
-
-                    taskPool.execute(listener);
-                } else {
-
-                    lpd.cancel();
+                lpd.cancel();
                     if (gridBeanList != null && gridBeanList.size() > 0) {
                         lay_fragment_ProdutEmpty.setVisibility(View.GONE);
                         lv_roadList.setVisibility(View.VISIBLE);
@@ -605,7 +561,60 @@ public class GridsListActivity extends StyleAnimActivity {
                         lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
                         lv_roadList.setVisibility(View.GONE);
                     }
-                }
+
+
+//                final TaskPool taskPool=new TaskPool();
+//
+//
+//                OnNetRequestListener listener=new OnNetRequestListener() {
+//                    @Override
+//                    public void onFinish() {
+//                        lpd.cancel();
+//                        if (gridBeanList != null && gridBeanList.size() > 0) {
+//                            lay_fragment_ProdutEmpty.setVisibility(View.GONE);
+//                            lv_roadList.setVisibility(View.VISIBLE);
+//                        }else {
+//                            lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
+//                            lv_roadList.setVisibility(View.GONE);
+//                        }
+//                        resDataManageAdapter.notifyDataSetChanged();
+//                    }
+//
+//
+//                    @Override
+//                    public void OnNext() {
+//
+//                        taskPool.execute(this);
+//                    }
+//
+//                    @Override
+//                    public void OnResult(boolean isOk, String msg, Object object) {
+//                        taskPool.execute(this);
+//                    }
+//                };
+//
+//                if (gridBeanList != null && gridBeanList.size() > 0) {
+//
+//                    for (int i = 0; i < gridBeanList.size(); i++) {
+//
+//                        GridBean resDataBean = gridBeanList.get(i);
+//
+//                        taskPool.addTask(new GetGridTreeCountAPI(userInfo, TreeFormModelId, resDataBean, listener));
+//
+//                    }
+//
+//                    taskPool.execute(listener);
+//                } else {
+//
+//                    lpd.cancel();
+//                    if (gridBeanList != null && gridBeanList.size() > 0) {
+//                        lay_fragment_ProdutEmpty.setVisibility(View.GONE);
+//                        lv_roadList.setVisibility(View.VISIBLE);
+//                    } else {
+//                        lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
+//                        lv_roadList.setVisibility(View.GONE);
+//                    }
+//                }
 
 
 

@@ -32,6 +32,7 @@ import com.hollysmart.formlib.activitys.MapRangeActivity;
 import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.bjwillowgov.R;
+import com.hollysmart.gridslib.beans.GridBean;
 import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.Utils;
 import com.hollysmart.views.linearlayoutforlistview.MyLinearLayoutForListView;
@@ -57,7 +58,7 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
     private List<DongTaiFormBean> biaoGeBeanList;
     private TimePickerDialog timePickerDialog;
 
-    private ResDataBean roadbean;
+    private GridBean roadbean;
     private ResDataBean tree_resDataBean;
     private ProjectBean projectBean;
 
@@ -118,7 +119,7 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
      * @param tree_resDataBean
      */
 
-    public BiaoGeRecyclerAdapter2(Context mContext, List<DongTaiFormBean> biaoGeBeanList, boolean isCheck, ResDataBean roadbean, ResDataBean tree_resDataBean, ProjectBean projectBean) {
+    public BiaoGeRecyclerAdapter2(Context mContext, List<DongTaiFormBean> biaoGeBeanList, boolean isCheck, GridBean roadbean, ResDataBean tree_resDataBean, ProjectBean projectBean) {
         this.mContext = mContext;
         mLayoutInflater = LayoutInflater.from(mContext);
         this.biaoGeBeanList = biaoGeBeanList;

@@ -15,6 +15,7 @@ import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.gridslib.adapters.TreeListAdapter;
 import com.hollysmart.gridslib.apis.SearchListAPI;
+import com.hollysmart.gridslib.beans.GridBean;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.Utils;
@@ -55,7 +56,7 @@ public class SearchTreeActivity extends StyleAnimActivity implements  SearchList
     private LoadingProgressDialog lpd;
 
 
-    private ResDataBean roadBean;
+    private GridBean roadBean;
     private String TreeFormModelId;
 
     private boolean ischeck ;
@@ -101,7 +102,7 @@ public class SearchTreeActivity extends StyleAnimActivity implements  SearchList
 
         TreeFormModelId = getIntent().getStringExtra("TreeFormModelId");
 
-        roadBean = (ResDataBean) getIntent().getSerializableExtra("roadBean");
+        roadBean = (GridBean) getIntent().getSerializableExtra("roadBean");
         projectBean = (ProjectBean) getIntent().getSerializableExtra("projectBean");
 
         ischeck = getIntent().getBooleanExtra("ischeck", false);

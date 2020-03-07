@@ -102,7 +102,7 @@ public class GridsListAdapter extends CommonAdapter<GridBean> {
         GridBean gridBean = gridBeanList.get(position);
         final SlideLayout slSlide = holder.getView(R.id.sl_slide);
 
-        final SlideLayout tv_delete = holder.getView(R.id.tv_delete);
+        final TextView tv_delete = holder.getView(R.id.tv_delete);
         final TextView tv_check = holder.getView(R.id.tv_check);
         final TextView tv_gridNum = holder.getView(R.id.tv_gridNum);
 
