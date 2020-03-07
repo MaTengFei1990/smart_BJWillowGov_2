@@ -87,8 +87,6 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
     SmartRefreshLayout refreshLayout;
 
 
-    private List<JDPicInfo> picList; // 当前景点图片集
-    private List<String> soundList; // 当前景点录音集
 
 
 
@@ -137,8 +135,6 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
     @Override
     public void init() {
         isLogin();
-        picList = new ArrayList<>();
-        soundList = new ArrayList<>();
         treeslist = new ArrayList<>();
 
 

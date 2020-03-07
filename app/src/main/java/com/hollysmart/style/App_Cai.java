@@ -70,7 +70,7 @@ public class App_Cai extends MultiDexApplication implements NetChecker.NetCallba
          * 参数4:设备类型，UMConfigure.DEVICE_TYPE_PHONE为手机、UMConfigure.DEVICE_TYPE_BOX为盒子，默认为手机
          * 参数5:Push推送业务的secret
          */
-        UMConfigure.init(this, "5d36a14e570df3050500113a", "Umeng", UMConfigure.DEVICE_TYPE_PHONE, "9af1cb1184bcff6ae9f3f034a548fe3f");
+        UMConfigure.init(this, "5e633c0d570df3a9e0000255", "Umeng", UMConfigure.DEVICE_TYPE_PHONE, "07492e22061a6ddbee0f4e974f4e4e86");
 
         PushAgent mPushAgent = PushAgent.getInstance(this);
         //注册推送服务，每次调用register方法都会回调该接口

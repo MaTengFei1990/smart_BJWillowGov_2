@@ -461,7 +461,7 @@ public class RoadListShowOnMapActivity extends StyleAnimActivity implements View
 //                        gps.getLon());
 //                OverlayOptions ooA = new MarkerOptions().position(llA)
 //                        .icon(bdA).zIndex(i);
-//                Marker marker = (Marker) (mBaiduMap.addOverlay(ooA));
+//                Marker marker = (Marker) (mGaoDeMap.addOverlay(ooA));
 //                mMarkers.put(i, marker);
 //                builder.include(llA);
 //                int fanwei = resDatalist.get(i).getScope();
@@ -473,7 +473,7 @@ public class RoadListShowOnMapActivity extends StyleAnimActivity implements View
 //            int Width = mMapView.getWidth();
 //            int height = mMapView.getHeight();
 //            MapStatusUpdate u = MapStatusUpdateFactory.newLatLngBounds(bounds, Width, height);
-//            mBaiduMap.setMapStatus(u);
+//            mGaoDeMap.setMapStatus(u);
 //        }
     }
 

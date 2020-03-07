@@ -29,9 +29,12 @@ import com.hollysmart.formlib.beans.DongTaiFormBean;
 import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.bjwillowgov.R;
-import com.hollysmart.gridslib.adapters.RoadListAdapter;
+import com.hollysmart.gridslib.adapters.GridsListAdapter;
+import com.hollysmart.gridslib.apis.FindGridsListPageAPI;
 import com.hollysmart.gridslib.apis.FindListPageAPI;
+import com.hollysmart.gridslib.apis.GetGridTreeCountAPI;
 import com.hollysmart.gridslib.apis.GetNetTreeListCountAPI;
+import com.hollysmart.gridslib.beans.GridBean;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.CCM_DateTime;
@@ -81,8 +84,6 @@ public class GridsListActivity extends StyleAnimActivity {
 
     private ProjectBean projectBean;
 
-    private List<JDPicInfo> picList; // 当前景点图片集
-    private List<String> soundList; // 当前景点录音集
 
 
     private String roadFormModelId = "";
@@ -98,8 +99,8 @@ public class GridsListActivity extends StyleAnimActivity {
         findViewById(R.id.ll_search).setOnClickListener(this);
     }
 
-    private List<ResDataBean> roadBeanList;
-    private RoadListAdapter resDataManageAdapter;
+    private List<GridBean> gridBeanList;
+    private GridsListAdapter resDataManageAdapter;
     Map<String, String> map = new HashMap<String , String>();
     private HashMap<String, List<JDPicInfo>> formPicMap = new HashMap<String, List<JDPicInfo>>();
 
@@ -117,7 +118,7 @@ public class GridsListActivity extends StyleAnimActivity {
         isLogin();
         setLpd();
         lay_fragment_ProdutEmpty.setVisibility(View.GONE);
-        roadBeanList = new ArrayList<>();
+        gridBeanList = new ArrayList<>();
 
 
 
@@ -209,10 +210,7 @@ public class GridsListActivity extends StyleAnimActivity {
 
             case R.id.rl_bottom:
                 Intent intent = new Intent(mContext, RoadDetailsActivity.class);
-
-
                 ResModelBean resModelBean = new ResModelBean();
-
                 for (int i = 0; i < resModelList.size(); i++) {
 
                     if (roadFormModelId.equals(resModelList.get(i).getId())) {
@@ -283,7 +281,7 @@ public class GridsListActivity extends StyleAnimActivity {
 
     // 查询
     private void selectDB() {
-        roadBeanList.clear();
+        gridBeanList.clear();
         if (map != null && map.size() > 0) {
             lpd.show();
 
@@ -318,7 +316,7 @@ public class GridsListActivity extends StyleAnimActivity {
                                         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
                                         lv_roadList.setLayoutManager(layoutManager);
 
-                                        resDataManageAdapter = new RoadListAdapter(PcToken,mContext, roadFormModelId, TreeFormModelId, roadBeanList, picList, soundList, projectBean, newFormList, ischeck);
+                                        resDataManageAdapter = new GridsListAdapter(PcToken,mContext,  TreeFormModelId, gridBeanList, projectBean, ischeck);
                                         lv_roadList.setAdapter(resDataManageAdapter);
                                         selectDB(projectBean.getId());
 
@@ -336,7 +334,7 @@ public class GridsListActivity extends StyleAnimActivity {
                     } else {
                         lpd.cancel();
                         projectBean=new ProjectBean();
-                        if (roadBeanList != null && roadBeanList.size() > 0) {
+                        if (gridBeanList != null && gridBeanList.size() > 0) {
                             lay_fragment_ProdutEmpty.setVisibility(View.GONE);
                             lv_roadList.setVisibility(View.VISIBLE);
                         } else {
@@ -372,7 +370,7 @@ public class GridsListActivity extends StyleAnimActivity {
     // 查询
     private void selectDB(final String jqId) {
         Mlog.d("jqId = " + jqId);
-        roadBeanList.clear();
+        gridBeanList.clear();
 
         resModelList.clear();
         lpd.show();
@@ -431,120 +429,17 @@ public class GridsListActivity extends StyleAnimActivity {
                         }
 
                         JDPicDao jdPicDao = new JDPicDao(mContext);
-                        for (int i = 0; i < roadBeanList.size(); i++) {
-                            ResDataBean resDataBean = roadBeanList.get(i);
+                        for (int i = 0; i < gridBeanList.size(); i++) {
+                            GridBean resDataBean = gridBeanList.get(i);
 
                             List<JDPicInfo> jdPicInfoList = jdPicDao.getDataByJDId(resDataBean.getId() + "");
 
-                            resDataBean.setJdPicInfos(jdPicInfoList);
+//                            resDataBean.setJdPicInfos(jdPicInfoList);
 
                         }
 
 
-                        new FindListPageAPI(userInfo, roadFormModelId,projectBean,null, new FindListPageAPI.DatadicListIF() {
-                            @Override
-                            public void datadicListResult(boolean isOk, List<ResDataBean> netDataList) {
-
-
-                                List<String> idList = new ArrayList<>();
-
-                                for (ResDataBean resDataBean : roadBeanList) {
-
-                                    idList.add(resDataBean.getId());
-                                }
-
-
-                                if (isOk) {
-                                    if (netDataList != null && netDataList.size() > 0) {
-
-                                        for (int i = 0; i < netDataList.size(); i++) {
-
-                                            ResDataBean resDataBean = netDataList.get(i);
-
-                                            if (!idList.contains(resDataBean.getId())) {
-                                                String fd_resposition = resDataBean.getFd_resposition();
-
-                                                if (!Utils.isEmpty(fd_resposition)) {
-
-                                                    String[] split = fd_resposition.split(",");
-                                                    resDataBean.setLatitude(split[0]);
-                                                    resDataBean.setLongitude(split[1]);
-
-                                                }
-
-
-                                                roadBeanList.add(resDataBean);
-
-
-                                                projectBean.setNetCount(10);
-                                            }
-                                        }
-
-                                        new ProjectDao(mContext).addOrUpdate(projectBean);
-                                        ProjectBean dataByID = new ProjectDao(mContext).getDataByID(projectBean.getId());
-
-                                        dataByID.getNetCount();
-                                    }
-                                }
-
-                                resDataManageAdapter.notifyDataSetChanged();
-
-                                TaskPool taskPool=new TaskPool();
-
-
-                                OnNetRequestListener listener=new OnNetRequestListener() {
-                                    @Override
-                                    public void onFinish() {
-                                        lpd.cancel();
-                                        if (roadBeanList != null && roadBeanList.size() > 0) {
-                                            lay_fragment_ProdutEmpty.setVisibility(View.GONE);
-                                            lv_roadList.setVisibility(View.VISIBLE);
-                                        }else {
-                                            lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
-                                            lv_roadList.setVisibility(View.GONE);
-                                        }
-                                        resDataManageAdapter.notifyDataSetChanged();
-                                    }
-
-                                    @Override
-                                    public void OnNext() {
-
-                                    }
-
-                                    @Override
-                                    public void OnResult(boolean isOk, String msg, Object object) {
-
-                                    }
-                                };
-
-                                if (roadBeanList != null && roadBeanList.size() > 0) {
-
-                                    for (int i = 0; i < roadBeanList.size(); i++) {
-
-                                        ResDataBean resDataBean = roadBeanList.get(i);
-
-                                        taskPool.addTask(new GetNetTreeListCountAPI(userInfo, TreeFormModelId, resDataBean, listener));
-
-                                    }
-
-                                    taskPool.execute(listener);
-                                } else {
-
-                                    lpd.cancel();
-                                    if (roadBeanList != null && roadBeanList.size() > 0) {
-                                        lay_fragment_ProdutEmpty.setVisibility(View.GONE);
-                                        lv_roadList.setVisibility(View.VISIBLE);
-                                    } else {
-                                        lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
-                                        lv_roadList.setVisibility(View.GONE);
-                                    }
-                                }
-
-
-
-
-                            }
-                        }).request();
+                        getdataList();
 
 
                     }
@@ -582,130 +477,141 @@ public class GridsListActivity extends StyleAnimActivity {
 
 
             ResDataDao resDataDao = new ResDataDao(getApplication());
-            List<ResDataBean> resDataBeans = resDataDao.getData(jqId + "",true);
-            if (resDataBeans != null && resDataBeans.size() > 0) {
-
-                roadBeanList.addAll(resDataBeans);
-            }
+//            List<GridBean> resDataBeans = resDataDao.getData(jqId + "",true);
+//            if (resDataBeans != null && resDataBeans.size() > 0) {
+//
+//                gridBeanList.addAll(resDataBeans);
+//            }
 
 
             JDPicDao jdPicDao = new JDPicDao(mContext);
-            for (int i = 0; i < roadBeanList.size(); i++) {
-                ResDataBean resDataBean = roadBeanList.get(i);
+            for (int i = 0; i < gridBeanList.size(); i++) {
+                GridBean resDataBean = gridBeanList.get(i);
 
                 List<JDPicInfo> jdPicInfoList = jdPicDao.getDataByJDId(resDataBean.getId() + "");
 
-                resDataBean.setJdPicInfos(jdPicInfoList);
+//                resDataBean.setJdPicInfos(jdPicInfoList);
 
             }
 
 
-            new FindListPageAPI(userInfo, roadFormModelId,projectBean,null, new FindListPageAPI.DatadicListIF() {
-                @Override
-                public void datadicListResult(boolean isOk, List<ResDataBean> netDataList) {
+            getdataList();
+        }
+
+    }
+
+    private void getdataList(){
+
+        new FindGridsListPageAPI(userInfo, roadFormModelId,projectBean,null, new FindGridsListPageAPI.DatadicListIF() {
+            @Override
+            public void datadicListResult(boolean isOk, List<GridBean> netDataList) {
 
 
-                    List<String> idList = new ArrayList<>();
+                List<String> idList = new ArrayList<>();
 
-                    for (ResDataBean resDataBean : roadBeanList) {
+                for (GridBean resDataBean : gridBeanList) {
 
-                        idList.add(resDataBean.getId());
-                    }
-
-
-                    if (isOk) {
-                        if (netDataList != null && netDataList.size() > 0) {
-                            int j = 0;
-
-                            for (int i = 0; i < netDataList.size(); i++) {
-
-                                ResDataBean resDataBean = netDataList.get(i);
-
-                                if (!idList.contains(resDataBean.getId())) {
-                                    String fd_resposition = resDataBean.getFd_resposition();
-
-                                    if (!Utils.isEmpty(fd_resposition)) {
-
-                                        String[] split = fd_resposition.split(",");
-                                        resDataBean.setLatitude(split[0]);
-                                        resDataBean.setLongitude(split[1]);
-
-                                    }
+                    idList.add(resDataBean.getId());
+                }
 
 
-                                    roadBeanList.add(resDataBean);
+                if (isOk) {
+                    if (netDataList != null && netDataList.size() > 0) {
+                        int j = 0;
 
-                                    j = j + 1;
+                        for (int i = 0; i < netDataList.size(); i++) {
 
-                                    projectBean.setNetCount(10);
-                                }
+                            GridBean resDataBean = netDataList.get(i);
+
+                            if (!idList.contains(resDataBean.getId())) {
+//                                String fd_resposition = resDataBean.getFd_resposition();
+//
+//                                if (!Utils.isEmpty(fd_resposition)) {
+//
+//                                    String[] split = fd_resposition.split(",");
+//                                    resDataBean.setLatitude(split[0]);
+//                                    resDataBean.setLongitude(split[1]);
+//
+//                                }
+
+
+                                gridBeanList.add(resDataBean);
+
+                                j = j + 1;
+
+                                projectBean.setNetCount(10);
                             }
-
-                            new ProjectDao(mContext).addOrUpdate(projectBean);
-                            ProjectBean dataByID = new ProjectDao(mContext).getDataByID(projectBean.getId());
-
-                            dataByID.getNetCount();
                         }
+
+                        new ProjectDao(mContext).addOrUpdate(projectBean);
+                        ProjectBean dataByID = new ProjectDao(mContext).getDataByID(projectBean.getId());
+
+                        dataByID.getNetCount();
                     }
+                }
 
 
-                    resDataManageAdapter.notifyDataSetChanged();
+                resDataManageAdapter.notifyDataSetChanged();
 
 
-                    final TaskPool taskPool=new TaskPool();
+                final TaskPool taskPool=new TaskPool();
 
 
-                    OnNetRequestListener listener=new OnNetRequestListener() {
-                        @Override
-                        public void onFinish() {
-                            lpd.cancel();
-                            if (roadBeanList != null && roadBeanList.size() > 0) {
-                                lay_fragment_ProdutEmpty.setVisibility(View.GONE);
-                                lv_roadList.setVisibility(View.VISIBLE);
-                            }
-                            resDataManageAdapter.notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void OnNext() {
-
-                            taskPool.execute(this);
-                        }
-
-                        @Override
-                        public void OnResult(boolean isOk, String msg, Object object) {
-                            taskPool.execute(this);
-                        }
-                    };
-
-                    if (roadBeanList != null && roadBeanList.size() > 0) {
-
-                        for (int i = 0; i < roadBeanList.size(); i++) {
-
-                            ResDataBean resDataBean = roadBeanList.get(i);
-
-                            taskPool.addTask(new GetNetTreeListCountAPI(userInfo, TreeFormModelId, resDataBean, listener));
-
-                        }
-
-                        taskPool.execute(listener);
-                    } else {
-
+                OnNetRequestListener listener=new OnNetRequestListener() {
+                    @Override
+                    public void onFinish() {
                         lpd.cancel();
-                        if (roadBeanList != null && roadBeanList.size() > 0) {
+                        if (gridBeanList != null && gridBeanList.size() > 0) {
                             lay_fragment_ProdutEmpty.setVisibility(View.GONE);
                             lv_roadList.setVisibility(View.VISIBLE);
-                        } else {
+                        }else {
                             lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
                             lv_roadList.setVisibility(View.GONE);
                         }
+                        resDataManageAdapter.notifyDataSetChanged();
                     }
 
 
+                    @Override
+                    public void OnNext() {
 
+                        taskPool.execute(this);
+                    }
+
+                    @Override
+                    public void OnResult(boolean isOk, String msg, Object object) {
+                        taskPool.execute(this);
+                    }
+                };
+
+                if (gridBeanList != null && gridBeanList.size() > 0) {
+
+                    for (int i = 0; i < gridBeanList.size(); i++) {
+
+                        GridBean resDataBean = gridBeanList.get(i);
+
+                        taskPool.addTask(new GetGridTreeCountAPI(userInfo, TreeFormModelId, resDataBean, listener));
+
+                    }
+
+                    taskPool.execute(listener);
+                } else {
+
+                    lpd.cancel();
+                    if (gridBeanList != null && gridBeanList.size() > 0) {
+                        lay_fragment_ProdutEmpty.setVisibility(View.GONE);
+                        lv_roadList.setVisibility(View.VISIBLE);
+                    } else {
+                        lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
+                        lv_roadList.setVisibility(View.GONE);
+                    }
                 }
-            }).request();
-        }
+
+
+
+            }
+        }).request();
+
 
     }
 
