@@ -23,12 +23,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.hollysmart.beans.DictionaryBean;
 import com.hollysmart.dialog.RoadPlateBsSelectDialog;
+import com.hollysmart.formlib.activitys.GaoDeMapRangeActivity;
 import com.hollysmart.formlib.beans.DongTaiFormBean;
 import com.hollysmart.beans.JDPicInfo;
 import com.hollysmart.beans.cgformRuleBean;
 import com.hollysmart.dialog.BsSelectDialog;
 import com.hollysmart.dialog.TimePickerDialog;
-import com.hollysmart.formlib.activitys.MapRangeActivity;
 import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.bjwillowgov.R;
@@ -152,6 +152,9 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
                         childbean.setPropertyLabel("0");
                     }
                 }
+            }
+            if (!isCheck&&bean.getJavaField().equals("name")) {
+                bean.setPropertyLabel(roadbean.getFdBlockCode());
             }
 
 
@@ -1562,7 +1565,7 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
             public void onClick(View v) {
                 if (bean.getShowType().equals("marker")) {
 
-                    Intent intent = new Intent(mContext, MapRangeActivity.class);
+                    Intent intent = new Intent(mContext, GaoDeMapRangeActivity.class);
                     intent.putExtra("falg", bean.getShowType());
                     intent.putExtra("bean", bean);
                     intent.putExtra("isCheck", isCheck);
@@ -1579,7 +1582,7 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
                     activity.startActivityForResult(intent, 6);
                 }
                 if (bean.getShowType().equals("plane")) {
-                    Intent intent = new Intent(mContext, MapRangeActivity.class);
+                    Intent intent = new Intent(mContext, GaoDeMapRangeActivity.class);
                     intent.putExtra("falg", bean.getShowType());
                     intent.putExtra("bean", bean);
                     intent.putExtra("isCheck", isCheck);
@@ -1596,7 +1599,7 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
                     activity.startActivityForResult(intent, 6);
                 }
                 if (bean.getShowType().equals("line")) {
-                    Intent intent = new Intent(mContext, MapRangeActivity.class);
+                    Intent intent = new Intent(mContext, GaoDeMapRangeActivity.class);
                     intent.putExtra("falg", bean.getShowType());
                     intent.putExtra("bean", bean);
                     intent.putExtra("isCheck", isCheck);

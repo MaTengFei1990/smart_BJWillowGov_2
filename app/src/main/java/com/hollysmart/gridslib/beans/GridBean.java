@@ -19,13 +19,13 @@ public class GridBean implements Serializable {
     @DatabaseField(columnName = "fdBlockCode")
     private String fdBlockCode;
     @DatabaseField(columnName = "fdLbLng")
-    private String fdLbLng;
+    private double fdLbLng;
     @DatabaseField(columnName = "fdLbLat")
-    private String fdLbLat;
+    private double fdLbLat;
     @DatabaseField(columnName = "fdRtLng")
-    private String fdRtLng;
+    private double fdRtLng;
     @DatabaseField(columnName = "fdRtLat")
-    private String fdRtLat;
+    private double fdRtLat;
 
 
     private FormModelBean formModel;
@@ -59,35 +59,35 @@ public class GridBean implements Serializable {
         this.fdBlockCode = fdBlockCode;
     }
 
-    public String getFdLbLng() {
+    public double getFdLbLng() {
         return fdLbLng;
     }
 
-    public void setFdLbLng(String fdLbLng) {
+    public void setFdLbLng(double fdLbLng) {
         this.fdLbLng = fdLbLng;
     }
 
-    public String getFdLbLat() {
+    public double getFdLbLat() {
         return fdLbLat;
     }
 
-    public void setFdLbLat(String fdLbLat) {
+    public void setFdLbLat(double fdLbLat) {
         this.fdLbLat = fdLbLat;
     }
 
-    public String getFdRtLng() {
+    public double getFdRtLng() {
         return fdRtLng;
     }
 
-    public void setFdRtLng(String fdRtLng) {
+    public void setFdRtLng(double fdRtLng) {
         this.fdRtLng = fdRtLng;
     }
 
-    public String getFdRtLat() {
+    public double getFdRtLat() {
         return fdRtLat;
     }
 
-    public void setFdRtLat(String fdRtLat) {
+    public void setFdRtLat(double fdRtLat) {
         this.fdRtLat = fdRtLat;
     }
 

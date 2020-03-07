@@ -184,6 +184,8 @@ public class GridsListActivity extends StyleAnimActivity {
 
                     getResTaskById();
 
+                }else {
+                    lpd.cancel();
                 }
 
             }
@@ -295,8 +297,6 @@ public class GridsListActivity extends StyleAnimActivity {
                             projectBean = projectBeanList.get(0);
 
                             TreeFormModelId = projectBean.getfTaskmodel().split(",")[0];
-                            roadFormModelId = projectBean.getfTaskmodel().split(",")[1];
-
                             new GetResModelAPI(userInfo.getAccess_token(), TreeFormModelId, new GetResModelAPI.GetResModelIF() {
                                 @Override
                                 public void ongetResModelIFResult(boolean isOk, ResModelBean resModelBen) {
@@ -455,7 +455,7 @@ public class GridsListActivity extends StyleAnimActivity {
 
             for (int i = 0; i < resModelList.size(); i++) {
 
-                if (roadFormModelId.equals(resModelList.get(i).getId())) {
+                if (TreeFormModelId.equals(resModelList.get(i).getId())) {
 
 
                     resModelBean = resModelList.get(i);
