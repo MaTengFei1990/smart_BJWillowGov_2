@@ -29,13 +29,12 @@ import okhttp3.MediaType;
 public class FindGridsListPageAPI implements INetModel {
 
 
+    private int page=0;
     private UserInfo userInfo;
     private DatadicListIF datadicListIF;
-    private int pageNo;
-    private int  pageSize;
 
-    public FindGridsListPageAPI(UserInfo userInfo, DatadicListIF datadicListIF) {
-        this.pageNo = 1;
+    public FindGridsListPageAPI(int page,UserInfo userInfo, DatadicListIF datadicListIF) {
+        this.page = page;
         this.userInfo = userInfo;
         this.datadicListIF = datadicListIF;
     }
@@ -47,19 +46,20 @@ public class FindGridsListPageAPI implements INetModel {
         OkHttpUtils.get().url(urlStr)
                 .addHeader("Authorization", userInfo.getAccess_token())
                 .addParams("officeid", userInfo.getOffice().getId())
+                .addParams("page", page+"")
                 .build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
                 e.printStackTrace();
                 if (datadicListIF != null) {
-                    datadicListIF.datadicListResult(false, null);
+                    datadicListIF.datadicListResult(false, null,0);
                 }
 
             }
 
             @Override
             public void onResponse(String response, int id) {
-                Mlog.d("findListPage......... = " + response);
+                Mlog.d("findblocks......... = " + response);
                 response = response.replace("\"\"", "null");
                 try {
                     JSONObject object = new JSONObject(response);
@@ -71,20 +71,16 @@ public class FindGridsListPageAPI implements INetModel {
                                 new TypeToken<List<GridBean>>() {
                                 }.getType());
 
-                        for (GridBean resDataBean : menuBeanList) {
-//                            resDataBean.setFdTaskId(projectBean.getId());
-//                            resDataBean.setFd_resmodelid(resmodelid);
-                        }
-
                         if (datadicListIF != null) {
+                            int count = object.getInt("count");
 
-                            datadicListIF.datadicListResult(true, menuBeanList);
+                            datadicListIF.datadicListResult(true, menuBeanList, count);
                         }
 
                     } else {
                         if (datadicListIF != null) {
 
-                            datadicListIF.datadicListResult(false, null);
+                            datadicListIF.datadicListResult(false, null,0);
                         }
 
                     }
@@ -92,7 +88,7 @@ public class FindGridsListPageAPI implements INetModel {
                     e.printStackTrace();
                     if (datadicListIF != null) {
 
-                        datadicListIF.datadicListResult(false, null);
+                        datadicListIF.datadicListResult(false, null,0);
                     }
 
                 }
@@ -101,9 +97,6 @@ public class FindGridsListPageAPI implements INetModel {
     }
 
     public interface DatadicListIF {
-        void datadicListResult(boolean isOk, List<GridBean> menuBeanList);
-    }
-    public interface DatadicListCountIF {
-        void datadicListResult(boolean isOk, List<GridBean> menuBeanList, int allCount);
+        void datadicListResult(boolean isOk, List<GridBean> menuBeanList,int count);
     }
 }

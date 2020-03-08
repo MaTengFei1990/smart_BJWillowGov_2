@@ -44,6 +44,7 @@
             android:padding="10dp"
             android:text="地图"
             android:gravity="center"
+            android:visibility="gone"
             android:textColor="@color/baise"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
@@ -78,16 +79,24 @@
 
     </LinearLayout>
 
-    <com.d.lib.xrv.LRecyclerView
-        android:id="@+id/lv_roadList"
-        android:layout_below="@+id/ll_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:divider="@color/touming"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/smart_refresh"
+        android:layout_width="match_parent"
         android:layout_above="@+id/rl_bottom"
-        android:visibility="gone"
-        android:dividerHeight="0sp">
-    </com.d.lib.xrv.LRecyclerView>
+        android:layout_below="@+id/ll_search"
+        android:layout_height="match_parent">
+
+        <com.d.lib.xrv.LRecyclerView
+            android:id="@+id/lv_roadList"
+            android:layout_below="@+id/ll_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:divider="@color/touming"
+            android:layout_above="@+id/rl_bottom"
+            android:dividerHeight="0sp">
+        </com.d.lib.xrv.LRecyclerView>
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 
     <LinearLayout

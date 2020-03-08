@@ -30,6 +30,7 @@ import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.gridslib.adapters.GridsListAdapter;
+import com.hollysmart.gridslib.adapters.MyClassicsHeader;
 import com.hollysmart.gridslib.apis.FindGridsListPageAPI;
 import com.hollysmart.gridslib.apis.FindListPageAPI;
 import com.hollysmart.gridslib.apis.GetGridTreeCountAPI;
@@ -43,6 +44,10 @@ import com.hollysmart.utils.Utils;
 import com.hollysmart.utils.taskpool.OnNetRequestListener;
 import com.hollysmart.utils.taskpool.TaskPool;
 import com.hollysmart.value.Values;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
 import java.io.File;
 import java.io.Serializable;
@@ -57,7 +62,7 @@ import butterknife.ButterKnife;
 /***
  * 网格类表；
  */
-public class GridsListActivity extends StyleAnimActivity {
+public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoadMoreListener {
 
     @Override
     public int layoutResID() {
@@ -79,6 +84,9 @@ public class GridsListActivity extends StyleAnimActivity {
     @BindView(R.id.lay_fragment_ProdutEmpty)
     LinearLayout lay_fragment_ProdutEmpty;
 
+    @BindView(R.id.smart_refresh)
+    SmartRefreshLayout refreshLayout;
+
 
 
 
@@ -89,6 +97,11 @@ public class GridsListActivity extends StyleAnimActivity {
     private String roadFormModelId = "";
     private String TreeFormModelId = "";
 
+    private int page=1;
+    private boolean isRefresh=false;
+    private boolean loadMore=false;
+    private int  pageSize=100;
+
 
     @Override
     public void findView() {
@@ -97,6 +110,16 @@ public class GridsListActivity extends StyleAnimActivity {
         tv_maplsit.setOnClickListener(this);
         rl_bottom.setOnClickListener(this);
         findViewById(R.id.ll_search).setOnClickListener(this);
+
+        //添加刷新监听
+        refreshLayout.setEnableRefresh(true);
+        refreshLayout.setEnableLoadMore(true);
+        refreshLayout.setEnableHeaderTranslationContent(true);//是否下拉Header的时候向下平移列表或者内容
+        refreshLayout.setEnableFooterTranslationContent(true);//是否上拉Footer的时候向上平移列表或者内容
+        refreshLayout.setRefreshFooter(new ClassicsFooter(this));
+        refreshLayout.setRefreshHeader(new MyClassicsHeader(this));
+        refreshLayout.setOnLoadMoreListener(this);
+        refreshLayout.setOnRefreshListener(this);
     }
 
     private List<GridBean> gridBeanList;
@@ -502,66 +525,42 @@ public class GridsListActivity extends StyleAnimActivity {
 
     private void getdataList(){
 
-        new FindGridsListPageAPI(userInfo, new FindGridsListPageAPI.DatadicListIF() {
+        new FindGridsListPageAPI(page,userInfo, new FindGridsListPageAPI.DatadicListIF() {
             @Override
-            public void datadicListResult(boolean isOk, List<GridBean> netDataList) {
-
-
-                List<String> idList = new ArrayList<>();
-
-                for (GridBean resDataBean : gridBeanList) {
-
-                    idList.add(resDataBean.getId());
-                }
-
-
+            public void datadicListResult(boolean isOk, List<GridBean> netDataList,int count) {
                 if (isOk) {
-                    if (netDataList != null && netDataList.size() > 0) {
-                        int j = 0;
-
-                        for (int i = 0; i < netDataList.size(); i++) {
-
-                            GridBean resDataBean = netDataList.get(i);
-
-                            if (!idList.contains(resDataBean.getId())) {
-//                                String fd_resposition = resDataBean.getFd_resposition();
-//
-//                                if (!Utils.isEmpty(fd_resposition)) {
-//
-//                                    String[] split = fd_resposition.split(",");
-//                                    resDataBean.setLatitude(split[0]);
-//                                    resDataBean.setLongitude(split[1]);
-//
-//                                }
-
-
-                                gridBeanList.add(resDataBean);
-
-                                j = j + 1;
-
-                                projectBean.setNetCount(10);
-                            }
-                        }
-
-                        new ProjectDao(mContext).addOrUpdate(projectBean);
-                        ProjectBean dataByID = new ProjectDao(mContext).getDataByID(projectBean.getId());
-
-                        dataByID.getNetCount();
+                    if (isRefresh) {
+                        gridBeanList.clear();
                     }
+                    if (gridBeanList.size() > 0 || netDataList.size() >0 ){
+                        lay_fragment_ProdutEmpty.setVisibility(View.GONE);
+                    }else {
+                        lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
+                    }
+
+                    if (page > count) {
+                        refreshLayout.setEnableLoadMore(false);
+                        refreshLayout.finishLoadMore();
+                        refreshLayout.finishLoadMoreWithNoMoreData();
+                    } else {
+                        if (!refreshLayout.isEnableLoadMore()) {
+                            refreshLayout.setEnableLoadMore(true);
+                            refreshLayout.setNoMoreData(false);//恢复没有更多数据的原始状态 1.0.5
+                        }
+                    }
+                    gridBeanList.addAll(netDataList);
+                    resDataManageAdapter.notifyDataSetChanged();
+                    lpd.cancel();
                 }
 
-
-                resDataManageAdapter.notifyDataSetChanged();
-
-                lpd.cancel();
-                    if (gridBeanList != null && gridBeanList.size() > 0) {
-                        lay_fragment_ProdutEmpty.setVisibility(View.GONE);
-                        lv_roadList.setVisibility(View.VISIBLE);
-                    } else {
-                        lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
-                        lv_roadList.setVisibility(View.GONE);
-                    }
-
+                if (isRefresh) {
+                    refreshLayout.finishRefresh();
+                    isRefresh = false;
+                }
+                if (loadMore) {
+                    refreshLayout.finishLoadMore();
+                    loadMore = false;
+                }
 
 //                final TaskPool taskPool=new TaskPool();
 //
@@ -674,13 +673,21 @@ public class GridsListActivity extends StyleAnimActivity {
     }
 
 
+    @Override
+    public void onLoadMore(RefreshLayout refreshLayout) {
 
 
+        loadMore = true;
+        page++;
+        getdataList();
 
+    }
 
-
-
-
-
-
+    @Override
+    public void onRefresh(RefreshLayout refreshLayout) {
+        isRefresh = true;
+        page = 1;
+        Mlog.d("刷新了页面");
+        getdataList();
+    }
 }
