@@ -12,8 +12,8 @@ public class GridBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @DatabaseField(columnName = "Id", id = true)
-    private String Id;
+    @DatabaseField(columnName = "id", id = true)
+    private String id;
     @DatabaseField(columnName = "fdBlockNum")
     private String fdBlockNum;
     @DatabaseField(columnName = "fdBlockCode")
@@ -40,11 +40,11 @@ public class GridBean implements Serializable {
     }
 
     public String getId() {
-        return Id;
+        return id;
     }
 
     public void setId(String id) {
-        this.Id = id;
+        this.id = id;
     }
 
     public String getFdBlockNum() {

@@ -1,6 +1,7 @@
 package com.hollysmart.gridslib;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
@@ -38,8 +39,13 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.PolygonOptions;
 import com.amap.api.maps.model.animation.Animation;
 import com.baidu.mapapi.map.Overlay;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.hollysmart.beans.JDPicInfo;
 import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.db.UserInfo;
+import com.hollysmart.formlib.apis.ResDataGetAPI;
 import com.hollysmart.formlib.beans.DongTaiFormBean;
 import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
@@ -51,7 +57,11 @@ import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.Utils;
 import com.hollysmart.value.Values;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -251,10 +261,11 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
     private void drawMarkerTrees() {
         if (points != null && points.size() > 0) {
 
-            for (LatLng latLng : points) {
+            for (int i=0;i<points.size();i++){
+                LatLng latLng = points.get(i);
 
                 BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.resflag_add));
-                mGaoDeMap.addMarker(new MarkerOptions().position(latLng).icon(bitmapDescriptor));
+                mGaoDeMap.addMarker(new MarkerOptions().position(latLng).period(i).icon(bitmapDescriptor));
             }
 
         }
@@ -677,6 +688,7 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
     @Override
     public void onMapClick(LatLng latLng) {
 
+
     }
 
     @Override
@@ -686,8 +698,159 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
 
     @Override
     public boolean onMarkerClick(Marker marker) {
+
+        marker.getPeriod();
+        int position = marker.getPeriod();
+        ResDataBean resDataBean = treeslist.get(position);
+
+        final Intent intent = new Intent(this, TreeDetailsActivity.class);
+        final String formData = resDataBean.getFormData();
+
+
+        if (Utils.isEmpty(formData)) {
+
+            new ResDataGetAPI(userInfo.getAccess_token(), resDataBean, new ResDataGetAPI.ResDataDeleteIF() {
+                @Override
+                public void onResDataDeleteResult(boolean isOk, ResDataBean resDataBen) {
+
+                    if (isOk) {
+                        String formData = resDataBen.getFormData();
+
+                        startDetailActivity(intent, formData, position);
+
+                    }
+
+                }
+            }).request();
+
+        } else {
+            startDetailActivity(intent, formData, position);
+        }
+
+
         return false;
     }
+
+    private void startDetailActivity(Intent intent, String formData, int position) {
+
+        List<DongTaiFormBean> formBeanList=new ArrayList<>();// 当前资源的动态表单
+        HashMap<String, List<JDPicInfo>> formPicMap = new HashMap<>();
+        formBeanList.clear();
+
+        try {
+            JSONObject jsonObject = null;
+            jsonObject = new JSONObject(formData);
+            Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm").create();
+            List<DongTaiFormBean> oldFormList = mGson.fromJson(jsonObject.getString("cgformFieldList"),
+                    new TypeToken<List<DongTaiFormBean>>() {}.getType());
+            formBeanList.addAll(oldFormList);
+            getFormPicMap(formBeanList,formPicMap);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        intent.putExtra("formBeanList", (Serializable) formBeanList);
+        intent.putExtra("resDataBean", treeslist.get(position));
+        intent.putExtra("formPicMap", (Serializable) formPicMap);
+        intent.putExtra("roadbean", roadbean);
+        intent.putExtra("projectBean", projectBean);
+        intent.putExtra("ischeck",  isCheck);
+        startActivityForResult(intent, 4);
+    }
+
+    private void getFormPicMap(List<DongTaiFormBean> formBeans,HashMap<String, List<JDPicInfo>> formPicMap) {
+
+        for (int i = 0; i < formBeans.size(); i++) {
+            DongTaiFormBean formBean = formBeans.get(i);
+
+            if (formBean.getPic() != null && formBean.getPic().size() > 0) {
+                formPicMap.put(formBean.getJavaField(), formBean.getPic());
+
+            }else {
+
+                if (formBean.getShowType().equals("image")) {
+
+                    if (!Utils.isEmpty(formBean.getPropertyLabel())) {
+                        String[] split = formBean.getPropertyLabel().split(",");
+                        List<JDPicInfo> picInfos = new ArrayList<>();
+
+                        for (int k = 0; k < split.length; k++) {
+
+                            JDPicInfo jdPicInfo = new JDPicInfo();
+
+                            jdPicInfo.setImageUrl(split[k]);
+                            jdPicInfo.setIsDownLoad("true");
+                            jdPicInfo.setIsAddFlag(0);
+
+                            picInfos.add(jdPicInfo);
+                        }
+                        if (picInfos != null && picInfos.size() > 0) {
+
+                            formPicMap.put(formBean.getJavaField(), picInfos);
+                        }
+
+
+                    }
+
+
+                }
+
+            }
+
+            if (formBean.getCgformFieldList() != null && formBean.getCgformFieldList().size() > 0) {
+
+                List<DongTaiFormBean> childList = formBean.getCgformFieldList();
+
+                for (int j = 0; j < childList.size(); j++) {
+
+                    DongTaiFormBean childbean = childList.get(j);
+
+                    if (childbean.getPic() != null && childbean.getPic().size() > 0) {
+                        formPicMap.put(childbean.getJavaField(), childbean.getPic());
+
+                    }else {
+
+                        if (childbean.getShowType().equals("image")) {
+
+                            if (!Utils.isEmpty(childbean.getPropertyLabel())) {
+                                String[] split = childbean.getPropertyLabel().split(",");
+                                List<JDPicInfo> picInfos = new ArrayList<>();
+
+                                for (int k = 0; k < split.length; k++) {
+
+                                    JDPicInfo jdPicInfo = new JDPicInfo();
+
+                                    jdPicInfo.setImageUrl(split[k]);
+                                    jdPicInfo.setIsDownLoad("true");
+                                    jdPicInfo.setIsAddFlag(0);
+
+                                    picInfos.add(jdPicInfo);
+                                }
+                                if (picInfos != null && picInfos.size() > 0) {
+
+                                    formPicMap.put(childbean.getJavaField(), picInfos);
+                                }
+
+
+                            }
+
+
+                        }
+
+
+                    }
+
+
+
+                }
+
+            }
+
+        }
+
+    }
+
+
 
     @Override
     public void activate(LocationSource.OnLocationChangedListener onLocationChangedListener) {

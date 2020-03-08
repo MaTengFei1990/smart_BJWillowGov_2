@@ -65,11 +65,10 @@
                     android:layout_marginTop="10dp">
 
                     <TextView
-                        android:id="@+id/tv_address"
-                        android:layout_width="wrap_content"
+                        android:layout_width="80dp"
                         android:layout_height="wrap_content"
+                        android:text="树 木 总  量："
                         android:textColor="@color/huise_line"
-                        android:text="总数量：10条"
                         android:textSize="@dimen/text_xiao" />
 
 
@@ -80,7 +79,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:textColor="@color/huise_line"
-                        android:text="已同步：2条"
                         android:textSize="@dimen/text_xiao" />
 
 

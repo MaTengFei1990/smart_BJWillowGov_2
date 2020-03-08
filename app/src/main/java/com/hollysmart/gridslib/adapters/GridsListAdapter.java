@@ -85,7 +85,7 @@ public class GridsListAdapter extends CommonAdapter<GridBean> {
             tv_check.setText("查看");
         }
 
-        holder.setText(R.id.tv_countOfTree, "树木数量" + gridBeanList.get(position).getChildTreeCount() + "棵");
+        holder.setText(R.id.tv_countOfTree, "树木数量" + gridBean.getChildTreeCount() + "棵");
 
         slSlide.setOnStateChangeListener(new SlideLayout.OnStateChangeListener() {
             @Override

@@ -162,7 +162,7 @@ public class TreeListAdapter extends CommonAdapter<ResDataBean> {
 
                 DongTaiFormBean formBean = cgformFieldList.get(i);
 
-                if (formBean.getJavaField().equals("tree_species")) {
+                if (formBean.getJavaField().equals("tree_category")) {
 
                     holder.setText(R.id.tv_treetype, formBean.getPropertyLabel());
                 }
@@ -261,15 +261,6 @@ public class TreeListAdapter extends CommonAdapter<ResDataBean> {
         activity.startActivityForResult(intent, 4);
     }
 
-//    class ViewHolder {
-//        TextView tv_name;
-//        LinearLayout ll_bianji;
-//        LinearLayout ll_shangchuan;
-//        LinearLayout ll_xiugai;
-//        LinearLayout ll_shanchu;
-//        LinearLayout ll_fenxiang;
-//        TextView tv_treetype;
-//    }
 
 
 

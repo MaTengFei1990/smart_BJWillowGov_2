@@ -163,7 +163,6 @@ public class GDMapActivity extends StyleAnimActivity  implements AMapLocationLis
     private HashMap<Integer, Marker> mMarkers;
     private HashMap<Integer, Overlay> mOverlays;
     private LatLng dingWeiDian;
-    private MainPresenter mainPresenter;
     private String TreeFormModelId;
 
     private ResDataBean roadBean;

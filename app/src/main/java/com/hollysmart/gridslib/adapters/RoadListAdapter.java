@@ -689,13 +689,11 @@ public  class RoadListAdapter extends CommonAdapter<ResDataBean> {
 
                                 String[] split = firstGps.split(",");
 
-                                GPS gps = GPSConverterUtils.Gps84_To_bd09(Double.parseDouble(split[0]),
-                                        Double.parseDouble(split[1]));
 
                                 if (Utils.isEmpty(strplanes)) {
-                                    strplanes = gps.getLat() + "," + gps.getLon();
+                                    strplanes = split[0] + "," + split[1] ;
                                 } else {
-                                    strplanes = strplanes + "|" + gps.getLat() + "," + gps.getLon();
+                                    strplanes = strplanes + "|" + split[0] + "," + split[1];
                                 }
 
 
