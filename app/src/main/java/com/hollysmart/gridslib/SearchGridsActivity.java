@@ -32,7 +32,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SearchRoadActivity extends StyleAnimActivity implements SearchGridsListPageAPI.SearchDataIF {
+public class SearchGridsActivity extends StyleAnimActivity implements SearchGridsListPageAPI.SearchDataIF {
 
 
     @Override

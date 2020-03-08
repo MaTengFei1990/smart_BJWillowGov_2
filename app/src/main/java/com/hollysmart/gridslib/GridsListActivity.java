@@ -18,7 +18,6 @@ import com.hollysmart.apis.ResModelListAPI;
 import com.hollysmart.beans.JDPicInfo;
 import com.hollysmart.beans.ResModelBean;
 import com.hollysmart.db.JDPicDao;
-import com.hollysmart.db.ProjectDao;
 import com.hollysmart.db.ResDataDao;
 import com.hollysmart.db.ResModelDao;
 import com.hollysmart.db.UserInfo;
@@ -32,17 +31,12 @@ import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.gridslib.adapters.GridsListAdapter;
 import com.hollysmart.gridslib.adapters.MyClassicsHeader;
 import com.hollysmart.gridslib.apis.FindGridsListPageAPI;
-import com.hollysmart.gridslib.apis.FindListPageAPI;
-import com.hollysmart.gridslib.apis.GetGridTreeCountAPI;
-import com.hollysmart.gridslib.apis.GetNetTreeListCountAPI;
 import com.hollysmart.gridslib.beans.GridBean;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.CCM_DateTime;
 import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.Utils;
-import com.hollysmart.utils.taskpool.OnNetRequestListener;
-import com.hollysmart.utils.taskpool.TaskPool;
 import com.hollysmart.value.Values;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -265,7 +259,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                 break;
 
             case R.id.ll_search:
-                Intent searchIntent = new Intent(mContext, SearchRoadActivity.class);
+                Intent searchIntent = new Intent(mContext, SearchGridsActivity.class);
 
                 ResModelBean search_resModelBean = new ResModelBean();
 

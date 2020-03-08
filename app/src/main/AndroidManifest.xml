@@ -59,7 +59,7 @@
 
         </activity>
         <activity android:name="com.hollysmart.gridslib.SearchTreeActivity" />
-        <activity android:name="com.hollysmart.gridslib.SearchRoadActivity" />
+        <activity android:name="com.hollysmart.gridslib.SearchGridsActivity" />
         <activity android:name="com.hollysmart.gridslib.TreeDetailsActivity" />
         <activity android:name="com.hollysmart.gridslib.TreeListActivity" />
         <activity android:name="com.hollysmart.gridslib.RoadDetailsActivity" />
