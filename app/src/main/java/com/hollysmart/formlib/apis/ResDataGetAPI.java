@@ -139,18 +139,16 @@ public class ResDataGetAPI implements INetModel {
 
                     String[] split = firstGps.split(",");
 
-                    GPS gps = GPSConverterUtils.Gps84_To_bd09(new Double(split[0]),new Double(split[1]));
-
                     if (Utils.isEmpty(strplanes)) {
-                        strplanes = gps.getLat() + "," + gps.getLon();
+                        strplanes = new Double(split[0]) + "," +new Double(split[1]);
                     } else {
-                        strplanes = strplanes + "|" + gps.getLat() + "," + gps.getLon();
+                        strplanes = strplanes + "|" + new Double(split[0]) + "," +new Double(split[1]);
                     }
 
                     if (j == 0) {
-                        resDataBean.setLatitude(gps.getLat() + "");
-                        resDataBean.setLongitude(gps.getLon() + "");
-                        resDataBean.setFd_resposition(gps.getLat() + "," + gps.getLon());
+                        resDataBean.setLatitude(new Double(split[0])  + "");
+                        resDataBean.setLongitude(new Double(split[1])  + "");
+                        resDataBean.setFd_resposition(new Double(split[0]) + "," +new Double(split[1]));
 
                     }
 

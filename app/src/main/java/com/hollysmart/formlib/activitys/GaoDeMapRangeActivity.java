@@ -260,6 +260,14 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
 
         }
 
+        if (points != null && points.size() > 0) {
+            for (int i = 0; i < points.size(); i++) {
+
+                builder.include(points.get(i));
+            }
+
+        }
+
 
         LatLngBounds bounds = builder.build();
 

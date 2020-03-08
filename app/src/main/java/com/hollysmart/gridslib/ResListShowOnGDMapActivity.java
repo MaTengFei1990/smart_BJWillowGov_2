@@ -265,7 +265,7 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
                 LatLng latLng = points.get(i);
 
                 BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.resflag_add));
-                mGaoDeMap.addMarker(new MarkerOptions().position(latLng).period(i).icon(bitmapDescriptor));
+                mGaoDeMap.addMarker(new MarkerOptions().position(latLng).period(i+1).icon(bitmapDescriptor));
             }
 
         }
@@ -277,6 +277,15 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
         for (LatLng latlng : latLngs) {
 
             builder.include(latlng);
+
+        }
+
+        if (points != null && points.size() > 0) {
+
+            for (int i=0;i<points.size();i++){
+                LatLng latLng = points.get(i);
+                builder.include(latLng);
+            }
 
         }
 
@@ -700,7 +709,7 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
     public boolean onMarkerClick(Marker marker) {
 
         marker.getPeriod();
-        int position = marker.getPeriod();
+        int position = marker.getPeriod()-1;
         ResDataBean resDataBean = treeslist.get(position);
 
         final Intent intent = new Intent(this, TreeDetailsActivity.class);
