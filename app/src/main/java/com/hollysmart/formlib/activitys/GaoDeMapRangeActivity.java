@@ -242,7 +242,7 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
         if (rectangles != null) {
             mGaoDeMap.addPolygon(new PolygonOptions()
                     .addAll(rectangles)
-                    .fillColor(Color.GRAY)
+                    .fillColor(getResources().getColor(R.color.touming))
                     .strokeColor(R.color.bg_lan)
                     .strokeWidth(2)
             );
@@ -568,7 +568,7 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
                 add(centerlatlng);
                 break;
             case R.id.bn_weixing:
-//                mapChaged();
+                mapChaged();
                 break;
             case R.id.bn_dingwei:
 //                MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(mLatLng);
@@ -583,6 +583,18 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
 
         }
 
+    }
+
+    public void mapChaged() {
+
+        int mapType = mGaoDeMap.getMapType();
+        if (mapType == 1) {
+            bn_weixing.setImageResource(R.mipmap.icon1_02);
+            mGaoDeMap.setMapType(AMap.MAP_TYPE_SATELLITE);
+        } else {
+            bn_weixing.setImageResource(R.mipmap.icon1_01);
+            mGaoDeMap.setMapType(AMap.MAP_TYPE_NORMAL);
+        }
     }
 
 

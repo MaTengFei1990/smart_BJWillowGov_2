@@ -38,6 +38,7 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.PolygonOptions;
 import com.amap.api.maps.model.animation.Animation;
+import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.Overlay;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -154,6 +155,19 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
         requestPermisson();
         isLogin();
 
+        ButterKnife.bind(this);
+        try {
+
+            findViewById(R.id.iv_back).setOnClickListener(this);
+            findViewById(R.id.imagbtn_enlarge).setOnClickListener(this);
+            findViewById(R.id.imagbtn_zoomOut).setOnClickListener(this);
+
+            bn_weixing.setOnClickListener(this);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         projectBean = (ProjectBean) getIntent().getSerializableExtra("projectBean");
         treeslist = (ArrayList) getIntent().getSerializableExtra("treeList");
@@ -163,15 +177,6 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
             TreeFormModelId = getIntent().getStringExtra("TreeFormModelId");
             tv_projectName.setText("树木地图");
             roadbean = (GridBean) getIntent().getSerializableExtra("gridBean");
-        }
-
-
-        if (isCheck) {
-            findViewById(R.id.btn_add).setVisibility(View.GONE);
-            findViewById(R.id.btn_chexiao).setVisibility(View.GONE);
-            findViewById(R.id.btn_save).setVisibility(View.GONE);
-            findViewById(R.id.bn_dingwei).setVisibility(View.GONE);
-
         }
 
 
@@ -191,18 +196,7 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
 
     @Override
     public void findView() {
-        ButterKnife.bind(this);
-        try {
 
-            findViewById(R.id.iv_back).setOnClickListener(this);
-
-            findViewById(R.id.btn_chexiao).setOnClickListener(this);
-            findViewById(R.id.btn_save).setOnClickListener(this);
-            findViewById(R.id.btn_add).setOnClickListener(this);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
 
     }
@@ -248,7 +242,7 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
         if (rectangles != null) {
             mGaoDeMap.addPolygon(new PolygonOptions()
                     .addAll(rectangles)
-                    .fillColor(Color.GRAY)
+                    .fillColor(getResources().getColor(R.color.touming))
                     .strokeColor(R.color.bg_lan)
                     .strokeWidth(2)
             );
@@ -583,7 +577,7 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
 //                cheXiao();
                 break;
             case R.id.bn_weixing:
-//                mapChaged();
+                mapChaged();
                 break;
             case R.id.bn_dingwei:
 //                MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(mLatLng);
@@ -598,6 +592,18 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
 
         }
 
+    }
+
+    public void mapChaged() {
+
+        int mapType = mGaoDeMap.getMapType();
+        if (mapType == 1) {
+            bn_weixing.setImageResource(R.mipmap.icon1_02);
+            mGaoDeMap.setMapType(AMap.MAP_TYPE_SATELLITE);
+        } else {
+            bn_weixing.setImageResource(R.mipmap.icon1_01);
+            mGaoDeMap.setMapType(AMap.MAP_TYPE_NORMAL);
+        }
     }
 
 
