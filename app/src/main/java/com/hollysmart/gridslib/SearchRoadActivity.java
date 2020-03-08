@@ -15,8 +15,11 @@ import com.hollysmart.formlib.beans.DongTaiFormBean;
 import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.bjwillowgov.R;
+import com.hollysmart.gridslib.adapters.GridsListAdapter;
 import com.hollysmart.gridslib.adapters.RoadListAdapter;
+import com.hollysmart.gridslib.apis.SearchGridsListPageAPI;
 import com.hollysmart.gridslib.apis.SearchListAPI;
+import com.hollysmart.gridslib.beans.GridBean;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.Utils;
@@ -29,7 +32,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SearchRoadActivity extends StyleAnimActivity implements  SearchListAPI.DataSearchListIF{
+public class SearchRoadActivity extends StyleAnimActivity implements SearchGridsListPageAPI.SearchDataIF {
 
 
     @Override
@@ -51,8 +54,8 @@ public class SearchRoadActivity extends StyleAnimActivity implements  SearchList
     EditText ed_search;
 
 
-    private List<ResDataBean> roadBeanList;
-    private RoadListAdapter resDataManageAdapter;
+    private List<GridBean> roadBeanList;
+    private GridsListAdapter resDataManageAdapter;
 
     private LoadingProgressDialog lpd;
 
@@ -118,7 +121,7 @@ public class SearchRoadActivity extends StyleAnimActivity implements  SearchList
 
 
 
-        resDataManageAdapter = new RoadListAdapter(PcToken,mContext, roadFormModelId, TreeFormModelId, roadBeanList, picList, soundList, projectBean, DongTainewFormList, ischeck);
+        resDataManageAdapter = new GridsListAdapter(PcToken,mContext, roadFormModelId, roadBeanList, projectBean, ischeck);
         lv_roadList.setAdapter(resDataManageAdapter);
 
 
@@ -162,7 +165,7 @@ public class SearchRoadActivity extends StyleAnimActivity implements  SearchList
 
         lpd.show();
         lv_roadList.setAdapter(resDataManageAdapter);
-        new SearchListAPI(userInfo,"2",editSearch,search_resDataBean, this).request();
+        new SearchGridsListPageAPI(editSearch,userInfo, this).request();
 
 
 
@@ -170,24 +173,6 @@ public class SearchRoadActivity extends StyleAnimActivity implements  SearchList
 
     }
 
-    @Override
-    public void dataSearchList(boolean isOk, List<ResDataBean> menuBeanList) {
-        lpd.cancel();
-
-        if (isOk) {
-            roadBeanList.clear();
-            roadBeanList.addAll(menuBeanList);
-            lv_roadList.setVisibility(View.VISIBLE);
-            resDataManageAdapter.notifyDataSetChanged();
-
-
-        }else {
-            roadBeanList.clear();
-            resDataManageAdapter.notifyDataSetChanged();
-            lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
-        }
-
-    }
 
 
 
@@ -213,4 +198,22 @@ public class SearchRoadActivity extends StyleAnimActivity implements  SearchList
     }
 
 
+    @Override
+    public void searchDatadicListResult(boolean isOk, List<GridBean> menuBeanList, int count) {
+        lpd.cancel();
+
+        if (isOk) {
+            roadBeanList.clear();
+            roadBeanList.addAll(menuBeanList);
+            lv_roadList.setVisibility(View.VISIBLE);
+            resDataManageAdapter.notifyDataSetChanged();
+
+
+        }else {
+            roadBeanList.clear();
+            resDataManageAdapter.notifyDataSetChanged();
+            lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
+        }
+
+    }
 }
