@@ -448,13 +448,6 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
         }
         holder.et_value.clearFocus();
 
-        if (isCheck) {
-            holder.et_value.setEnabled(false);
-
-        } else {
-            holder.et_value.setEnabled(true);
-        }
-
         /// 是否可修改  0：不能修改 1：可以修改
 
         if (!Utils.isEmpty(bean.getIsEdit())) {
@@ -467,6 +460,15 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
             }
 
         }
+
+        if (isCheck) {
+            holder.et_value.setEnabled(false);
+
+        } else {
+            holder.et_value.setEnabled(true);
+        }
+
+
 
         List<cgformRuleBean> cgformRuleList = bean.getCgformRuleList();
         Matcher m = null;

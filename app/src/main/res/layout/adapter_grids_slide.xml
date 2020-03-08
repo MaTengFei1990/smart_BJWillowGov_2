@@ -37,7 +37,7 @@
                         android:singleLine="true"
                         android:ellipsize="end"
                         android:maxEms="10"
-                        android:text="编            号:"
+                        android:text="编          号:"
                         android:textColor="@color/heise"
                         android:textSize="@dimen/text_zhong" />
                     <TextView
@@ -130,6 +130,7 @@
                 android:background="@color/chengse"
                 android:gravity="center"
                 android:text="编辑"
+                android:visibility="gone"
                 android:textColor="@color/baise"
                 android:textSize="14dp" />
 
@@ -142,6 +143,7 @@
                 android:background="#FF3A30"
                 android:gravity="center"
                 android:text="删除"
+                android:visibility="gone"
                 android:textColor="@color/baise"
                 android:textSize="14dp" />
 
