@@ -12,8 +12,8 @@ public class GridBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @DatabaseField(columnName = "id", id = true)
-    private String id;
+    @DatabaseField(columnName = "Id", id = true)
+    private String Id;
     @DatabaseField(columnName = "fdBlockNum")
     private String fdBlockNum;
     @DatabaseField(columnName = "fdBlockCode")
@@ -26,6 +26,10 @@ public class GridBean implements Serializable {
     private double fdRtLng;
     @DatabaseField(columnName = "fdRtLat")
     private double fdRtLat;
+    @DatabaseField(columnName = "fdAreaId")
+    private String fdAreaId;
+    @DatabaseField(columnName = "fdAreaName")
+    private String fdAreaName;
 
 
     private FormModelBean formModel;
@@ -36,11 +40,11 @@ public class GridBean implements Serializable {
     }
 
     public String getId() {
-        return id;
+        return Id;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.Id = id;
     }
 
     public String getFdBlockNum() {
@@ -104,7 +108,24 @@ public class GridBean implements Serializable {
     }
 
     public void setChildTreeCount(int childTreeCount) {
+
         this.childTreeCount = childTreeCount;
+    }
+
+    public String getFdAreaId() {
+        return fdAreaId;
+    }
+
+    public void setFdAreaId(String fdAreaId) {
+        this.fdAreaId = fdAreaId;
+    }
+
+    public String getFdAreaName() {
+        return fdAreaName;
+    }
+
+    public void setFdAreaName(String fdAreaName) {
+        this.fdAreaName = fdAreaName;
     }
 }
 

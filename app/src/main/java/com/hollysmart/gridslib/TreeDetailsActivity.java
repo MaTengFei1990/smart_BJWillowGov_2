@@ -43,7 +43,6 @@ import com.hollysmart.gridslib.beans.GridBean;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.CCM_Bitmap;
-import com.hollysmart.utils.GPSConverterUtils;
 import com.hollysmart.utils.PicYasuo;
 import com.hollysmart.utils.Utils;
 import com.hollysmart.utils.loctionpic.ImageItem;
@@ -1197,13 +1196,8 @@ public class TreeDetailsActivity extends StyleAnimActivity {
                 if (!Utils.isEmpty(propertyLabel)) {
                     tree_resDataBean.setFd_resposition(propertyLabel);
                     String[] split = propertyLabel.split(",");
-
-                    GPS gps = baiDu2GaoDe(new Double(split[0]), new Double(split[1]));
-
-                    tree_resDataBean.setLatitude(gps.getLat() + "");
-                    tree_resDataBean.setLongitude(gps.getLon() + "");
-                    tree_resDataBean.setFd_resposition(gps.getLat() + "," + gps.getLon());
-                    formBean.setPropertyLabel(gps.getLat() + "," + gps.getLon());
+                    tree_resDataBean.setLatitude(new Double(split[0]) + "");
+                    tree_resDataBean.setLongitude(new Double(split[1])+ "");
                 }
 
 
@@ -1219,12 +1213,6 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
     }
 
-    private GPS baiDu2GaoDe(double bd_lat, double bd_lon) {
-        GPS Gcj02_gps = GPSConverterUtils.bd09_To_Gps84(bd_lat, bd_lon);
-
-        return Gcj02_gps;
-
-    }
 
     // 数据库操作
     private void addDB(ResDataBean resDataBean) {

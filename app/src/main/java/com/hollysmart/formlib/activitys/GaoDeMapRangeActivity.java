@@ -739,6 +739,7 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
 
     private void drawRangeInMap(int type) {
         mGaoDeMap.clear();
+        drawGrid(roadbean);
 
         if (points == null || points.size() == 0) {
             return;
@@ -769,7 +770,7 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
                 break;
         }
 
-        drawGrid(roadbean);
+
 
 
 

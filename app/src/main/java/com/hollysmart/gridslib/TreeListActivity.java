@@ -26,7 +26,6 @@ import com.hollysmart.db.ResDataDao;
 import com.hollysmart.db.ResModelDao;
 import com.hollysmart.db.UserInfo;
 import com.hollysmart.dialog.LoadingProgressDialog;
-import com.hollysmart.formlib.ResListShowOnMapActivity;
 import com.hollysmart.formlib.beans.DongTaiFormBean;
 import com.hollysmart.formlib.beans.LastTreeDataBean;
 import com.hollysmart.formlib.beans.ProjectBean;
@@ -127,7 +126,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
 
     private LoadingProgressDialog lpd;
 
-    private GridBean roadBean;
+    private GridBean gridBean;
     private String TreeFormModelId;
     private String PcToken;
 
@@ -144,7 +143,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
         PcToken = getIntent().getStringExtra("PcToken");
         TreeFormModelId = getIntent().getStringExtra("TreeFormModelId");
 
-        roadBean = (GridBean) getIntent().getSerializableExtra("roadBean");
+        gridBean = (GridBean) getIntent().getSerializableExtra("gridBean");
         projectBean = (ProjectBean) getIntent().getSerializableExtra("projectBean");
         setLpd();
         selectDB();
@@ -195,10 +194,11 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                 break;
             case R.id.tv_maplsit:
                 Intent mapintent = new Intent(mContext, ResListShowOnGDMapActivity.class);
-                mapintent.putExtra("roadBean", roadBean);
+                mapintent.putExtra("gridBean", gridBean);
                 mapintent.putExtra("projectBean", projectBean);
                 mapintent.putExtra("exter", (Serializable) map);
                 mapintent.putExtra("ischeck", ischeck);
+                mapintent.putExtra("treeList", (Serializable)treeslist);
                 mapintent.putExtra("TreeFormModelId", TreeFormModelId);
                 startActivityForResult(mapintent, 6);
                 break;
@@ -277,7 +277,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                     resDataBean.setFd_resdate(createTime);
                     resDataBean.setFd_resmodelname(resModelBean.getfModelName());
                     resDataBean.setFd_restaskname(projectBean.getfTaskname());
-                    resDataBean.setFd_parentid(roadBean.getId());
+                    resDataBean.setFd_parentid(gridBean.getId());
                     resDataBean.setFdTaskId(projectBean.getId());
 
                     intent.putExtra("formBeanList", (Serializable) formBeanList);
@@ -285,7 +285,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                     intent.putExtra("sportEditFlag", true);
                     formPicMap.clear();
                     intent.putExtra("formPicMap", (Serializable) formPicMap);
-                    intent.putExtra("roadbean", (Serializable) roadBean);
+                    intent.putExtra("roadbean", (Serializable) gridBean);
                     intent.putExtra("projectBean", (Serializable) projectBean);
                     intent.putExtra("isNewAdd",  true);
                     intent.putExtra("PcToken",  PcToken);
@@ -301,7 +301,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                     resDataBean.setFd_resdate(createTime);
                     resDataBean.setFd_resmodelname(resModelBean.getfModelName());
                     resDataBean.setFd_restaskname(projectBean.getfTaskname());
-                    resDataBean.setFd_parentid(roadBean.getId());
+                    resDataBean.setFd_parentid(gridBean.getId());
                     resDataBean.setFdTaskId(projectBean.getId());
 
                     intent.putExtra("formBeanList", (Serializable) formBeanList);
@@ -309,7 +309,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                     intent.putExtra("sportEditFlag", true);
                     formPicMap.clear();
                     intent.putExtra("formPicMap", (Serializable) formPicMap);
-                    intent.putExtra("roadbean", (Serializable) roadBean);
+                    intent.putExtra("roadbean", (Serializable) gridBean);
                     intent.putExtra("projectBean", (Serializable) projectBean);
 
                     intent.putExtra("isNewAdd",  true);
@@ -329,7 +329,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                 Intent searchIntent = new Intent(mContext, SearchTreeActivity.class);
                 searchIntent.putExtra("TreeFormModelId", TreeFormModelId);
                 searchIntent.putExtra("projectBean", projectBean);
-                searchIntent.putExtra("roadBean", roadBean);
+                searchIntent.putExtra("gridBean", gridBean);
                 searchIntent.putExtra("ischeck", ischeck);
                 startActivity(searchIntent);
 
@@ -364,11 +364,11 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         lv_treeList.setLayoutManager(layoutManager);
 
-        treeListAdapter = new TreeListAdapter(mContext,TreeFormModelId, projectBean,roadBean, treeslist, ischeck);
+        treeListAdapter = new TreeListAdapter(mContext,TreeFormModelId, projectBean, gridBean, treeslist, ischeck);
 
         lv_treeList.setAdapter(treeListAdapter);
 
-        new FindListPageAPI(userInfo,TreeFormModelId, projectBean,roadBean.getId(), new FindListPageAPI.DatadicListIF() {
+        new FindListPageAPI(userInfo,TreeFormModelId, projectBean, gridBean.getId(), new FindListPageAPI.DatadicListIF() {
             @Override
             public void datadicListResult(boolean isOk, List<ResDataBean> netDataList) {
                 List<String> idList = new ArrayList<>();
@@ -410,7 +410,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                     }
                 }
 
-                selectDB(roadBean.getId());
+                selectDB(gridBean.getId());
 
                 lpd.cancel();
 
@@ -475,7 +475,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
 
 
 
-                        new FindListPageAPI(userInfo, TreeFormModelId,projectBean,roadBean.getId(), new FindListPageAPI.DatadicListIF() {
+                        new FindListPageAPI(userInfo, TreeFormModelId,projectBean, gridBean.getId(), new FindListPageAPI.DatadicListIF() {
                             @Override
                             public void datadicListResult(boolean isOk, List<ResDataBean> netDataList) {
 
@@ -582,7 +582,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
             }
 
 
-            new FindListPageAPI(userInfo,TreeFormModelId, projectBean,roadBean.getId(), new FindListPageAPI.DatadicListIF() {
+            new FindListPageAPI(userInfo,TreeFormModelId, projectBean, gridBean.getId(), new FindListPageAPI.DatadicListIF() {
                 @Override
                 public void datadicListResult(boolean isOk, List<ResDataBean> netDataList) {
 
@@ -675,7 +675,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
             if (resultCode == 1) {
 
 
-                selectDB(roadBean.getId());
+                selectDB(gridBean.getId());
 
             }
         }
@@ -685,7 +685,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
             if (resultCode == 1) {
 
 
-                selectDB(roadBean.getId());
+                selectDB(gridBean.getId());
 
             }
         }
@@ -723,7 +723,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
 
     private void getData() {
 
-        new FindListPageAPI(page, pageSize, userInfo, TreeFormModelId, projectBean, roadBean.getId(), new FindListPageAPI.DatadicListCountIF() {
+        new FindListPageAPI(page, pageSize, userInfo, TreeFormModelId, projectBean, gridBean.getId(), new FindListPageAPI.DatadicListCountIF() {
             @Override
             public void datadicListResult(boolean isOk, List<ResDataBean> list, int allCount) {
 

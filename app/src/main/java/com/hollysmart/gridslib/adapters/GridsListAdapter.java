@@ -1,57 +1,27 @@
 package com.hollysmart.gridslib.adapters;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.d.lib.slidelayout.SlideLayout;
 import com.d.lib.slidelayout.SlideManager;
 import com.d.lib.xrv.adapter.CommonAdapter;
 import com.d.lib.xrv.adapter.CommonHolder;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonIOException;
-import com.google.gson.reflect.TypeToken;
-import com.hollysmart.apis.ResModelListAPI;
-import com.hollysmart.beans.GPS;
 import com.hollysmart.beans.JDPicInfo;
-import com.hollysmart.beans.ResModelBean;
 import com.hollysmart.bjwillowgov.R;
-import com.hollysmart.db.DatabaseHelper;
-import com.hollysmart.db.JDPicDao;
-import com.hollysmart.db.ProjectDao;
-import com.hollysmart.db.ResDataDao;
-import com.hollysmart.db.ResModelDao;
 import com.hollysmart.db.UserInfo;
-import com.hollysmart.formlib.apis.ResDataDeleteAPI;
-import com.hollysmart.formlib.apis.ResDataGetAPI;
-import com.hollysmart.formlib.beans.DongTaiFormBean;
-import com.hollysmart.formlib.beans.FormModelBean;
 import com.hollysmart.formlib.beans.ProjectBean;
-import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.gridslib.RoadDetailsActivity;
 import com.hollysmart.gridslib.TreeListActivity;
-import com.hollysmart.gridslib.apis.FindListPageAPI;
 import com.hollysmart.gridslib.beans.GridBean;
 import com.hollysmart.utils.ACache;
-import com.hollysmart.utils.GPSConverterUtils;
-import com.hollysmart.utils.Mlog;
-import com.hollysmart.utils.Utils;
 import com.hollysmart.value.Values;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -105,8 +75,10 @@ public class GridsListAdapter extends CommonAdapter<GridBean> {
         final TextView tv_delete = holder.getView(R.id.tv_delete);
         final TextView tv_check = holder.getView(R.id.tv_check);
         final TextView tv_gridNum = holder.getView(R.id.tv_gridNum);
+        final TextView tv_area = holder.getView(R.id.tv_area);
 
         tv_gridNum.setText(gridBean.getFdBlockCode());
+        tv_area.setText(gridBean.getFdAreaName());
 
         if (ischeck) {
             tv_delete.setVisibility(View.GONE);
@@ -136,7 +108,7 @@ public class GridsListAdapter extends CommonAdapter<GridBean> {
                 final GridBean resDataBean = gridBeanList.get(position);
                 Activity activity = (Activity) context;
                 intent.putExtra("projectBean", projectBean);
-                intent.putExtra("roadBean", resDataBean);
+                intent.putExtra("gridBean", resDataBean);
                 intent.putExtra("TreeFormModelId", TreeFormModelId);
                 intent.putExtra("ischeck", ischeck);
                 intent.putExtra("PcToken", PcToken);

@@ -3,6 +3,7 @@ package com.hollysmart.gridslib;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -27,10 +28,13 @@ import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
+import com.amap.api.maps.model.BitmapDescriptor;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.PolygonOptions;
 import com.amap.api.maps.model.animation.Animation;
 import com.baidu.mapapi.map.Overlay;
@@ -62,7 +66,7 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
 
 
     AMap mGaoDeMap;
-    com.amap.api.maps.MapView mMapView = null;
+    MapView mMapView = null;
     boolean isFirstLoc = true;// 是否首次定位
 
     //声明定位回调监听器
@@ -81,6 +85,8 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
 
     //多边形顶点位置
     private List<LatLng> points = new ArrayList<>();
+
+    private List<ResDataBean> treeslist;
 
 
     @BindView(R.id.tv_projectName)
@@ -140,12 +146,13 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
 
 
         projectBean = (ProjectBean) getIntent().getSerializableExtra("projectBean");
+        treeslist = (ArrayList) getIntent().getSerializableExtra("treeList");
 
         if (projectBean != null) {
             isCheck = getIntent().getBooleanExtra("ischeck", false);
             TreeFormModelId = getIntent().getStringExtra("TreeFormModelId");
             tv_projectName.setText("树木地图");
-            roadBean = (GridBean) getIntent().getSerializableExtra("roadBean");
+            roadbean = (GridBean) getIntent().getSerializableExtra("gridBean");
         }
 
 
@@ -158,26 +165,14 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
         }
 
 
-        if (dongTaiFormBean != null && (!Utils.isEmpty(dongTaiFormBean.getPropertyLabel()))) {
+        if (treeslist != null && (treeslist.size() > 0)) {
 
-            String propertyLabel = dongTaiFormBean.getPropertyLabel();
+            for (ResDataBean resDataBean : treeslist) {
+                Double lat = Double.parseDouble(resDataBean.getLatitude());
+                Double lng = Double.parseDouble(resDataBean.getLongitude());
+                LatLng latLng = new LatLng(lat, lng);
+                points.add(latLng);
 
-            String[] localpoints = propertyLabel.split("\\|");
-            if (localpoints.length > 0) {
-
-                for (int i = 0; i < localpoints.length; i++) {
-
-                    String localpoint = localpoints[i];
-
-                    String[] str_latlng = localpoint.split(",");
-
-                    if (str_latlng.length > 1) {
-                        Double lat = Double.parseDouble(str_latlng[0]);
-                        Double lng = Double.parseDouble(str_latlng[1]);
-                        LatLng latLng = new LatLng(lat, lng);
-                        points.add(latLng);
-                    }
-                }
             }
         }
 
@@ -215,8 +210,6 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
     private MainPresenter mainPresenter;
     private String TreeFormModelId;
 
-    private GridBean roadBean;
-
     private String propertyLabel;
 
     private UiSettings uiSettings;
@@ -252,6 +245,19 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
         }
 
         setMapBounds(rectangles);
+        drawMarkerTrees();
+    }
+
+    private void drawMarkerTrees() {
+        if (points != null && points.size() > 0) {
+
+            for (LatLng latLng : points) {
+
+                BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.resflag_add));
+                mGaoDeMap.addMarker(new MarkerOptions().position(latLng).icon(bitmapDescriptor));
+            }
+
+        }
     }
 
     private void setMapBounds(List<LatLng> latLngs) {
