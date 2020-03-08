@@ -194,7 +194,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                 finish();
                 break;
             case R.id.tv_maplsit:
-                Intent mapintent = new Intent(mContext, ResListShowOnMapActivity.class);
+                Intent mapintent = new Intent(mContext, ResListShowOnGDMapActivity.class);
                 mapintent.putExtra("roadBean", roadBean);
                 mapintent.putExtra("projectBean", projectBean);
                 mapintent.putExtra("exter", (Serializable) map);

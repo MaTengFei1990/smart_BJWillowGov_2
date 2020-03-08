@@ -193,7 +193,6 @@ public class ResListShowOnMapActivity extends StyleAnimActivity implements View.
         projectBean = (ProjectBean) getIntent().getSerializableExtra("projectBean");
 
         if (projectBean != null) {
-
             ischeck = getIntent().getBooleanExtra("ischeck", false);
             TreeFormModelId = getIntent().getStringExtra("TreeFormModelId");
             tv_projectName.setText("树木地图");
