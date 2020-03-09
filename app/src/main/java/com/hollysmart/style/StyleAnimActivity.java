@@ -35,7 +35,7 @@ public abstract class StyleAnimActivity extends CaiActivity{
 			setTranslucentStatus(true);
 			SystemBarTintManager tintManager = new SystemBarTintManager(this);
 			tintManager.setStatusBarTintEnabled(true);
-			tintManager.setStatusBarTintResource(R.color.titleBg);//状态栏所需颜色
+			tintManager.setStatusBarTintResource(R.color.heise);//状态栏所需颜色
 
 		}
 	}

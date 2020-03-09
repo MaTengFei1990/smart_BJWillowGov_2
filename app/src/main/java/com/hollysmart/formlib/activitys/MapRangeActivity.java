@@ -362,10 +362,8 @@ public class MapRangeActivity extends StyleAnimActivity implements View.OnClickL
 
         int mapType = mBaiduMap.getMapType();
         if (mapType != 1) {
-            bn_weixing.setImageResource(R.mipmap.icon1_02);
             mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
         } else {
-            bn_weixing.setImageResource(R.mipmap.icon1_01);
             mBaiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
         }
     }

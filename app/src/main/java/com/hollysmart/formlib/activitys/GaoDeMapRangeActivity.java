@@ -240,11 +240,18 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
         List<LatLng> rectangles = createRectangle(gridBean);
 
         if (rectangles != null) {
+
+//            PolygonOptions polygonOptions = new PolygonOptions()
+//                    .addAll(rectangles)
+//                    .fillColor(Color.argb(100, 158, 230, 252))
+//                    .strokeColor(Color.argb(255, 177, 152, 198))
+//                    .strokeWidth(4);
+
             mGaoDeMap.addPolygon(new PolygonOptions()
                     .addAll(rectangles)
-                    .fillColor(getResources().getColor(R.color.touming))
-                    .strokeColor(R.color.bg_lan)
-                    .strokeWidth(2)
+                    .fillColor(Color.argb(130, 158, 230,252))
+                    .strokeColor(Color.argb(130, 177, 152, 198))
+                    .strokeWidth(5)
             );
         }
 
@@ -585,14 +592,38 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
 
     }
 
+
+    /**
+     * 撤销
+     */
+    private void cheXiao() {
+        if (points != null && points.size() > 0) {
+
+            points.remove(points.size() - 1);
+        } else {
+
+            if (points == null || points.size() == 0) {
+
+                mGaoDeMap.clear();
+                drawRangeInMap(flagtype);
+//                drawTreesInMap(treesPoints);
+                Utils.showToast(mContext, "暂无坐标点可撤销");
+                return;
+            }
+        }
+
+        drawRangeInMap(flagtype);
+
+
+    }
+
+
     public void mapChaged() {
 
         int mapType = mGaoDeMap.getMapType();
         if (mapType == 1) {
-            bn_weixing.setImageResource(R.mipmap.icon1_02);
             mGaoDeMap.setMapType(AMap.MAP_TYPE_SATELLITE);
         } else {
-            bn_weixing.setImageResource(R.mipmap.icon1_01);
             mGaoDeMap.setMapType(AMap.MAP_TYPE_NORMAL);
         }
     }

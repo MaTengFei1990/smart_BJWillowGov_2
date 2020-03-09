@@ -240,11 +240,18 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
         List<LatLng> rectangles = createRectangle(gridBean);
 
         if (rectangles != null) {
+//            mGaoDeMap.addPolygon(new PolygonOptions()
+//                    .addAll(rectangles)
+//                    .fillColor(getResources().getColor(R.color.touming))
+//                    .strokeColor(R.color.bg_lan)
+//                    .strokeWidth(2)
+//            );
+
             mGaoDeMap.addPolygon(new PolygonOptions()
                     .addAll(rectangles)
-                    .fillColor(getResources().getColor(R.color.touming))
-                    .strokeColor(R.color.bg_lan)
-                    .strokeWidth(2)
+                    .fillColor(Color.argb(130, 158, 230,252))
+                    .strokeColor(Color.argb(130, 177, 152, 198))
+                    .strokeWidth(5)
             );
         }
 
@@ -598,10 +605,8 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
 
         int mapType = mGaoDeMap.getMapType();
         if (mapType == 1) {
-            bn_weixing.setImageResource(R.mipmap.icon1_02);
             mGaoDeMap.setMapType(AMap.MAP_TYPE_SATELLITE);
         } else {
-            bn_weixing.setImageResource(R.mipmap.icon1_01);
             mGaoDeMap.setMapType(AMap.MAP_TYPE_NORMAL);
         }
     }
