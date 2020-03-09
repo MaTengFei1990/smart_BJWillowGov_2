@@ -131,6 +131,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
     private String PcToken;
 
     private ProjectBean projectBean;
+    private int position;
 
     @Override
     public void init() {
@@ -145,6 +146,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
 
         gridBean = (GridBean) getIntent().getSerializableExtra("gridBean");
         projectBean = (ProjectBean) getIntent().getSerializableExtra("projectBean");
+        position =  getIntent().getIntExtra("position",0);
         setLpd();
         selectDB();
 
@@ -190,6 +192,11 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ib_back:
+
+                Intent intentbak = new Intent();
+                intentbak.putExtra("position", position);
+                intentbak.putExtra("gridBean", gridBean);
+                setResult(7, intentbak);
                 finish();
                 break;
             case R.id.tv_maplsit:
@@ -759,6 +766,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                 refreshLayout.finishLoadMore();
                 loadMore = false;
             }
+                gridBean.setChildTreeCount(treeslist.size());
 
 
             }

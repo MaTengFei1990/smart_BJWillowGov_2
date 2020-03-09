@@ -112,7 +112,8 @@ public class GridsListAdapter extends CommonAdapter<GridBean> {
                 intent.putExtra("TreeFormModelId", TreeFormModelId);
                 intent.putExtra("ischeck", ischeck);
                 intent.putExtra("PcToken", PcToken);
-                activity.startActivity(intent);
+                intent.putExtra("position", position);
+                activity.startActivityForResult(intent,7);
             }
         });
 

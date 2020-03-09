@@ -664,6 +664,15 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
             }
         }
+        //在地图页面修改了地图修改
+        if (requestCode == 7) {
+
+            int position = data.getIntExtra("position", 0);
+            GridBean gridBean = (GridBean) data.getSerializableExtra("gridBean");
+
+            gridBeanList.get(position).setChildTreeCount(gridBean.getChildTreeCount());
+            resDataManageAdapter.notifyDataSetChanged();
+        }
     }
 
 
@@ -684,4 +693,6 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         Mlog.d("刷新了页面");
         getdataList();
     }
+
+
 }
