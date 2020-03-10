@@ -31,12 +31,15 @@ import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.gridslib.adapters.GridsListAdapter;
 import com.hollysmart.gridslib.adapters.MyClassicsHeader;
 import com.hollysmart.gridslib.apis.FindGridsListPageAPI;
+import com.hollysmart.gridslib.apis.GetGridTreeCountAPI;
 import com.hollysmart.gridslib.beans.GridBean;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.CCM_DateTime;
 import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.Utils;
+import com.hollysmart.utils.taskpool.OnNetRequestListener;
+import com.hollysmart.utils.taskpool.TaskPool;
 import com.hollysmart.value.Values;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -556,61 +559,63 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                     loadMore = false;
                 }
 
-//                final TaskPool taskPool=new TaskPool();
-//
-//
-//                OnNetRequestListener listener=new OnNetRequestListener() {
-//                    @Override
-//                    public void onFinish() {
-//                        lpd.cancel();
-//                        if (gridBeanList != null && gridBeanList.size() > 0) {
-//                            lay_fragment_ProdutEmpty.setVisibility(View.GONE);
-//                            lv_roadList.setVisibility(View.VISIBLE);
-//                        }else {
-//                            lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
-//                            lv_roadList.setVisibility(View.GONE);
-//                        }
-//                        resDataManageAdapter.notifyDataSetChanged();
-//                    }
-//
-//
-//                    @Override
-//                    public void OnNext() {
-//
-//                        taskPool.execute(this);
-//                    }
-//
-//                    @Override
-//                    public void OnResult(boolean isOk, String msg, Object object) {
-//                        taskPool.execute(this);
-//                    }
-//                };
-//
-//                if (gridBeanList != null && gridBeanList.size() > 0) {
-//
-//                    for (int i = 0; i < gridBeanList.size(); i++) {
-//
-//                        GridBean resDataBean = gridBeanList.get(i);
-//
-//                        taskPool.addTask(new GetGridTreeCountAPI(userInfo, TreeFormModelId, resDataBean, listener));
-//
-//                    }
-//
-//                    taskPool.execute(listener);
-//                } else {
-//
-//                    lpd.cancel();
-//                    if (gridBeanList != null && gridBeanList.size() > 0) {
-//                        lay_fragment_ProdutEmpty.setVisibility(View.GONE);
-//                        lv_roadList.setVisibility(View.VISIBLE);
-//                    } else {
-//                        lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
-//                        lv_roadList.setVisibility(View.GONE);
-//                    }
-//                }
+//                getTreeNum();
 
 
+            }
 
+            private void getTreeNum() {
+                final TaskPool taskPool=new TaskPool();
+
+                OnNetRequestListener listener=new OnNetRequestListener() {
+                    @Override
+                    public void onFinish() {
+                        lpd.cancel();
+                        if (gridBeanList != null && gridBeanList.size() > 0) {
+                            lay_fragment_ProdutEmpty.setVisibility(View.GONE);
+                            lv_roadList.setVisibility(View.VISIBLE);
+                        }else {
+                            lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
+                            lv_roadList.setVisibility(View.GONE);
+                        }
+                        resDataManageAdapter.notifyDataSetChanged();
+                    }
+
+
+                    @Override
+                    public void OnNext() {
+
+                        taskPool.execute(this);
+                    }
+
+                    @Override
+                    public void OnResult(boolean isOk, String msg, Object object) {
+                        taskPool.execute(this);
+                    }
+                };
+
+                if (gridBeanList != null && gridBeanList.size() > 0) {
+
+                    for (int i = 0; i < gridBeanList.size(); i++) {
+
+                        GridBean resDataBean = gridBeanList.get(i);
+
+                        taskPool.addTask(new GetGridTreeCountAPI(userInfo, TreeFormModelId, resDataBean, listener));
+
+                    }
+
+                    taskPool.execute(listener);
+                } else {
+
+                    lpd.cancel();
+                    if (gridBeanList != null && gridBeanList.size() > 0) {
+                        lay_fragment_ProdutEmpty.setVisibility(View.GONE);
+                        lv_roadList.setVisibility(View.VISIBLE);
+                    } else {
+                        lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
+                        lv_roadList.setVisibility(View.GONE);
+                    }
+                }
             }
         }).request();
 
