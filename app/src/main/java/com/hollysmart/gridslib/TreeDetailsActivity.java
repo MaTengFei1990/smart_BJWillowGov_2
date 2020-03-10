@@ -75,6 +75,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
     private List<DongTaiFormBean> resFromBeanLsit;
     private List<DongTaiFormBean> formBeanList;
+    private List<ResDataBean> treeList;
 
 
     private BiaoGeRecyclerAdapter2 biaoGeRecyclerAdapter;
@@ -132,6 +133,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
         tree_resDataBean = (ResDataBean) getIntent().getSerializableExtra("resDataBean");
         roadBean = (GridBean) getIntent().getSerializableExtra("roadbean");
         resFromBeanLsit = (List<DongTaiFormBean>) getIntent().getSerializableExtra("formBeanList");
+        treeList = (List<ResDataBean>) getIntent().getSerializableExtra("treeList");
         formPicMap = (HashMap<String, List<JDPicInfo>>) getIntent().getSerializableExtra("formPicMap");
         sportEditFlag = getIntent().getBooleanExtra("sportEditFlag", false);
         ischeck = getIntent().getBooleanExtra("ischeck", false);
@@ -335,6 +337,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
                                                 biaoGeRecyclerAdapter = new BiaoGeRecyclerAdapter2(mContext, formBeanList, ischeck,roadBean,tree_resDataBean,projectBean);
 
                                                 recy_view.setAdapter(biaoGeRecyclerAdapter);
+                                                biaoGeRecyclerAdapter.setTreeList(treeList);
 
                                                 recy_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
                                                     @Override
@@ -424,6 +427,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
         biaoGeRecyclerAdapter = new BiaoGeRecyclerAdapter2(mContext, formBeanList, ischeck,roadBean,tree_resDataBean,projectBean);
         recy_view.setAdapter(biaoGeRecyclerAdapter);
+        biaoGeRecyclerAdapter.setTreeList(treeList);
         recy_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -599,6 +603,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
                     biaoGeRecyclerAdapter = new BiaoGeRecyclerAdapter2(mContext, formBeanList, ischeck,roadBean,tree_resDataBean,projectBean);
 
                     recy_view.setAdapter(biaoGeRecyclerAdapter);
+                    biaoGeRecyclerAdapter.setTreeList(treeList);
 
                     recy_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override

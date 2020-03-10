@@ -77,6 +77,8 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
     private ImageButton imagbtn_zoomOut;
     private ImageView iv_center;
 
+    private List<ResDataBean> treeList = new ArrayList<>();
+
 
     private boolean isCheck;
     private GridBean roadbean;
@@ -88,11 +90,13 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
     private static final int LINE_FLAG = 2;
     private static final int PLANE_FLAG = 3;
 
-    private int flagtype=0;
+    private int flagtype = 0;
     private LatLng centerlatlng = null;
 
     //多边形顶点位置
     private List<LatLng> points = new ArrayList<>();
+
+    private List<LatLng> treesPoints = new ArrayList<>();
 
 
     @Override
@@ -136,6 +140,9 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
             findViewById(R.id.btn_save).setVisibility(View.GONE);
             findViewById(R.id.bn_dingwei).setVisibility(View.GONE);
 
+        }else {
+
+            treeList = (List<ResDataBean>) getIntent().getSerializableExtra("treeList");
         }
 
         if (!Utils.isEmpty(isEdit) && isEdit.equals("0")) {
@@ -144,6 +151,8 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
             findViewById(R.id.btn_chexiao).setVisibility(View.GONE);
             findViewById(R.id.bn_dingwei).setVisibility(View.GONE);
             iv_center.setVisibility(View.GONE);
+        }else {
+            treeList = (List<ResDataBean>) getIntent().getSerializableExtra("treeList");
         }
 
         if (dongTaiFormBean != null && (!Utils.isEmpty(dongTaiFormBean.getPropertyLabel()))) {
@@ -161,12 +170,23 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
 
                     if (str_latlng.length > 1) {
                         Double lat = Double.parseDouble(str_latlng[0]);
-                        Double lng =Double.parseDouble(str_latlng[1]);
+                        Double lng = Double.parseDouble(str_latlng[1]);
                         LatLng latLng = new LatLng(lat, lng);
                         points.add(latLng);
                     }
                 }
             }
+        }
+        if (treeList != null && (treeList.size() > 0)) {
+
+            for (int i = 0; i < treeList.size(); i++) {
+                ResDataBean resDataBean = treeList.get(i);
+                Double lat = Double.parseDouble(resDataBean.getLatitude());
+                Double lng = Double.parseDouble(resDataBean.getLongitude());
+                LatLng latLng = new LatLng(lat, lng);
+                treesPoints.add(latLng);
+            }
+
         }
 
         drawRangeInMap(flagtype);
@@ -249,17 +269,18 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
 
             mGaoDeMap.addPolygon(new PolygonOptions()
                     .addAll(rectangles)
-                    .fillColor(Color.argb(130, 158, 230,252))
+                    .fillColor(Color.argb(130, 158, 230, 252))
                     .strokeColor(Color.argb(130, 177, 152, 198))
                     .strokeWidth(5)
             );
         }
+        drawTreesInMap(treesPoints);
 
         setMapBounds(rectangles);
     }
 
-    private void setMapBounds( List<LatLng> latLngs){
-        LatLngBounds.Builder builder=LatLngBounds.builder();
+    private void setMapBounds(List<LatLng> latLngs) {
+        LatLngBounds.Builder builder = LatLngBounds.builder();
 
         for (LatLng latlng : latLngs) {
 
@@ -274,21 +295,28 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
             }
 
         }
+        if (treesPoints != null && treesPoints.size() > 0) {
+            for (int i = 0; i < treesPoints.size(); i++) {
+
+                builder.include(treesPoints.get(i));
+            }
+
+        }
 
 
         LatLngBounds bounds = builder.build();
 
-        mGaoDeMap.animateCamera(CameraUpdateFactory.newLatLngBoundsRect(bounds,50,50,50,50));
+        mGaoDeMap.animateCamera(CameraUpdateFactory.newLatLngBoundsRect(bounds, 50, 50, 50, 50));
 
 
     }
 
-    private List<LatLng> createRectangle(GridBean gridBean){
+    private List<LatLng> createRectangle(GridBean gridBean) {
         List<LatLng> latLngs = new ArrayList<>();
-        latLngs.add(new LatLng(gridBean.getFdLbLat(),gridBean.getFdRtLng()));
-        latLngs.add(new LatLng(gridBean.getFdRtLat(),gridBean.getFdRtLng()));
-        latLngs.add(new LatLng(gridBean.getFdRtLat(),gridBean.getFdLbLng()));
-        latLngs.add(new LatLng(gridBean.getFdLbLat(),gridBean.getFdLbLng()));
+        latLngs.add(new LatLng(gridBean.getFdLbLat(), gridBean.getFdRtLng()));
+        latLngs.add(new LatLng(gridBean.getFdRtLat(), gridBean.getFdRtLng()));
+        latLngs.add(new LatLng(gridBean.getFdRtLat(), gridBean.getFdLbLng()));
+        latLngs.add(new LatLng(gridBean.getFdLbLat(), gridBean.getFdLbLng()));
         return latLngs;
     }
 
@@ -566,7 +594,7 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
                 finish();
                 break;
             case R.id.btn_chexiao:
-//                cheXiao();
+                cheXiao();
                 break;
             case R.id.btn_save:
                 save();
@@ -606,7 +634,7 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
 
                 mGaoDeMap.clear();
                 drawRangeInMap(flagtype);
-//                drawTreesInMap(treesPoints);
+                drawTreesInMap(treesPoints);
                 Utils.showToast(mContext, "暂无坐标点可撤销");
                 return;
             }
@@ -615,6 +643,20 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
         drawRangeInMap(flagtype);
 
 
+    }
+
+    private void drawTreesInMap(List<LatLng> treesPoints) {
+
+        if (treesPoints != null && treesPoints.size() > 0) {
+
+            BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.resflag_add));
+            for (int i = 0; i < treesPoints.size(); i++) {
+
+                mGaoDeMap.addMarker(new MarkerOptions().position(treesPoints.get(i)).icon(bitmapDescriptor));
+
+            }
+
+        }
     }
 
 
@@ -640,7 +682,7 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
             case MARKER_FLAG:
                 if (points != null && points.size() > 0) {
 
-                    LatLng latLng =points.get(0);
+                    LatLng latLng = points.get(0);
                     strPoints = latLng.latitude + "," + latLng.longitude;
 
 
@@ -726,11 +768,7 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
         }
 
 
-
-
-
     }
-
 
 
     /***
@@ -783,8 +821,6 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
         }
 
 
-
-
     }
 
     private void drawRangeInMap(int type) {
@@ -798,10 +834,13 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
         switch (type) {
             case MARKER_FLAG:
                 if (points != null && points.size() > 0) {
+
                     BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.resflag_add));
+                    for (int i = 0; i < points.size(); i++) {
 
+                        mGaoDeMap.addMarker(new MarkerOptions().position(points.get(i)).icon(bitmapDescriptor));
 
-                    mGaoDeMap.addMarker(new MarkerOptions().position(points.get(0)).icon(bitmapDescriptor));
+                    }
 
                 }
 
@@ -821,12 +860,7 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
         }
 
 
-
-
-
     }
-
-
 
 
     /**
@@ -846,7 +880,7 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
      * @param mGaoDeMap
      * @param b
      */
-    public void gaoDeMapZoomChange( AMap mGaoDeMap, boolean b) {
+    public void gaoDeMapZoomChange(AMap mGaoDeMap, boolean b) {
 
         float zoomLevel = mGaoDeMap.getCameraPosition().zoom;
         Mlog.d("zoom:" + zoomLevel);
@@ -866,7 +900,6 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
 
 
     }
-
 
 
     @Override

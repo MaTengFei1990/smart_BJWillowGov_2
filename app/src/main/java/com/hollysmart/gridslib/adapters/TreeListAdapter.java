@@ -253,6 +253,10 @@ public class TreeListAdapter extends CommonAdapter<ResDataBean> {
 
         intent.putExtra("formBeanList", (Serializable) formBeanList);
         intent.putExtra("resDataBean", mJingDians.get(position));
+        List<ResDataBean> treelist = new ArrayList<>();
+        treelist.addAll(mJingDians);
+        treelist.remove(position);
+        intent.putExtra("treeList", (Serializable)treelist);
         intent.putExtra("formPicMap", (Serializable) formPicMap);
         intent.putExtra("roadbean", roadbean);
         intent.putExtra("projectBean", projectBean);

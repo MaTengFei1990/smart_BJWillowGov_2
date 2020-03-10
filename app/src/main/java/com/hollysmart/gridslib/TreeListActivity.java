@@ -288,6 +288,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                     resDataBean.setFdTaskId(projectBean.getId());
 
                     intent.putExtra("formBeanList", (Serializable) formBeanList);
+                    intent.putExtra("treeList", (Serializable) treeslist);
                     intent.putExtra("resDataBean", resDataBean);
                     intent.putExtra("sportEditFlag", true);
                     formPicMap.clear();

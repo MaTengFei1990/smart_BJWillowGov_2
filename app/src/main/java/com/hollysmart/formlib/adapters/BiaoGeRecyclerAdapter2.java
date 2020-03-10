@@ -37,6 +37,7 @@ import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.Utils;
 import com.hollysmart.views.linearlayoutforlistview.MyLinearLayoutForListView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -65,6 +66,7 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
     private boolean isCheck = false; //是否是查看，true查看，不能编辑；
     private DictionaryBean cancelbean;
 
+    private List<ResDataBean>treeList=new ArrayList<>();
 
     JDPicInfo picBeannull = new JDPicInfo(0, null, null, null, 1, "false");
 
@@ -164,6 +166,13 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
         cancelbean.setLabel("取消");
     }
 
+    public List<ResDataBean> getTreeList() {
+        return treeList;
+    }
+
+    public void setTreeList(List<ResDataBean> treeList) {
+        this.treeList = treeList;
+    }
 
     public void setMap(HashMap<String, List<DictionaryBean>> map) {
         this.map = map;
@@ -1580,6 +1589,9 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
                     if (projectBean != null) {
                         intent.putExtra("projectBean", projectBean);
                     }
+                    if (treeList != null) {
+                        intent.putExtra("treeList", (Serializable)treeList);
+                    }
                     Activity activity = (Activity) mContext;
                     activity.startActivityForResult(intent, 6);
                 }
@@ -1597,6 +1609,9 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
                     if (projectBean != null) {
                         intent.putExtra("projectBean", projectBean);
                     }
+                    if (treeList != null) {
+                        intent.putExtra("treeList",(Serializable) treeList);
+                    }
                     Activity activity = (Activity) mContext;
                     activity.startActivityForResult(intent, 6);
                 }
@@ -1613,6 +1628,9 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
                     }
                     if (projectBean != null) {
                         intent.putExtra("projectBean", projectBean);
+                    }
+                    if (treeList != null) {
+                        intent.putExtra("treeList",(Serializable) treeList);
                     }
                     Activity activity = (Activity) mContext;
                     activity.startActivityForResult(intent, 6);

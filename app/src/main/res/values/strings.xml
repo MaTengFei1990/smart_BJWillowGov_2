@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">杨柳飞絮治理</string>
+    <string name="app_name">北京飞絮治理</string>
 
     <bool name="weixin">true</bool>
     <string name="weixinAppId">wx594f31f0e211f7e5</string>
