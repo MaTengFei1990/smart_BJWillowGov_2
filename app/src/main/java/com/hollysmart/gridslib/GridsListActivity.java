@@ -1,13 +1,36 @@
 package com.hollysmart.gridslib;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapOptions;
+import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.LocationSource;
+import com.amap.api.maps.MapView;
+import com.amap.api.maps.UiSettings;
+import com.amap.api.maps.model.BitmapDescriptor;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.LatLngBounds;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.PolygonOptions;
 import com.d.lib.xrv.LRecyclerView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -59,7 +82,10 @@ import butterknife.ButterKnife;
 /***
  * 网格类表；
  */
-public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoadMoreListener {
+public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoadMoreListener, AMapLocationListener,
+        LocationSource, AMap.OnMarkerClickListener, AMap.OnInfoWindowClickListener,
+        AMap.InfoWindowAdapter, AMap.OnMapLoadedListener, AMap.OnCameraChangeListener,
+        Animation.AnimationListener, View.OnClickListener, AMap.OnMapClickListener, GridsListAdapter.setMapBtnClickListener {
 
     @Override
     public int layoutResID() {
@@ -84,10 +110,22 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     @BindView(R.id.smart_refresh)
     SmartRefreshLayout refreshLayout;
 
+    @BindView(R.id.bmapView)
+    MapView mMapView;
+
 
 
 
     private ProjectBean projectBean;
+
+    AMap mGaoDeMap;
+
+    //声明定位回调监听器
+    public AMapLocationClientOption mLocationOption = null;
+
+    public AMapLocationClient mLocationClient = null;
+
+    private UiSettings uiSettings;
 
 
 
@@ -99,6 +137,148 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     private boolean loadMore=false;
     private int  pageSize=100;
 
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        initMap(savedInstanceState);
+
+    }
+
+
+
+
+
+    /***
+     * 初始化地图
+     */
+
+    private void initMap(Bundle savedInstanceState) {
+        // 地图初始化
+        mMapView = findViewById(R.id.bmapView);
+
+
+        mMapView.onCreate(savedInstanceState);// 此方法必须重写
+        mGaoDeMap = mMapView.getMap();
+        mGaoDeMap.setMapType(AMap.MAP_TYPE_NORMAL);
+
+        //初始化定位
+        mLocationClient = new AMapLocationClient(this);
+        //设置定位回调监听
+        mLocationClient.setLocationListener(mLocationListener);
+        mLocationOption = new AMapLocationClientOption();
+        //设置定位模式为高精度模式，AMapLocationMode.Battery_Saving为低功耗模式，AMapLocationMode.Device_Sensors是仅设备模式
+        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        //设置是否返回地址信息（默认返回地址信息）
+        mLocationOption.setNeedAddress(true);
+        //设置是否只定位一次,默认为false
+        mLocationOption.setOnceLocation(false);
+        //设置是否强制刷新WIFI，默认为强制刷新
+        mLocationOption.setWifiActiveScan(true);
+        //设置是否允许模拟位置,默认为false，不允许模拟位置
+        mLocationOption.setMockEnable(false);
+        //设置定位间隔,单位毫秒,默认为2000ms
+        mLocationOption.setInterval(2000);
+        //给定位客户端对象设置定位参数
+        mLocationClient.setLocationOption(mLocationOption);
+        //启动定位
+        mLocationClient.startLocation();
+
+        uiSettings = mGaoDeMap.getUiSettings();
+
+        //设置地图缩放
+        settingZoom();
+
+        initMapListener();
+
+
+    }
+
+
+    public AMapLocationListener mLocationListener = new AMapLocationListener() {
+        @Override
+
+        public void onLocationChanged(AMapLocation aMapLocation) {
+
+            if (aMapLocation != null) {
+
+                if (aMapLocation.getErrorCode() == 0) {
+
+                    //定位成功回调信息，设置相关消息
+
+                    aMapLocation.getLocationType();//获取当前定位结果来源，如网络定位结果，详见定位类型表
+
+                    aMapLocation.getLatitude();//获取纬度
+
+                    aMapLocation.getLongitude();//获取经度
+
+                    aMapLocation.getAccuracy();//获取精度信息
+
+                    java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+
+                    aMapLocation.getAddress();//地址，如果option中设置isNeedAddress为false，则没有此结果，网络定位结果中会有地址信息，GPS定位不返回地址信息。
+
+                    aMapLocation.getCountry();//国家信息
+
+                    aMapLocation.getProvince();//省信息
+
+                    aMapLocation.getCity();//城市信息
+
+                    aMapLocation.getDistrict();//城区信息
+
+                    aMapLocation.getStreet();//街道信息
+
+                    aMapLocation.getStreetNum();//街道门牌号信息
+
+                    aMapLocation.getCityCode();//城市编码
+
+                    aMapLocation.getAdCode();//地区编码
+
+                    Log.i("zjc", aMapLocation.getCity());
+
+                    mLocationClient.stopLocation();//停止定位
+
+                } else {
+
+                    //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
+
+                    Log.e("info", "location Error, ErrCode:" + aMapLocation.getErrorCode() + ", errInfo:" + aMapLocation.getErrorInfo());
+
+                }
+
+            }
+
+        }
+    };
+
+    private void initMapListener() {
+        mGaoDeMap.setOnMapLoadedListener(this);
+        mGaoDeMap.setOnCameraChangeListener(this);
+        mGaoDeMap.setOnMarkerClickListener(this);
+        mGaoDeMap.setOnInfoWindowClickListener(this);
+        mGaoDeMap.setInfoWindowAdapter(this);// 设置自定义InfoWindow样式
+        mGaoDeMap.setOnMapClickListener(this);
+//        centerMarker.setAnimationListener(this);
+    }
+
+
+    private void settingZoom() {
+
+        //是否允许显示地图缩放按钮
+        uiSettings.setZoomControlsEnabled(false);
+        //是否允许收拾手势缩放地图
+        uiSettings.setZoomGesturesEnabled(true);
+        //设置双击地图放大在地图中心位置放大，false则是在点击位置放大
+        uiSettings.setZoomInByScreenCenter(true);
+        //地图缩放按钮的位置
+        uiSettings.setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_BUTTOM);
+//        AMapOptions.ZOOM_POSITION_RIGHT_CENTER
+//        AMapOptions.ZOOM_POSITION_RIGHT_BUTTOM
+        //获取地图缩放按钮位置
+        Mlog.d("settingZoom: " + uiSettings.getZoomPosition());
+    }
 
     @Override
     public void findView() {
@@ -338,6 +518,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
                                         resDataManageAdapter = new GridsListAdapter(PcToken,mContext,  TreeFormModelId, gridBeanList, projectBean, ischeck);
                                         lv_roadList.setAdapter(resDataManageAdapter);
+                                        resDataManageAdapter.setMapBtnClickListener(GridsListActivity.this);
                                         selectDB(projectBean.getId());
 
                                     } else {
@@ -700,4 +881,141 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     }
 
 
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
+    }
+
+    @Override
+    public void onLocationChanged(AMapLocation aMapLocation) {
+
+    }
+
+    @Override
+    public View getInfoWindow(Marker marker) {
+        return null;
+    }
+
+    @Override
+    public View getInfoContents(Marker marker) {
+        return null;
+    }
+
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
+
+    }
+
+    @Override
+    public void onCameraChangeFinish(CameraPosition cameraPosition) {
+
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+
+    }
+
+    @Override
+    public void onMapLoaded() {
+
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        return false;
+    }
+
+    @Override
+    public void activate(OnLocationChangedListener onLocationChangedListener) {
+
+    }
+
+    @Override
+    public void deactivate() {
+
+    }
+
+    @Override
+    public void MapBtnClick(GridBean gridBean) {
+
+        drawGrid(gridBean);
+
+    }
+
+
+
+
+    /***
+     * 绘制表格
+     */
+
+    private void drawGrid(GridBean gridBean) {
+
+        if (gridBean == null) {
+            return;
+        }
+
+        List<LatLng> rectangles = createRectangle(gridBean);
+
+        if (rectangles != null) {
+//            mGaoDeMap.addPolygon(new PolygonOptions()
+//                    .addAll(rectangles)
+//                    .fillColor(getResources().getColor(R.color.touming))
+//                    .strokeColor(R.color.bg_lan)
+//                    .strokeWidth(2)
+//            );
+
+            mGaoDeMap.addPolygon(new PolygonOptions()
+                    .addAll(rectangles)
+                    .fillColor(Color.argb(130, 158, 230,252))
+                    .strokeColor(Color.argb(130, 177, 152, 198))
+                    .strokeWidth(5)
+            );
+        }
+
+        setMapBounds(rectangles);
+    }
+
+
+    private void setMapBounds(List<LatLng> latLngs) {
+        LatLngBounds.Builder builder = LatLngBounds.builder();
+
+        for (LatLng latlng : latLngs) {
+
+            builder.include(latlng);
+
+        }
+
+
+        LatLngBounds bounds = builder.build();
+
+        mGaoDeMap.animateCamera(CameraUpdateFactory.newLatLngBoundsRect(bounds, 50, 50, 50, 50));
+
+
+    }
+
+    private List<LatLng> createRectangle(GridBean gridBean) {
+        List<LatLng> latLngs = new ArrayList<>();
+        latLngs.add(new LatLng(gridBean.getFdLbLat(), gridBean.getFdRtLng()));
+        latLngs.add(new LatLng(gridBean.getFdRtLat(), gridBean.getFdRtLng()));
+        latLngs.add(new LatLng(gridBean.getFdRtLat(), gridBean.getFdLbLng()));
+        latLngs.add(new LatLng(gridBean.getFdLbLat(), gridBean.getFdLbLng()));
+        return latLngs;
+    }
 }

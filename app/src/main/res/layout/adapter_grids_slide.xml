@@ -114,6 +114,33 @@
 
 
 
+
+
+            <Button
+                android:id="@+id/btn_map"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/lanse_bg"
+                android:text="地图"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/baise"
+                android:layout_marginRight="20dp"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/text_zhong"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/lanse_bg"
+                android:text="树木列表"
+                android:layout_toLeftOf="@+id/btn_map"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:textColor="@color/baise"
+                android:textSize="@dimen/text_zhong"/>
+
+
+
         </RelativeLayout>
 
 

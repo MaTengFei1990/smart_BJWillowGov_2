@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.d.lib.slidelayout.SlideLayout;
@@ -40,6 +41,8 @@ public class GridsListAdapter extends CommonAdapter<GridBean> {
 
     private HashMap<String, List<JDPicInfo>> formPicMap = new HashMap<>();
 
+    private setMapBtnClickListener mapBtnClickListener;
+
     boolean ischeck = false; //是否只能查看 true  只能查看不能编辑；
 
     public GridsListAdapter(String PcToken, Context context, String TreeFormModelId, List<GridBean> gridBeanList, ProjectBean projectBean, boolean ischeck) {
@@ -54,6 +57,14 @@ public class GridsListAdapter extends CommonAdapter<GridBean> {
         isLogin();
     }
 
+
+    public setMapBtnClickListener getMapBtnClickListener() {
+        return mapBtnClickListener;
+    }
+
+    public void setMapBtnClickListener(setMapBtnClickListener mapBtnClickListener) {
+        this.mapBtnClickListener = mapBtnClickListener;
+    }
 
     @Override
     public int getItemCount() {
@@ -76,6 +87,7 @@ public class GridsListAdapter extends CommonAdapter<GridBean> {
         final TextView tv_check = holder.getView(R.id.tv_check);
         final TextView tv_gridNum = holder.getView(R.id.tv_gridNum);
         final TextView tv_area = holder.getView(R.id.tv_area);
+        final Button btn_map = holder.getView(R.id.btn_map);
 
         tv_gridNum.setText(gridBean.getFdBlockCode());
         tv_area.setText(gridBean.getFdAreaName());
@@ -134,6 +146,19 @@ public class GridsListAdapter extends CommonAdapter<GridBean> {
         });
 
 
+        btn_map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (mapBtnClickListener != null) {
+                    GridBean gridBean = gridBeanList.get(position);
+                    mapBtnClickListener.MapBtnClick(gridBean);
+                }
+
+            }
+        });
+
+
     }
 
 
@@ -163,6 +188,13 @@ public class GridsListAdapter extends CommonAdapter<GridBean> {
             e.printStackTrace();
         }
         return false;
+    }
+
+
+   public interface  setMapBtnClickListener{
+
+        void MapBtnClick(GridBean gridBean);
+
     }
 
 }
