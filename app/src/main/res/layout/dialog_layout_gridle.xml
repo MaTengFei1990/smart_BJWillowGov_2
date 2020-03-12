@@ -17,7 +17,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
-        android:text="树木采集规范"
+        android:text="采集提示"
 
         />
     <TextView

@@ -37,7 +37,7 @@
                         android:singleLine="true"
                         android:ellipsize="end"
                         android:maxEms="10"
-                        android:text="编          号:"
+                        android:text="网格编号:"
                         android:textColor="@color/heise"
                         android:textSize="@dimen/text_zhong" />
                     <TextView
@@ -118,7 +118,7 @@
 
             <Button
                 android:id="@+id/btn_map"
-                android:layout_width="wrap_content"
+                android:layout_width=""
                 android:layout_height="wrap_content"
                 android:background="@color/lanse_bg"
                 android:text="地图"
