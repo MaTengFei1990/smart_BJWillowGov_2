@@ -14,12 +14,12 @@
         <!--content view-->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="100dp"
             android:gravity="center_vertical">
 
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
                 android:gravity="center_vertical"
@@ -32,12 +32,10 @@
                     android:layout_gravity="center_vertical">
 
                     <TextView
-                        android:layout_width="80dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:ellipsize="end"
-                        android:maxEms="10"
-                        android:text="网格编号:"
+                        android:text="网格编号（网格号-子网格号):"
                         android:textColor="@color/heise"
                         android:textSize="@dimen/text_zhong" />
                     <TextView
@@ -58,16 +56,18 @@
 
 
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginTop="10dp">
 
                     <TextView
+                        android:id="@+id/tv_count"
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:text="树 木 总  量："
+                        android:layout_centerVertical="true"
                         android:textColor="@color/huise_line"
                         android:textSize="@dimen/text_xiao" />
 
@@ -78,16 +78,45 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
+                        android:layout_centerVertical="true"
+                        android:text="ddidiidid"
+                        android:layout_toRightOf="@+id/tv_count"
                         android:textColor="@color/huise_line"
                         android:textSize="@dimen/text_xiao" />
 
 
-                </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btn_map"
+                        android:layout_width="50dp"
+                        android:layout_height="30dp"
+                        android:background="@color/lanse_bg"
+                        android:text="地图"
+                        android:layout_alignParentRight="true"
+                        android:textColor="@color/baise"
+                        android:layout_marginRight="20dp"
+                        android:layout_centerVertical="true"
+                        android:textSize="@dimen/text_zhong"/>
+
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="30dp"
+                        android:background="@color/lanse_bg"
+                        android:text="树木列表"
+                        android:gravity="center"
+                        android:enabled="false"
+                        android:layout_toLeftOf="@+id/btn_map"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="20dp"
+                        android:textColor="@color/baise"
+                        android:textSize="@dimen/text_zhong"/>
+
+
+                </RelativeLayout>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginTop="10dp">
+                    android:layout_gravity="center_vertical">
 
                     <TextView
                         android:layout_width="80dp"
@@ -113,31 +142,6 @@
             </LinearLayout>
 
 
-
-
-
-            <Button
-                android:id="@+id/btn_map"
-                android:layout_width=""
-                android:layout_height="wrap_content"
-                android:background="@color/lanse_bg"
-                android:text="地图"
-                android:layout_alignParentRight="true"
-                android:textColor="@color/baise"
-                android:layout_marginRight="20dp"
-                android:layout_centerVertical="true"
-                android:textSize="@dimen/text_zhong"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/lanse_bg"
-                android:text="树木列表"
-                android:layout_toLeftOf="@+id/btn_map"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="20dp"
-                android:textColor="@color/baise"
-                android:textSize="@dimen/text_zhong"/>
 
 
 

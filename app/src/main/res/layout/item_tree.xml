@@ -75,7 +75,7 @@
                         android:maxEms="10"
                         android:visibility="gone"
                         android:singleLine="true"
-                        android:text="危树："
+                        android:text="安全风险："
                         android:textColor="@color/huise_line"
                         android:textSize="@dimen/text_xiao" />
                     <TextView

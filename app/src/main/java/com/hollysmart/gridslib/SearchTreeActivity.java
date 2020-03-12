@@ -182,6 +182,7 @@ public class SearchTreeActivity extends StyleAnimActivity implements  SearchList
             treeslist.clear();
             treeslist.addAll(menuBeanList);
             lv_treeList.setVisibility(View.VISIBLE);
+            lay_fragment_ProdutEmpty.setVisibility(View.GONE);
             treeListAdapter.notifyDataSetChanged();
 
 

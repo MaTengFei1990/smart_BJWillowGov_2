@@ -206,6 +206,7 @@ public class SearchGridsActivity extends StyleAnimActivity implements SearchGrid
             roadBeanList.clear();
             roadBeanList.addAll(menuBeanList);
             lv_roadList.setVisibility(View.VISIBLE);
+            lay_fragment_ProdutEmpty.setVisibility(View.GONE);
             resDataManageAdapter.notifyDataSetChanged();
 
 

@@ -50,6 +50,15 @@ public class FindListPageAPI implements INetModel {
         this.fd_parentid = fd_parentid;
         this.datadicListIF = datadicListIF;
     }
+    public FindListPageAPI(int pageSize,UserInfo userInfo, String resmodelid, ProjectBean projectBean,String fd_parentid, DatadicListIF datadicListIF) {
+        this.pageNo = 1;
+        this.pageSize = pageSize;
+        this.userInfo = userInfo;
+        this.resmodelid = resmodelid;
+        this.projectBean = projectBean;
+        this.fd_parentid = fd_parentid;
+        this.datadicListIF = datadicListIF;
+    }
     public FindListPageAPI(int pageNo ,int pageSize,UserInfo userInfo, String resmodelid, ProjectBean projectBean,String fd_parentid, DatadicListCountIF datadicListCountIF) {
         this.pageNo = pageNo;
         this.pageSize = pageSize;

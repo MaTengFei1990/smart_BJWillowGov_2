@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -55,6 +57,7 @@ import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.gridslib.adapters.GridsListAdapter;
 import com.hollysmart.gridslib.adapters.MyClassicsHeader;
 import com.hollysmart.gridslib.apis.FindGridsListPageAPI;
+import com.hollysmart.gridslib.apis.FindListPageAPI;
 import com.hollysmart.gridslib.apis.GetGridTreeCountAPI;
 import com.hollysmart.gridslib.beans.GridBean;
 import com.hollysmart.style.StyleAnimActivity;
@@ -300,6 +303,11 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         rl_bottom.setOnClickListener(this);
         tv_closeMap.setOnClickListener(this);
         tv_addTree.setOnClickListener(this);
+
+        findViewById(R.id.imagbtn_enlarge).setOnClickListener(this);
+        findViewById(R.id.imagbtn_zoomOut).setOnClickListener(this);
+        findViewById(R.id.bn_weixing).setOnClickListener(this);
+
         findViewById(R.id.ll_search).setOnClickListener(this);
 
         //添加刷新监听
@@ -508,7 +516,74 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                 startActivityForResult(intentadd,7);
 
                 break;
+
+
+            case R.id.bn_weixing:
+                mapChaged();
+                break;
+            case R.id.bn_dingwei:
+//                MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(mLatLng);
+//                mGaoDeMap.animateMapStatus(u);
+                break;
+            case R.id.imagbtn_enlarge:
+                ZoomChange(true);
+                break;
+            case R.id.imagbtn_zoomOut:
+                ZoomChange(false);
+                break;
         }
+    }
+
+
+
+    public void mapChaged() {
+
+        int mapType = mGaoDeMap.getMapType();
+        if (mapType == 1) {
+            mGaoDeMap.setMapType(AMap.MAP_TYPE_SATELLITE);
+        } else {
+            mGaoDeMap.setMapType(AMap.MAP_TYPE_NORMAL);
+        }
+    }
+
+
+
+    /**
+     * 地图进行缩放
+     *
+     * @param b
+     */
+    public void ZoomChange(boolean b) {
+
+        gaoDeMapZoomChange(mGaoDeMap, b);
+    }
+
+
+    /**
+     * 对地图进行缩放
+     *
+     * @param mGaoDeMap
+     * @param b
+     */
+    public void gaoDeMapZoomChange(AMap mGaoDeMap, boolean b) {
+
+        float zoomLevel = mGaoDeMap.getCameraPosition().zoom;
+        Mlog.d("zoom:" + zoomLevel);
+        if (b) {
+            if (zoomLevel < mGaoDeMap.getMaxZoomLevel()) {
+                zoomLevel = zoomLevel + 1;
+            }
+        } else {
+            if (zoomLevel > mGaoDeMap.getMinZoomLevel()) {
+                zoomLevel = zoomLevel - 1;
+            }
+        }
+//        MapStatusUpdate u = MapStatusUpdateFactory.zoomTo(zoomLevel);
+//        mGaoDeMap.animateMapStatus(u);
+
+        mGaoDeMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+
+
     }
 
 
@@ -548,6 +623,8 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                                         resDataManageAdapter = new GridsListAdapter(PcToken,mContext,  TreeFormModelId, gridBeanList, projectBean, ischeck);
                                         lv_roadList.setAdapter(resDataManageAdapter);
                                         resDataManageAdapter.setMapBtnClickListener(GridsListActivity.this);
+                                        int space = 20;
+                                        lv_roadList.addItemDecoration(new SpacesItemDecoration(space));
                                         selectDB(projectBean.getId());
 
                                     } else {
@@ -989,10 +1066,38 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
             rl_mapContent.setVisibility(View.VISIBLE);
         }
 
+        new FindListPageAPI(10000,userInfo,TreeFormModelId, projectBean, gridBean.getId(), new FindListPageAPI.DatadicListIF() {
+            @Override
+            public void datadicListResult(boolean isOk, List<ResDataBean> netDataList) {
+                List<LatLng> points = new ArrayList<>();
 
-        drawGrid(gridBean);
+                if (isOk) {
+                    if (netDataList != null && netDataList.size() > 0) {
 
-        tv_griNumber.setText(gridBean.getFdBlockCode());
+                        for (int i = 0; i < netDataList.size(); i++) {
+
+                            ResDataBean resDataBean = netDataList.get(i);
+
+                            Double lat = Double.parseDouble(resDataBean.getLatitude());
+                            Double lng = Double.parseDouble(resDataBean.getLongitude());
+                            LatLng latLng = new LatLng(lat, lng);
+                            points.add(latLng);
+
+                        }
+                    }
+
+
+                    drawGrid(gridBean,points);
+
+                    tv_griNumber.setText(gridBean.getFdBlockCode());
+
+
+                    }
+
+
+            }
+        }).request();
+
     }
 
 
@@ -1002,7 +1107,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
      * 绘制表格
      */
 
-    private void drawGrid(GridBean gridBean) {
+    private void drawGrid(GridBean gridBean,List<LatLng> netDataList) {
         mGaoDeMap.clear();
 
         if (gridBean == null) {
@@ -1012,13 +1117,6 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         List<LatLng> rectangles = createRectangle(gridBean);
 
         if (rectangles != null) {
-//            mGaoDeMap.addPolygon(new PolygonOptions()
-//                    .addAll(rectangles)
-//                    .fillColor(getResources().getColor(R.color.touming))
-//                    .strokeColor(R.color.bg_lan)
-//                    .strokeWidth(2)
-//            );
-
             mGaoDeMap.addPolygon(new PolygonOptions()
                     .addAll(rectangles)
                     .fillColor(Color.argb(130, 158, 230,252))
@@ -1026,17 +1124,40 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                     .strokeWidth(5)
             );
         }
-
-        setMapBounds(rectangles);
+        drawMarkerTrees(netDataList);
+        setMapBounds(rectangles,netDataList);
     }
 
 
-    private void setMapBounds(List<LatLng> latLngs) {
+    private void drawMarkerTrees(List<LatLng> points) {
+        if (points != null && points.size() > 0) {
+
+            for (int i=0;i<points.size();i++){
+                LatLng latLng = points.get(i);
+
+                BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.resflag_add));
+                mGaoDeMap.addMarker(new MarkerOptions().position(latLng).period(i+1).icon(bitmapDescriptor));
+            }
+
+        }
+    }
+
+
+    private void setMapBounds(List<LatLng> latLngs,List<LatLng> points) {
         LatLngBounds.Builder builder = LatLngBounds.builder();
 
         for (LatLng latlng : latLngs) {
 
             builder.include(latlng);
+
+        }
+
+        if (points != null && points.size() > 0) {
+
+            for (int i=0;i<points.size();i++){
+                LatLng latLng = points.get(i);
+                builder.include(latLng);
+            }
 
         }
 
@@ -1055,5 +1176,27 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         latLngs.add(new LatLng(gridBean.getFdRtLat(), gridBean.getFdLbLng()));
         latLngs.add(new LatLng(gridBean.getFdLbLat(), gridBean.getFdLbLng()));
         return latLngs;
+    }
+
+
+
+    public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
+        private int space;
+
+        public SpacesItemDecoration(int space) {
+            this.space = space;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view,
+                                   RecyclerView parent, RecyclerView.State state) {
+            outRect.left = space;
+            outRect.right = space;
+            outRect.bottom = space;
+
+            // Add top margin only for the first item to avoid double space between items
+            if (parent.getChildPosition(view) == 0)
+                outRect.top = space;
+        }
     }
 }
