@@ -679,12 +679,35 @@ public class ProjectManagerActivity extends StyleAnimActivity implements TextCli
     boolean isLoadMore=true;
 
 
+//    @Override
+//    public void onResTaskListResult(boolean isOk, List<ProjectBean> projectList,int count,String msg) {
+//
+//        if (isOk && projectList != null) {
+//            allCount = count;
+//            allprojectList.addAll(projectList);
+//            if (isRefresh) {
+//                swipe.setRefreshing(false);
+//                notifyDataChange(CurrentState);
+//                pageNo++;
+//                return;
+//            }
+//            if (projectShowList.size() == currentCount) {
+//                isLoadMore = false;
+//
+//            } else{
+//                pageNo++;
+//            }
+//            notifyDataChange(CurrentState);
+//        }
+//
+//
+//
+//    }
     @Override
-    public void onResTaskListResult(boolean isOk, List<ProjectBean> projectList,int count,String msg) {
+    public void onResTaskListResult(boolean isOk, ProjectBean projectList,String msg) {
 
         if (isOk && projectList != null) {
-            allCount = count;
-            allprojectList.addAll(projectList);
+            allprojectList.add(projectList);
             if (isRefresh) {
                 swipe.setRefreshing(false);
                 notifyDataChange(CurrentState);

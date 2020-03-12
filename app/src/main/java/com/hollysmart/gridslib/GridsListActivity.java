@@ -520,12 +520,10 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
             new getResTaskListAPI(userInfo.getAccess_token(), map.get("id"), 100, new getResTaskListAPI.ResTaskListIF() {
                 @Override
-                public void onResTaskListResult(boolean isOk, List<ProjectBean> projectBeanList, int count,String msg) {
+                public void onResTaskListResult(boolean isOk, ProjectBean protBean, String msg) {
 
                     if (isOk) {
-                        if (projectBeanList != null && projectBeanList.size() > 0) {
-
-                            projectBean = projectBeanList.get(0);
+                        projectBean=protBean;
 
                             TreeFormModelId = projectBean.getfTaskmodel().split(",")[0];
                             new GetResModelAPI(userInfo.getAccess_token(), TreeFormModelId, new GetResModelAPI.GetResModelIF() {
@@ -560,7 +558,6 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                                 }
                             }).request();
 
-                        }
 
 
                     } else {

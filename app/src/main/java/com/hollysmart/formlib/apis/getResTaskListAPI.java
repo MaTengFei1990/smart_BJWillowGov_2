@@ -29,16 +29,16 @@ public class getResTaskListAPI implements INetModel {
 
 
 
-    private ResTaskListIF sheBeiListIF;
+    private ResTaskListIF resTaskListIF;
     private int pageNo;
     private String  token;
     private String fdTaskId;
 
-    public getResTaskListAPI(String token,String fdTaskId,int pageNo, ResTaskListIF sheBeiListIF) {
+    public getResTaskListAPI(String token,String fdTaskId,int pageNo, ResTaskListIF resTaskListIF) {
         this.pageNo = pageNo;
         this.token = token;
         this.fdTaskId = fdTaskId;
-        this.sheBeiListIF = sheBeiListIF;
+        this.resTaskListIF = resTaskListIF;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class getResTaskListAPI implements INetModel {
             @Override
             public void onError(Call call, Exception e, int id) {
                 e.printStackTrace();
-                sheBeiListIF.onResTaskListResult(false, null,0,null);
+                resTaskListIF.onResTaskListResult(false, null,null);
             }
 
             @Override
@@ -73,21 +73,17 @@ public class getResTaskListAPI implements INetModel {
                         JSONObject dataOBJ = new JSONObject(jsonObject.getString("data"));
                         ProjectBean projectBean = mGson.fromJson(dataOBJ.toString(),
                                 new TypeToken<ProjectBean>() {}.getType());
-                        List<ProjectBean> projectBeanList = new ArrayList<>();
-                        projectBeanList.add(projectBean);
-                        for(ProjectBean projectBean1:projectBeanList){
-                            projectBean1.setUserinfoid(UserToken.getUserToken().getToken());
-                        }
+                            projectBean.setUserinfoid(UserToken.getUserToken().getToken());
 
-                        sheBeiListIF.onResTaskListResult(true, projectBeanList,projectBeanList.size(),null);
+                        resTaskListIF.onResTaskListResult(true, projectBean,null);
                     }else {
                         String msg = jsonObject.getString("msg");
 
-                        sheBeiListIF.onResTaskListResult(false, null,0,msg);
+                        resTaskListIF.onResTaskListResult(false, null,msg);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    sheBeiListIF.onResTaskListResult(false, null,0,null);
+                    resTaskListIF.onResTaskListResult(false, null,null);
                 }
 
             }
@@ -96,7 +92,7 @@ public class getResTaskListAPI implements INetModel {
     }
 
     public interface ResTaskListIF{
-        void onResTaskListResult(boolean isOk, List<ProjectBean> projectBeanList, int count,String msg);
+        void onResTaskListResult(boolean isOk, ProjectBean projectBeanList,String msg);
     }
 
 }
