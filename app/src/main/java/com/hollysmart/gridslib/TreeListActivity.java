@@ -100,6 +100,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
         bn_add.setOnClickListener(this);
         findViewById(R.id.ll_search).setOnClickListener(this);
         findViewById(R.id.tv_guifan).setOnClickListener(this);
+        findViewById(R.id.tv_success).setOnClickListener(this);
 
 
 
@@ -245,6 +246,11 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
 
                 break;
             case R.id.tv_guifan:
+
+                showGrid();
+
+                break;
+            case R.id.tv_success:
 
                 showGrid();
 

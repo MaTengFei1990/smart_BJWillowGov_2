@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -33,7 +34,10 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolygonOptions;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.d.lib.xrv.LRecyclerView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -119,13 +123,11 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
     @BindView(R.id.tv_griNumber)
     TextView tv_griNumber;
-    @BindView(R.id.tv_closeMap)
-    TextView tv_closeMap;
+    @BindView(R.id.bn_closeMap)
+    ImageButton bn_closeMap;
     @BindView(R.id.rl_mapContent)
     RelativeLayout rl_mapContent;
 
-    @BindView(R.id.tv_addTree)
-    TextView tv_addTree;
 
 
     private GridBean currrentGridBeanshownOnMap ;//当前显示在地图的网格
@@ -301,12 +303,12 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         iv_back.setOnClickListener(this);
         tv_maplsit.setOnClickListener(this);
         rl_bottom.setOnClickListener(this);
-        tv_closeMap.setOnClickListener(this);
-        tv_addTree.setOnClickListener(this);
+        bn_closeMap.setOnClickListener(this);
 
         findViewById(R.id.imagbtn_enlarge).setOnClickListener(this);
         findViewById(R.id.imagbtn_zoomOut).setOnClickListener(this);
         findViewById(R.id.bn_weixing).setOnClickListener(this);
+        findViewById(R.id.bn_dingwei).setOnClickListener(this);
 
         findViewById(R.id.ll_search).setOnClickListener(this);
 
@@ -499,24 +501,10 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                 startActivity(searchIntent);
 
                 break;
-            case R.id.tv_closeMap:
+            case R.id.bn_closeMap:
                 rl_mapContent.setVisibility(View.GONE);
 
                 break;
-            case R.id.tv_addTree:
-
-                Intent intentadd = new Intent(this, TreeListActivity.class);
-                intentadd.putExtra("projectBean", projectBean);
-                intentadd.putExtra("gridBean", currrentGridBeanshownOnMap);
-                intentadd.putExtra("TreeFormModelId", TreeFormModelId);
-                intentadd.putExtra("ischeck", ischeck);
-                intentadd.putExtra("PcToken", PcToken);
-                intentadd.putExtra("addtreeFalg", "addtreeFalg");
-                intentadd.putExtra("position", currrentPositionGridshownOnMap);
-                startActivityForResult(intentadd,7);
-
-                break;
-
 
             case R.id.bn_weixing:
                 mapChaged();
@@ -524,6 +512,8 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
             case R.id.bn_dingwei:
 //                MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(mLatLng);
 //                mGaoDeMap.animateMapStatus(u);
+
+                dingwei();
                 break;
             case R.id.imagbtn_enlarge:
                 ZoomChange(true);
@@ -534,6 +524,19 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         }
     }
 
+    private void dingwei() {
+
+
+        MyLocationStyle myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+        myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）默认执行此种模式。
+        mGaoDeMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
+        //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
+        mGaoDeMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
+        mGaoDeMap.moveCamera(CameraUpdateFactory.zoomTo(17));
+
+
+    }
 
 
     public void mapChaged() {
@@ -955,15 +958,15 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
             }
         }
-        //在地图页面修改了地图修改
-        if (requestCode == 7) {
-
-            int position = data.getIntExtra("position", 0);
-            GridBean gridBean = (GridBean) data.getSerializableExtra("gridBean");
-
-            gridBeanList.get(position).setChildTreeCount(gridBean.getChildTreeCount());
-            resDataManageAdapter.notifyDataSetChanged();
-        }
+//        //在地图页面修改了地图修改
+//        if (requestCode == 7) {
+//
+//            int position = data.getIntExtra("position", 0);
+//            GridBean gridBean = (GridBean) data.getSerializableExtra("gridBean");
+//
+//            gridBeanList.get(position).setChildTreeCount(gridBean.getChildTreeCount());
+//            resDataManageAdapter.notifyDataSetChanged();
+//        }
     }
 
 
@@ -1060,6 +1063,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     public void MapBtnClick(GridBean gridBean,int curPosition) {
         currrentGridBeanshownOnMap = gridBean;
         currrentPositionGridshownOnMap = curPosition;
+//        mGaoDeMap.setMyLocationEnabled(false);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
 
         if (!rl_mapContent.isShown()) {
 

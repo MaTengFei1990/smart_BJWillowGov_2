@@ -131,13 +131,15 @@
                 android:orientation="vertical">
 
 
-                <TextView
-                    android:id="@+id/tv_closeMap"
+                <ImageButton
+                    android:id="@+id/bn_closeMap"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="关闭"
                     android:layout_gravity="center"
-                    android:src="@mipmap/icon1_01" />
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@color/touming"
+                    android:src="@mipmap/close_map" />
 
                 <ImageButton
                     android:id="@+id/bn_weixing"
@@ -192,17 +194,6 @@
             </LinearLayout>
 
 
-
-
-            <TextView
-                android:id="@+id/tv_addTree"
-                android:textSize="@dimen/text_zhong"
-                android:layout_width="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="10dp"
-                android:text="添加"
-                android:layout_height="wrap_content"/>
 
 
 
