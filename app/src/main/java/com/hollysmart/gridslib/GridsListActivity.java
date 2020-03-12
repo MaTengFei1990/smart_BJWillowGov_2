@@ -1,5 +1,6 @@
 package com.hollysmart.gridslib;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -113,8 +114,19 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     @BindView(R.id.bmapView)
     MapView mMapView;
 
+    @BindView(R.id.tv_griNumber)
+    TextView tv_griNumber;
+    @BindView(R.id.tv_closeMap)
+    TextView tv_closeMap;
+    @BindView(R.id.rl_mapContent)
+    RelativeLayout rl_mapContent;
+
+    @BindView(R.id.tv_addTree)
+    TextView tv_addTree;
 
 
+    private GridBean currrentGridBeanshownOnMap ;//当前显示在地图的网格
+    private int  currrentPositionGridshownOnMap ;//当前显示在地图的网格
 
     private ProjectBean projectBean;
 
@@ -286,6 +298,8 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         iv_back.setOnClickListener(this);
         tv_maplsit.setOnClickListener(this);
         rl_bottom.setOnClickListener(this);
+        tv_closeMap.setOnClickListener(this);
+        tv_addTree.setOnClickListener(this);
         findViewById(R.id.ll_search).setOnClickListener(this);
 
         //添加刷新监听
@@ -475,6 +489,23 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                 searchIntent.putExtra("PcToken", PcToken);
                 searchIntent.putExtra("DongTainewFormList", (Serializable)DongTainewFormList);
                 startActivity(searchIntent);
+
+                break;
+            case R.id.tv_closeMap:
+                rl_mapContent.setVisibility(View.GONE);
+
+                break;
+            case R.id.tv_addTree:
+
+                Intent intentadd = new Intent(this, TreeListActivity.class);
+                intentadd.putExtra("projectBean", projectBean);
+                intentadd.putExtra("gridBean", currrentGridBeanshownOnMap);
+                intentadd.putExtra("TreeFormModelId", TreeFormModelId);
+                intentadd.putExtra("ischeck", ischeck);
+                intentadd.putExtra("PcToken", PcToken);
+                intentadd.putExtra("addtreeFalg", "addtreeFalg");
+                intentadd.putExtra("position", currrentPositionGridshownOnMap);
+                startActivityForResult(intentadd,7);
 
                 break;
         }
@@ -952,10 +983,19 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     }
 
     @Override
-    public void MapBtnClick(GridBean gridBean) {
+    public void MapBtnClick(GridBean gridBean,int curPosition) {
+        currrentGridBeanshownOnMap = gridBean;
+        currrentPositionGridshownOnMap = curPosition;
+
+        if (!rl_mapContent.isShown()) {
+
+            rl_mapContent.setVisibility(View.VISIBLE);
+        }
+
 
         drawGrid(gridBean);
 
+        tv_griNumber.setText(gridBean.getFdBlockCode());
     }
 
 
@@ -966,6 +1006,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
      */
 
     private void drawGrid(GridBean gridBean) {
+        mGaoDeMap.clear();
 
         if (gridBean == null) {
             return;

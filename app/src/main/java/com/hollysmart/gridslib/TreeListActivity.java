@@ -129,6 +129,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
     private GridBean gridBean;
     private String TreeFormModelId;
     private String PcToken;
+    private String addtreeFalg;
 
     private ProjectBean projectBean;
     private int position;
@@ -147,10 +148,27 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
         gridBean = (GridBean) getIntent().getSerializableExtra("gridBean");
         projectBean = (ProjectBean) getIntent().getSerializableExtra("projectBean");
         position =  getIntent().getIntExtra("position",0);
+        addtreeFalg =  getIntent().getStringExtra("addtreeFalg");
         setLpd();
-        selectDB();
+        if (addtreeFalg != null) {
+            ResModelDao resModelDao = new ResModelDao(mContext);
+            List<ResModelBean> allData = resModelDao.getAllData();
+            resModelList.addAll(allData);
 
-        showGrid();
+            LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+            lv_treeList.setLayoutManager(layoutManager);
+
+            treeListAdapter = new TreeListAdapter(mContext,TreeFormModelId, projectBean, gridBean, treeslist, ischeck);
+
+            lv_treeList.setAdapter(treeListAdapter);
+
+            addTrees();
+        } else {
+
+            selectDB();
+            showGrid();
+        }
+
     }
 
     private void showGrid() {
@@ -211,123 +229,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                 break;
 
             case R.id.rl_bottom:
-                Intent intent = new Intent(mContext, TreeDetailsActivity.class);
-
-                ResModelBean resModelBean = new ResModelBean();
-
-                for (int i = 0; i < resModelList.size(); i++) {
-
-                    if (TreeFormModelId.equals(resModelList.get(i).getId())) {
-
-
-                        resModelBean = resModelList.get(i);
-                    }
-                }
-
-                LastTreeResDataDao lastTreeResDataDao = new LastTreeResDataDao(mContext);
-                LastTreeDataBean upDataBean = lastTreeResDataDao.getLastId();//上一个资源
-
-                if (upDataBean != null) {
-
-
-                    String formDatas = upDataBean.getFormData();
-                    formBeanList.clear();
-                    try {
-                        Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm").create();
-                        JSONObject jsonObject = new JSONObject(formDatas);
-                        List<DongTaiFormBean> dictList = mGson.fromJson(jsonObject.getString("cgformFieldList"),
-                                new TypeToken<List<DongTaiFormBean>>() {
-                                }.getType());
-                        formBeanList.addAll(dictList);
-                        for (DongTaiFormBean formBean : formBeanList) {
-
-                            if (formBean.getJavaField().equals("location")) {
-
-                                formBean.setPropertyLabel("");
-
-                            }
-                            if (formBean.getJavaField().equals("tree_dangerous")) {
-
-                                formBean.setPropertyLabel("");
-
-
-
-                            }
-                            if (formBean.getJavaField().equals("tree_images")) {
-
-                                formBean.setPropertyLabel("");
-
-                                formBean.setPic(new ArrayList<>());
-
-                            }
-                            if (formBean.getJavaField().equals("time")) {
-
-                                formBean.setPropertyLabel("");
-
-                                formBean.setPic(new ArrayList<>());
-
-                            }
-                        }
-
-                    } catch (JsonIOException e) {
-                        e.printStackTrace();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-
-                    ResDataBean resDataBean = new ResDataBean();
-                    String createTime = new CCM_DateTime().Datetime2();
-                    resDataBean.setId(System.currentTimeMillis() + "");
-                    resDataBean.setFd_resmodelid(resModelBean.getId());
-                    resDataBean.setCreatedAt(createTime);
-                    resDataBean.setFd_resdate(createTime);
-                    resDataBean.setFd_resmodelname(resModelBean.getfModelName());
-                    resDataBean.setFd_restaskname(projectBean.getfTaskname());
-                    resDataBean.setFd_parentid(gridBean.getId());
-                    resDataBean.setFdTaskId(projectBean.getId());
-
-                    intent.putExtra("formBeanList", (Serializable) formBeanList);
-                    intent.putExtra("treeList", (Serializable) treeslist);
-                    intent.putExtra("resDataBean", resDataBean);
-                    intent.putExtra("sportEditFlag", true);
-                    formPicMap.clear();
-                    intent.putExtra("formPicMap", (Serializable) formPicMap);
-                    intent.putExtra("roadbean", (Serializable) gridBean);
-                    intent.putExtra("projectBean", (Serializable) projectBean);
-                    intent.putExtra("isNewAdd",  true);
-                    intent.putExtra("PcToken",  PcToken);
-
-                    startActivityForResult(intent, 4);
-                } else {
-
-                    ResDataBean resDataBean = new ResDataBean();
-                    String createTime = new CCM_DateTime().Datetime2();
-                    resDataBean.setId(System.currentTimeMillis() + "");
-                    resDataBean.setFd_resmodelid(resModelBean.getId());
-                    resDataBean.setCreatedAt(createTime);
-                    resDataBean.setFd_resdate(createTime);
-                    resDataBean.setFd_resmodelname(resModelBean.getfModelName());
-                    resDataBean.setFd_restaskname(projectBean.getfTaskname());
-                    resDataBean.setFd_parentid(gridBean.getId());
-                    resDataBean.setFdTaskId(projectBean.getId());
-
-                    intent.putExtra("formBeanList", (Serializable) formBeanList);
-                    intent.putExtra("resDataBean", resDataBean);
-                    intent.putExtra("sportEditFlag", true);
-                    formPicMap.clear();
-                    intent.putExtra("formPicMap", (Serializable) formPicMap);
-                    intent.putExtra("roadbean", (Serializable) gridBean);
-                    intent.putExtra("projectBean", (Serializable) projectBean);
-
-                    intent.putExtra("isNewAdd",  true);
-                    intent.putExtra("PcToken",  PcToken);
-
-                    startActivityForResult(intent, 4);
-
-                }
-
-
+                addTrees();
 
 
                 break;
@@ -347,6 +249,124 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                 showGrid();
 
                 break;
+        }
+    }
+
+    private void addTrees() {
+        Intent intent = new Intent(mContext, TreeDetailsActivity.class);
+
+        ResModelBean resModelBean = new ResModelBean();
+
+        for (int i = 0; i < resModelList.size(); i++) {
+
+            if (TreeFormModelId.equals(resModelList.get(i).getId())) {
+
+
+                resModelBean = resModelList.get(i);
+            }
+        }
+
+        LastTreeResDataDao lastTreeResDataDao = new LastTreeResDataDao(mContext);
+        LastTreeDataBean upDataBean = lastTreeResDataDao.getLastId();//上一个资源
+
+        if (upDataBean != null) {
+
+
+            String formDatas = upDataBean.getFormData();
+            formBeanList.clear();
+            try {
+                Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm").create();
+                JSONObject jsonObject = new JSONObject(formDatas);
+                List<DongTaiFormBean> dictList = mGson.fromJson(jsonObject.getString("cgformFieldList"),
+                        new TypeToken<List<DongTaiFormBean>>() {
+                        }.getType());
+                formBeanList.addAll(dictList);
+                for (DongTaiFormBean formBean : formBeanList) {
+
+                    if (formBean.getJavaField().equals("location")) {
+
+                        formBean.setPropertyLabel("");
+
+                    }
+                    if (formBean.getJavaField().equals("tree_dangerous")) {
+
+                        formBean.setPropertyLabel("");
+
+
+
+                    }
+                    if (formBean.getJavaField().equals("tree_images")) {
+
+                        formBean.setPropertyLabel("");
+
+                        formBean.setPic(new ArrayList<>());
+
+                    }
+                    if (formBean.getJavaField().equals("time")) {
+
+                        formBean.setPropertyLabel("");
+
+                        formBean.setPic(new ArrayList<>());
+
+                    }
+                }
+
+            } catch (JsonIOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+            ResDataBean resDataBean = new ResDataBean();
+            String createTime = new CCM_DateTime().Datetime2();
+            resDataBean.setId(System.currentTimeMillis() + "");
+            resDataBean.setFd_resmodelid(resModelBean.getId());
+            resDataBean.setCreatedAt(createTime);
+            resDataBean.setFd_resdate(createTime);
+            resDataBean.setFd_resmodelname(resModelBean.getfModelName());
+            resDataBean.setFd_restaskname(projectBean.getfTaskname());
+            resDataBean.setFd_parentid(gridBean.getId());
+            resDataBean.setFdTaskId(projectBean.getId());
+
+            intent.putExtra("formBeanList", (Serializable) formBeanList);
+            intent.putExtra("treeList", (Serializable) treeslist);
+            intent.putExtra("resDataBean", resDataBean);
+            intent.putExtra("sportEditFlag", true);
+            formPicMap.clear();
+            intent.putExtra("formPicMap", (Serializable) formPicMap);
+            intent.putExtra("roadbean", (Serializable) gridBean);
+            intent.putExtra("projectBean", (Serializable) projectBean);
+            intent.putExtra("isNewAdd",  true);
+            intent.putExtra("PcToken",  PcToken);
+
+            startActivityForResult(intent, 4);
+        } else {
+
+            ResDataBean resDataBean = new ResDataBean();
+            String createTime = new CCM_DateTime().Datetime2();
+            resDataBean.setId(System.currentTimeMillis() + "");
+            resDataBean.setFd_resmodelid(resModelBean.getId());
+            resDataBean.setCreatedAt(createTime);
+            resDataBean.setFd_resdate(createTime);
+            resDataBean.setFd_resmodelname(resModelBean.getfModelName());
+            resDataBean.setFd_restaskname(projectBean.getfTaskname());
+            resDataBean.setFd_parentid(gridBean.getId());
+            resDataBean.setFdTaskId(projectBean.getId());
+
+            intent.putExtra("formBeanList", (Serializable) formBeanList);
+            intent.putExtra("resDataBean", resDataBean);
+            intent.putExtra("sportEditFlag", true);
+            formPicMap.clear();
+            intent.putExtra("formPicMap", (Serializable) formPicMap);
+            intent.putExtra("roadbean", (Serializable) gridBean);
+            intent.putExtra("projectBean", (Serializable) projectBean);
+
+            intent.putExtra("isNewAdd",  true);
+            intent.putExtra("PcToken",  PcToken);
+
+            startActivityForResult(intent, 4);
+
         }
     }
 

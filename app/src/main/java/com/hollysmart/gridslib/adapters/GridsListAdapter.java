@@ -152,7 +152,7 @@ public class GridsListAdapter extends CommonAdapter<GridBean> {
 
                 if (mapBtnClickListener != null) {
                     GridBean gridBean = gridBeanList.get(position);
-                    mapBtnClickListener.MapBtnClick(gridBean);
+                    mapBtnClickListener.MapBtnClick(gridBean,position);
                 }
 
             }
@@ -193,7 +193,7 @@ public class GridsListAdapter extends CommonAdapter<GridBean> {
 
    public interface  setMapBtnClickListener{
 
-        void MapBtnClick(GridBean gridBean);
+        void MapBtnClick(GridBean gridBean,int curPosition);
 
     }
 
