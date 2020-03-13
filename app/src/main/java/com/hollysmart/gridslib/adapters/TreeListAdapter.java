@@ -19,7 +19,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.reflect.TypeToken;
 import com.hollysmart.apis.ResModelListAPI;
-import com.hollysmart.beans.GPS;
 import com.hollysmart.beans.JDPicInfo;
 import com.hollysmart.beans.ResModelBean;
 import com.hollysmart.db.DatabaseHelper;
@@ -36,7 +35,7 @@ import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.gridslib.TreeDetailsActivity;
 import com.hollysmart.gridslib.apis.FindListPageAPI;
-import com.hollysmart.gridslib.beans.GridBean;
+import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.Utils;
@@ -70,12 +69,12 @@ public class TreeListAdapter extends CommonAdapter<ResDataBean> {
 
     boolean ischeck =false; //是否只能查看 true  只能查看不能编辑；
     private String TreeFormModelId;
-    private GridBean roadbean;
+    private BlockBean roadbean;
     private ProjectBean projectBean;
 
     private SlideManager manager;
 
-    public TreeListAdapter(Context context, String TreeFormModelId, ProjectBean projectBean, GridBean roadbean, List<ResDataBean> mJingDians, boolean ischeck) {
+    public TreeListAdapter(Context context, String TreeFormModelId, ProjectBean projectBean, BlockBean roadbean, List<ResDataBean> mJingDians, boolean ischeck) {
         super(context, mJingDians, R.layout.item_tree);
         this.context = context;
         inflater = LayoutInflater.from(context);

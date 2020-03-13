@@ -32,16 +32,13 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.PolygonOptions;
 import com.amap.api.maps.model.animation.Animation;
-import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.Overlay;
-import com.baidu.mapapi.map.OverlayOptions;
 import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.db.UserInfo;
 import com.hollysmart.formlib.beans.DongTaiFormBean;
 import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
-import com.hollysmart.gridslib.beans.GridBean;
-import com.hollysmart.main.MainPresenter;
+import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.Mlog;
@@ -81,7 +78,7 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
 
 
     private boolean isCheck;
-    private GridBean roadbean;
+    private BlockBean roadbean;
     private ResDataBean tree_resDataBean;
     private ProjectBean projectBean;
     private DongTaiFormBean dongTaiFormBean;
@@ -117,7 +114,7 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
         String falg = getIntent().getStringExtra("falg");
         isCheck = getIntent().getBooleanExtra("isCheck", false);
         dongTaiFormBean = (DongTaiFormBean) getIntent().getSerializableExtra("bean");
-        roadbean = (GridBean) getIntent().getSerializableExtra("roadbean");
+        roadbean = (BlockBean) getIntent().getSerializableExtra("roadbean");
 
         tree_resDataBean = (ResDataBean) getIntent().getSerializableExtra("tree_resDataBean");
         projectBean = (ProjectBean) getIntent().getSerializableExtra("projectBean");
@@ -251,13 +248,13 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
      * 绘制表格
      */
 
-    private void drawGrid(GridBean gridBean) {
+    private void drawGrid(BlockBean blockBean) {
 
-        if (gridBean == null) {
+        if (blockBean == null) {
             return;
         }
 
-        List<LatLng> rectangles = createRectangle(gridBean);
+        List<LatLng> rectangles = createRectangle(blockBean);
 
         if (rectangles != null) {
 
@@ -311,12 +308,12 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
 
     }
 
-    private List<LatLng> createRectangle(GridBean gridBean) {
+    private List<LatLng> createRectangle(BlockBean blockBean) {
         List<LatLng> latLngs = new ArrayList<>();
-        latLngs.add(new LatLng(gridBean.getFdLbLat(), gridBean.getFdRtLng()));
-        latLngs.add(new LatLng(gridBean.getFdRtLat(), gridBean.getFdRtLng()));
-        latLngs.add(new LatLng(gridBean.getFdRtLat(), gridBean.getFdLbLng()));
-        latLngs.add(new LatLng(gridBean.getFdLbLat(), gridBean.getFdLbLng()));
+        latLngs.add(new LatLng(blockBean.getFdLbLat(), blockBean.getFdRtLng()));
+        latLngs.add(new LatLng(blockBean.getFdRtLat(), blockBean.getFdRtLng()));
+        latLngs.add(new LatLng(blockBean.getFdRtLat(), blockBean.getFdLbLng()));
+        latLngs.add(new LatLng(blockBean.getFdLbLat(), blockBean.getFdLbLng()));
         return latLngs;
     }
 

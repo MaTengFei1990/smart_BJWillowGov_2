@@ -16,10 +16,9 @@ import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.gridslib.adapters.GridsListAdapter;
-import com.hollysmart.gridslib.adapters.RoadListAdapter;
 import com.hollysmart.gridslib.apis.SearchGridsListPageAPI;
-import com.hollysmart.gridslib.apis.SearchListAPI;
-import com.hollysmart.gridslib.beans.GridBean;
+import com.hollysmart.gridslib.beans.BlockAndStatusBean;
+import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.Utils;
@@ -27,7 +26,9 @@ import com.hollysmart.value.Values;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,13 +55,15 @@ public class SearchGridsActivity extends StyleAnimActivity implements SearchGrid
     EditText ed_search;
 
 
-    private List<GridBean> roadBeanList;
+    private List<BlockAndStatusBean> roadBeanList;
     private GridsListAdapter resDataManageAdapter;
 
     private LoadingProgressDialog lpd;
 
     private List<JDPicInfo> picList; // 当前景点图片集
     private List<String> soundList; // 当前景点录音集
+
+    Map<String, String> map = new HashMap<String , String>();
 
     boolean ischeck = false; //是否只能查看 true  只能查看不能编辑；
 
@@ -116,6 +119,7 @@ public class SearchGridsActivity extends StyleAnimActivity implements SearchGrid
         ischeck = getIntent().getBooleanExtra("ischeck", false);
         roadFormModelId = getIntent().getStringExtra("roadFormModelId");
         TreeFormModelId = getIntent().getStringExtra("TreeFormModelId");
+        map = (Map<String, String>) getIntent().getSerializableExtra("exter");
         PcToken = getIntent().getStringExtra("PcToken");
 
 
@@ -165,7 +169,7 @@ public class SearchGridsActivity extends StyleAnimActivity implements SearchGrid
 
         lpd.show();
         lv_roadList.setAdapter(resDataManageAdapter);
-        new SearchGridsListPageAPI(editSearch,userInfo, this).request();
+        new SearchGridsListPageAPI(1,editSearch,userInfo,map.get("id"), this).request();
 
 
 
@@ -199,7 +203,7 @@ public class SearchGridsActivity extends StyleAnimActivity implements SearchGrid
 
 
     @Override
-    public void searchDatadicListResult(boolean isOk, List<GridBean> menuBeanList, int count) {
+    public void searchDatadicListResult(boolean isOk, List<BlockAndStatusBean> menuBeanList, int count) {
         lpd.cancel();
 
         if (isOk) {

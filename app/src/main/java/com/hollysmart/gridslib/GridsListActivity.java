@@ -1,6 +1,5 @@
 package com.hollysmart.gridslib;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -36,8 +35,6 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolygonOptions;
-import com.baidu.mapapi.map.MapStatusUpdate;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.d.lib.xrv.LRecyclerView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -63,7 +60,8 @@ import com.hollysmart.gridslib.adapters.MyClassicsHeader;
 import com.hollysmart.gridslib.apis.FindGridsListPageAPI;
 import com.hollysmart.gridslib.apis.FindListPageAPI;
 import com.hollysmart.gridslib.apis.GetGridTreeCountAPI;
-import com.hollysmart.gridslib.beans.GridBean;
+import com.hollysmart.gridslib.beans.BlockAndStatusBean;
+import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.CCM_DateTime;
@@ -130,7 +128,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
 
 
-    private GridBean currrentGridBeanshownOnMap ;//当前显示在地图的网格
+    private BlockBean currrentBlockBeanshownOnMap;//当前显示在地图的网格
     private int  currrentPositionGridshownOnMap ;//当前显示在地图的网格
 
     private ProjectBean projectBean;
@@ -323,7 +321,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         refreshLayout.setOnRefreshListener(this);
     }
 
-    private List<GridBean> gridBeanList;
+    private List<BlockAndStatusBean> blockBeanList;
     private GridsListAdapter resDataManageAdapter;
     Map<String, String> map = new HashMap<String , String>();
     private HashMap<String, List<JDPicInfo>> formPicMap = new HashMap<String, List<JDPicInfo>>();
@@ -342,7 +340,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         isLogin();
         setLpd();
         lay_fragment_ProdutEmpty.setVisibility(View.GONE);
-        gridBeanList = new ArrayList<>();
+        blockBeanList = new ArrayList<>();
 
 
 
@@ -592,7 +590,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
     // 查询
     private void selectDB() {
-        gridBeanList.clear();
+        blockBeanList.clear();
         if (map != null && map.size() > 0) {
             lpd.show();
 
@@ -623,7 +621,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                                         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
                                         lv_roadList.setLayoutManager(layoutManager);
 
-                                        resDataManageAdapter = new GridsListAdapter(PcToken,mContext,  TreeFormModelId, gridBeanList, projectBean, ischeck);
+                                        resDataManageAdapter = new GridsListAdapter(PcToken,mContext,  TreeFormModelId, blockBeanList, projectBean, ischeck);
                                         lv_roadList.setAdapter(resDataManageAdapter);
                                         resDataManageAdapter.setMapBtnClickListener(GridsListActivity.this);
                                         int space = 20;
@@ -643,7 +641,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                     } else {
                         lpd.cancel();
                         projectBean=new ProjectBean();
-                        if (gridBeanList != null && gridBeanList.size() > 0) {
+                        if (blockBeanList != null && blockBeanList.size() > 0) {
                             lay_fragment_ProdutEmpty.setVisibility(View.GONE);
                             lv_roadList.setVisibility(View.VISIBLE);
                         } else {
@@ -679,7 +677,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     // 查询
     private void selectDB(final String jqId) {
         Mlog.d("jqId = " + jqId);
-        gridBeanList.clear();
+        blockBeanList.clear();
 
         resModelList.clear();
         lpd.show();
@@ -738,8 +736,11 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                         }
 
                         JDPicDao jdPicDao = new JDPicDao(mContext);
-                        for (int i = 0; i < gridBeanList.size(); i++) {
-                            GridBean resDataBean = gridBeanList.get(i);
+                        for (int i = 0; i < blockBeanList.size(); i++) {
+
+                            BlockAndStatusBean blockAndStatusBean = blockBeanList.get(i);
+                            final BlockBean resDataBean = blockAndStatusBean.getBlock();
+
 
                             List<JDPicInfo> jdPicInfoList = jdPicDao.getDataByJDId(resDataBean.getId() + "");
 
@@ -786,16 +787,18 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
 
             ResDataDao resDataDao = new ResDataDao(getApplication());
-//            List<GridBean> resDataBeans = resDataDao.getData(jqId + "",true);
+//            List<BlockBean> resDataBeans = resDataDao.getData(jqId + "",true);
 //            if (resDataBeans != null && resDataBeans.size() > 0) {
 //
-//                gridBeanList.addAll(resDataBeans);
+//                blockBeanList.addAll(resDataBeans);
 //            }
 
 
             JDPicDao jdPicDao = new JDPicDao(mContext);
-            for (int i = 0; i < gridBeanList.size(); i++) {
-                GridBean resDataBean = gridBeanList.get(i);
+            for (int i = 0; i < blockBeanList.size(); i++) {
+
+                BlockAndStatusBean blockAndStatusBean = blockBeanList.get(i);
+                final BlockBean resDataBean = blockAndStatusBean.getBlock();
 
                 List<JDPicInfo> jdPicInfoList = jdPicDao.getDataByJDId(resDataBean.getId() + "");
 
@@ -811,14 +814,14 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
     private void getdataList(){
 
-        new FindGridsListPageAPI(page,userInfo, new FindGridsListPageAPI.DatadicListIF() {
+        new FindGridsListPageAPI(page,userInfo,map.get("id"), new FindGridsListPageAPI.DatadicListIF() {
             @Override
-            public void datadicListResult(boolean isOk, List<GridBean> netDataList,int count) {
+            public void datadicListResult(boolean isOk, List<BlockAndStatusBean> netDataList, int count) {
                 if (isOk) {
                     if (isRefresh) {
-                        gridBeanList.clear();
+                        blockBeanList.clear();
                     }
-                    if (gridBeanList.size() > 0 || netDataList.size() >0 ){
+                    if (blockBeanList.size() > 0 || netDataList.size() >0 ){
                         lay_fragment_ProdutEmpty.setVisibility(View.GONE);
                     }else {
                         lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
@@ -834,7 +837,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                             refreshLayout.setNoMoreData(false);//恢复没有更多数据的原始状态 1.0.5
                         }
                     }
-                    gridBeanList.addAll(netDataList);
+                    blockBeanList.addAll(netDataList);
                     resDataManageAdapter.notifyDataSetChanged();
                     lpd.cancel();
                 }
@@ -860,7 +863,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                     @Override
                     public void onFinish() {
                         lpd.cancel();
-                        if (gridBeanList != null && gridBeanList.size() > 0) {
+                        if (blockBeanList != null && blockBeanList.size() > 0) {
                             lay_fragment_ProdutEmpty.setVisibility(View.GONE);
                             lv_roadList.setVisibility(View.VISIBLE);
                         }else {
@@ -883,11 +886,12 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                     }
                 };
 
-                if (gridBeanList != null && gridBeanList.size() > 0) {
+                if (blockBeanList != null && blockBeanList.size() > 0) {
 
-                    for (int i = 0; i < gridBeanList.size(); i++) {
+                    for (int i = 0; i < blockBeanList.size(); i++) {
 
-                        GridBean resDataBean = gridBeanList.get(i);
+                        BlockAndStatusBean blockAndStatusBean = blockBeanList.get(i);
+                        final BlockBean resDataBean = blockAndStatusBean.getBlock();
 
                         taskPool.addTask(new GetGridTreeCountAPI(userInfo, TreeFormModelId, resDataBean, listener));
 
@@ -897,7 +901,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                 } else {
 
                     lpd.cancel();
-                    if (gridBeanList != null && gridBeanList.size() > 0) {
+                    if (blockBeanList != null && blockBeanList.size() > 0) {
                         lay_fragment_ProdutEmpty.setVisibility(View.GONE);
                         lv_roadList.setVisibility(View.VISIBLE);
                     } else {
@@ -962,9 +966,9 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 //        if (requestCode == 7) {
 //
 //            int position = data.getIntExtra("position", 0);
-//            GridBean gridBean = (GridBean) data.getSerializableExtra("gridBean");
+//            BlockBean gridBean = (BlockBean) data.getSerializableExtra("gridBean");
 //
-//            gridBeanList.get(position).setChildTreeCount(gridBean.getChildTreeCount());
+//            blockBeanList.get(position).setChildTreeCount(gridBean.getChildTreeCount());
 //            resDataManageAdapter.notifyDataSetChanged();
 //        }
     }
@@ -1060,8 +1064,8 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     }
 
     @Override
-    public void MapBtnClick(GridBean gridBean,int curPosition) {
-        currrentGridBeanshownOnMap = gridBean;
+    public void MapBtnClick(BlockBean blockBean, int curPosition) {
+        currrentBlockBeanshownOnMap = blockBean;
         currrentPositionGridshownOnMap = curPosition;
 //        mGaoDeMap.setMyLocationEnabled(false);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
 
@@ -1070,7 +1074,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
             rl_mapContent.setVisibility(View.VISIBLE);
         }
 
-        new FindListPageAPI(10000,userInfo,TreeFormModelId, projectBean, gridBean.getId(), new FindListPageAPI.DatadicListIF() {
+        new FindListPageAPI(10000,userInfo,TreeFormModelId, projectBean, blockBean.getId(), new FindListPageAPI.DatadicListIF() {
             @Override
             public void datadicListResult(boolean isOk, List<ResDataBean> netDataList) {
                 List<LatLng> points = new ArrayList<>();
@@ -1091,9 +1095,9 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                     }
 
 
-                    drawGrid(gridBean,points);
+                    drawGrid(blockBean,points);
 
-                    tv_griNumber.setText(gridBean.getFdBlockCode());
+                    tv_griNumber.setText(blockBean.getFdBlockCode());
 
 
                     }
@@ -1111,14 +1115,14 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
      * 绘制表格
      */
 
-    private void drawGrid(GridBean gridBean,List<LatLng> netDataList) {
+    private void drawGrid(BlockBean blockBean, List<LatLng> netDataList) {
         mGaoDeMap.clear();
 
-        if (gridBean == null) {
+        if (blockBean == null) {
             return;
         }
 
-        List<LatLng> rectangles = createRectangle(gridBean);
+        List<LatLng> rectangles = createRectangle(blockBean);
 
         if (rectangles != null) {
             mGaoDeMap.addPolygon(new PolygonOptions()
@@ -1173,12 +1177,12 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
     }
 
-    private List<LatLng> createRectangle(GridBean gridBean) {
+    private List<LatLng> createRectangle(BlockBean blockBean) {
         List<LatLng> latLngs = new ArrayList<>();
-        latLngs.add(new LatLng(gridBean.getFdLbLat(), gridBean.getFdRtLng()));
-        latLngs.add(new LatLng(gridBean.getFdRtLat(), gridBean.getFdRtLng()));
-        latLngs.add(new LatLng(gridBean.getFdRtLat(), gridBean.getFdLbLng()));
-        latLngs.add(new LatLng(gridBean.getFdLbLat(), gridBean.getFdLbLng()));
+        latLngs.add(new LatLng(blockBean.getFdLbLat(), blockBean.getFdRtLng()));
+        latLngs.add(new LatLng(blockBean.getFdRtLat(), blockBean.getFdRtLng()));
+        latLngs.add(new LatLng(blockBean.getFdRtLat(), blockBean.getFdLbLng()));
+        latLngs.add(new LatLng(blockBean.getFdLbLat(), blockBean.getFdLbLng()));
         return latLngs;
     }
 

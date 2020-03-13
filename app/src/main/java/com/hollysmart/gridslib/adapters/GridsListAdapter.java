@@ -17,7 +17,8 @@ import com.hollysmart.db.UserInfo;
 import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.gridslib.RoadDetailsActivity;
 import com.hollysmart.gridslib.TreeListActivity;
-import com.hollysmart.gridslib.beans.GridBean;
+import com.hollysmart.gridslib.beans.BlockAndStatusBean;
+import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.value.Values;
 
@@ -29,11 +30,11 @@ import java.util.List;
 /***
  * 表格列表的适配器
  */
-public class GridsListAdapter extends CommonAdapter<GridBean> {
+public class GridsListAdapter extends CommonAdapter<BlockAndStatusBean> {
 
     private SlideManager manager;
 
-    private List<GridBean> gridBeanList;
+    private List<BlockAndStatusBean> blockBeanList;
     private String TreeFormModelId;
     private String PcToken;
     private Context context;
@@ -45,12 +46,12 @@ public class GridsListAdapter extends CommonAdapter<GridBean> {
 
     boolean ischeck = false; //是否只能查看 true  只能查看不能编辑；
 
-    public GridsListAdapter(String PcToken, Context context, String TreeFormModelId, List<GridBean> gridBeanList, ProjectBean projectBean, boolean ischeck) {
-        super(context, gridBeanList, R.layout.adapter_grids_slide);
+    public GridsListAdapter(String PcToken, Context context, String TreeFormModelId, List<BlockAndStatusBean> blockBeanList, ProjectBean projectBean, boolean ischeck) {
+        super(context, blockBeanList, R.layout.adapter_grids_slide);
         this.context = context;
         this.TreeFormModelId = TreeFormModelId;
         this.PcToken = PcToken;
-        this.gridBeanList = gridBeanList;
+        this.blockBeanList = blockBeanList;
         manager = new SlideManager();
         this.projectBean = projectBean;
         this.ischeck = ischeck;
@@ -68,36 +69,47 @@ public class GridsListAdapter extends CommonAdapter<GridBean> {
 
     @Override
     public int getItemCount() {
-        if (gridBeanList.size() == 0) {
+        if (blockBeanList.size() == 0) {
             return 0;
         } else {
 
-            return gridBeanList.size();
+            return blockBeanList.size();
         }
 
     }
 
     @Override
-    public void convert(final int position, CommonHolder holder, final GridBean item) {
+    public void convert(final int position, CommonHolder holder, final BlockAndStatusBean item) {
 
-        GridBean gridBean = gridBeanList.get(position);
+        BlockAndStatusBean blockAndStatusBean = blockBeanList.get(position);
+        BlockBean blockBean = blockAndStatusBean.getBlock();
+
         final SlideLayout slSlide = holder.getView(R.id.sl_slide);
 
         final TextView tv_delete = holder.getView(R.id.tv_delete);
+        final TextView tv_gridNumTitle = holder.getView(R.id.tv_gridNumTitle);
         final TextView tv_check = holder.getView(R.id.tv_check);
         final TextView tv_gridNum = holder.getView(R.id.tv_gridNum);
         final TextView tv_area = holder.getView(R.id.tv_area);
         final Button btn_map = holder.getView(R.id.btn_map);
 
-        tv_gridNum.setText(gridBean.getFdBlockCode());
-        tv_area.setText(gridBean.getFdAreaName());
+        tv_gridNum.setText(blockBean.getFdBlockCode());
+        tv_area.setText(blockBean.getFdAreaName());
 
         if (ischeck) {
             tv_delete.setVisibility(View.GONE);
             tv_check.setText("查看");
         }
 
-        holder.setText(R.id.tv_countOfTree, "树木数量" + gridBean.getChildTreeCount() + "棵");
+        if (blockAndStatusBean.getFdStatus().equals("1")) {
+            tv_gridNumTitle.setTextColor(mContext.getResources().getColor(R.color.titleBg));
+            tv_gridNum.setTextColor(mContext.getResources().getColor(R.color.titleBg));
+        } else {
+            tv_gridNumTitle.setTextColor(mContext.getResources().getColor(R.color.heise));
+            tv_gridNum.setTextColor(mContext.getResources().getColor(R.color.heise));
+        }
+
+        holder.setText(R.id.tv_countOfTree, "树木数量" + blockBean.getChildTreeCount() + "棵");
 
         slSlide.setOnStateChangeListener(new SlideLayout.OnStateChangeListener() {
             @Override
@@ -117,10 +129,13 @@ public class GridsListAdapter extends CommonAdapter<GridBean> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, TreeListActivity.class);
-                final GridBean resDataBean = gridBeanList.get(position);
+
+                BlockAndStatusBean blockAndStatusBean = blockBeanList.get(position);
+               final BlockBean resDataBean = blockAndStatusBean.getBlock();
+
                 Activity activity = (Activity) context;
                 intent.putExtra("projectBean", projectBean);
-                intent.putExtra("gridBean", resDataBean);
+                intent.putExtra("blockBean", resDataBean);
                 intent.putExtra("TreeFormModelId", TreeFormModelId);
                 intent.putExtra("ischeck", ischeck);
                 intent.putExtra("PcToken", PcToken);
@@ -136,7 +151,7 @@ public class GridsListAdapter extends CommonAdapter<GridBean> {
 
                 final Intent intent = new Intent(context, RoadDetailsActivity.class);
 
-                intent.putExtra("resDataBean", gridBeanList.get(position));
+                intent.putExtra("resDataBean", blockBeanList.get(position));
                 intent.putExtra("formPicMap", (Serializable) formPicMap);
                 intent.putExtra("ischeck", ischeck);
                 Activity activity = (Activity) context;
@@ -151,8 +166,11 @@ public class GridsListAdapter extends CommonAdapter<GridBean> {
             public void onClick(View v) {
 
                 if (mapBtnClickListener != null) {
-                    GridBean gridBean = gridBeanList.get(position);
-                    mapBtnClickListener.MapBtnClick(gridBean,position);
+
+                    BlockAndStatusBean blockAndStatusBean = blockBeanList.get(position);
+                    final BlockBean blockBean = blockAndStatusBean.getBlock();
+
+                    mapBtnClickListener.MapBtnClick(blockBean,position);
                 }
 
             }
@@ -193,7 +211,7 @@ public class GridsListAdapter extends CommonAdapter<GridBean> {
 
    public interface  setMapBtnClickListener{
 
-        void MapBtnClick(GridBean gridBean,int curPosition);
+        void MapBtnClick(BlockBean blockBean, int curPosition);
 
     }
 

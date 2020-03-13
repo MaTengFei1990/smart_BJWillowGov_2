@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 
 @DatabaseTable(tableName = "grid_table")
-public class GridBean implements Serializable {
+public class BlockBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

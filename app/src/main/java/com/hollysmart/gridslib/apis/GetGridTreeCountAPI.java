@@ -2,7 +2,7 @@ package com.hollysmart.gridslib.apis;
 
 import com.hollysmart.db.UserInfo;
 import com.hollysmart.formlib.beans.ResDataBean;
-import com.hollysmart.gridslib.beans.GridBean;
+import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.Utils;
 import com.hollysmart.utils.taskpool.INetModel;
@@ -29,13 +29,13 @@ public class GetGridTreeCountAPI implements INetModel {
 
 
     private UserInfo userInfo;
-    private GridBean roadBean;
+    private BlockBean roadBean;
     private OnNetRequestListener onNetRequestListener;
     private String  parentId;
     private String  resmodelid;
 
 
-    public GetGridTreeCountAPI(UserInfo userInfo, String resmodelid, GridBean roadBean, OnNetRequestListener onNetRequestListener) {
+    public GetGridTreeCountAPI(UserInfo userInfo, String resmodelid, BlockBean roadBean, OnNetRequestListener onNetRequestListener) {
         this.userInfo = userInfo;
         this.roadBean = roadBean;
         this.onNetRequestListener = onNetRequestListener;

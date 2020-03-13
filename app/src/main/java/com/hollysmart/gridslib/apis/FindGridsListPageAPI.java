@@ -5,10 +5,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.hollysmart.db.UserInfo;
 import com.hollysmart.formlib.beans.ProjectBean;
-import com.hollysmart.formlib.beans.ResDataBean;
-import com.hollysmart.gridslib.beans.GridBean;
+import com.hollysmart.gridslib.beans.BlockAndStatusBean;
+import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.utils.Mlog;
-import com.hollysmart.utils.Utils;
 import com.hollysmart.utils.taskpool.INetModel;
 import com.hollysmart.value.Values;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -20,7 +19,6 @@ import org.json.JSONObject;
 import java.util.List;
 
 import okhttp3.Call;
-import okhttp3.MediaType;
 
 /**
  * Created by Lenovo on 2019/4/18.
@@ -31,11 +29,13 @@ public class FindGridsListPageAPI implements INetModel {
 
     private int page=0;
     private UserInfo userInfo;
+    private  String id;
     private DatadicListIF datadicListIF;
 
-    public FindGridsListPageAPI(int page,UserInfo userInfo, DatadicListIF datadicListIF) {
+    public FindGridsListPageAPI(int page, UserInfo userInfo, String id, DatadicListIF datadicListIF) {
         this.page = page;
         this.userInfo = userInfo;
+        this.id = id;
         this.datadicListIF = datadicListIF;
     }
 
@@ -47,6 +47,7 @@ public class FindGridsListPageAPI implements INetModel {
                 .addHeader("Authorization", userInfo.getAccess_token())
                 .addParams("officeid", userInfo.getOffice().getId())
                 .addParams("page", page+"")
+                .addParams("taskid", id)
                 .build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
@@ -67,8 +68,8 @@ public class FindGridsListPageAPI implements INetModel {
                     if (status == 1) {
 
                         Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm").create();
-                        List<GridBean> menuBeanList = mGson.fromJson(object.getString("data"),
-                                new TypeToken<List<GridBean>>() {
+                        List<BlockAndStatusBean> menuBeanList = mGson.fromJson(object.getString("data"),
+                                new TypeToken<List<BlockAndStatusBean>>() {
                                 }.getType());
 
                         if (datadicListIF != null) {
@@ -97,6 +98,6 @@ public class FindGridsListPageAPI implements INetModel {
     }
 
     public interface DatadicListIF {
-        void datadicListResult(boolean isOk, List<GridBean> menuBeanList,int count);
+        void datadicListResult(boolean isOk, List<BlockAndStatusBean> menuBeanList, int count);
     }
 }

@@ -34,7 +34,8 @@ import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.gridslib.adapters.MyClassicsHeader;
 import com.hollysmart.gridslib.adapters.TreeListAdapter;
 import com.hollysmart.gridslib.apis.FindListPageAPI;
-import com.hollysmart.gridslib.beans.GridBean;
+import com.hollysmart.gridslib.apis.BlocksComplateAPI;
+import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.CCM_DateTime;
@@ -127,7 +128,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
 
     private LoadingProgressDialog lpd;
 
-    private GridBean gridBean;
+    private BlockBean blockBean;
     private String TreeFormModelId;
     private String PcToken;
     private String addtreeFalg;
@@ -146,7 +147,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
         PcToken = getIntent().getStringExtra("PcToken");
         TreeFormModelId = getIntent().getStringExtra("TreeFormModelId");
 
-        gridBean = (GridBean) getIntent().getSerializableExtra("gridBean");
+        blockBean = (BlockBean) getIntent().getSerializableExtra("blockBean");
         projectBean = (ProjectBean) getIntent().getSerializableExtra("projectBean");
         position =  getIntent().getIntExtra("position",0);
         addtreeFalg =  getIntent().getStringExtra("addtreeFalg");
@@ -159,7 +160,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
             LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
             lv_treeList.setLayoutManager(layoutManager);
 
-            treeListAdapter = new TreeListAdapter(mContext,TreeFormModelId, projectBean, gridBean, treeslist, ischeck);
+            treeListAdapter = new TreeListAdapter(mContext,TreeFormModelId, projectBean, blockBean, treeslist, ischeck);
 
             lv_treeList.setAdapter(treeListAdapter);
 
@@ -214,13 +215,13 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
 
                 Intent intentbak = new Intent();
                 intentbak.putExtra("position", position);
-                intentbak.putExtra("gridBean", gridBean);
+                intentbak.putExtra("blockBean", blockBean);
                 setResult(7, intentbak);
                 finish();
                 break;
             case R.id.tv_maplsit:
                 Intent mapintent = new Intent(mContext, ResListShowOnGDMapActivity.class);
-                mapintent.putExtra("gridBean", gridBean);
+                mapintent.putExtra("blockBean", blockBean);
                 mapintent.putExtra("projectBean", projectBean);
                 mapintent.putExtra("exter", (Serializable) map);
                 mapintent.putExtra("ischeck", ischeck);
@@ -240,7 +241,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                 Intent searchIntent = new Intent(mContext, SearchTreeActivity.class);
                 searchIntent.putExtra("TreeFormModelId", TreeFormModelId);
                 searchIntent.putExtra("projectBean", projectBean);
-                searchIntent.putExtra("gridBean", gridBean);
+                searchIntent.putExtra("blockBean", blockBean);
                 searchIntent.putExtra("ischeck", ischeck);
                 startActivity(searchIntent);
 
@@ -252,10 +253,23 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                 break;
             case R.id.tv_success:
 
-                showGrid();
+                gridsSuccess();
 
                 break;
         }
+    }
+
+    private void gridsSuccess() {
+
+        new BlocksComplateAPI(userInfo, projectBean, blockBean, new BlocksComplateAPI.BlocksScomplateIF() {
+            @Override
+            public void blocksScomplateResult(boolean isOk, List<ResDataBean> menuBeanList) {
+
+            }
+        }).request();
+
+
+
     }
 
     private void addTrees() {
@@ -293,6 +307,14 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
 
                         formBean.setPropertyLabel("");
 
+                    }
+                    if (formBean.getJavaField().equals("fieldName")) {
+
+                        formBean.setPropertyLabel(blockBean.getFdBlockNum());
+                    }
+                    if (formBean.getJavaField().equals("tree_number")) {
+
+                        formBean.setPropertyLabel("1");
                     }
                     if (formBean.getJavaField().equals("tree_dangerous")) {
 
@@ -332,7 +354,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
             resDataBean.setFd_resdate(createTime);
             resDataBean.setFd_resmodelname(resModelBean.getfModelName());
             resDataBean.setFd_restaskname(projectBean.getfTaskname());
-            resDataBean.setFd_parentid(gridBean.getId());
+            resDataBean.setFd_parentid(blockBean.getId());
             resDataBean.setFdTaskId(projectBean.getId());
 
             intent.putExtra("formBeanList", (Serializable) formBeanList);
@@ -341,7 +363,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
             intent.putExtra("sportEditFlag", true);
             formPicMap.clear();
             intent.putExtra("formPicMap", (Serializable) formPicMap);
-            intent.putExtra("roadbean", (Serializable) gridBean);
+            intent.putExtra("roadbean", (Serializable) blockBean);
             intent.putExtra("projectBean", (Serializable) projectBean);
             intent.putExtra("isNewAdd",  true);
             intent.putExtra("PcToken",  PcToken);
@@ -357,7 +379,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
             resDataBean.setFd_resdate(createTime);
             resDataBean.setFd_resmodelname(resModelBean.getfModelName());
             resDataBean.setFd_restaskname(projectBean.getfTaskname());
-            resDataBean.setFd_parentid(gridBean.getId());
+            resDataBean.setFd_parentid(blockBean.getId());
             resDataBean.setFdTaskId(projectBean.getId());
 
             intent.putExtra("formBeanList", (Serializable) formBeanList);
@@ -365,7 +387,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
             intent.putExtra("sportEditFlag", true);
             formPicMap.clear();
             intent.putExtra("formPicMap", (Serializable) formPicMap);
-            intent.putExtra("roadbean", (Serializable) gridBean);
+            intent.putExtra("roadbean", (Serializable) blockBean);
             intent.putExtra("projectBean", (Serializable) projectBean);
 
             intent.putExtra("isNewAdd",  true);
@@ -398,11 +420,11 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         lv_treeList.setLayoutManager(layoutManager);
 
-        treeListAdapter = new TreeListAdapter(mContext,TreeFormModelId, projectBean, gridBean, treeslist, ischeck);
+        treeListAdapter = new TreeListAdapter(mContext,TreeFormModelId, projectBean, blockBean, treeslist, ischeck);
 
         lv_treeList.setAdapter(treeListAdapter);
 
-        new FindListPageAPI(userInfo,TreeFormModelId, projectBean, gridBean.getId(), new FindListPageAPI.DatadicListIF() {
+        new FindListPageAPI(userInfo,TreeFormModelId, projectBean, blockBean.getId(), new FindListPageAPI.DatadicListIF() {
             @Override
             public void datadicListResult(boolean isOk, List<ResDataBean> netDataList) {
                 List<String> idList = new ArrayList<>();
@@ -444,7 +466,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                     }
                 }
 
-                selectDB(gridBean.getId());
+                selectDB(blockBean.getId());
 
                 lpd.cancel();
 
@@ -509,7 +531,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
 
 
 
-                        new FindListPageAPI(userInfo, TreeFormModelId,projectBean, gridBean.getId(), new FindListPageAPI.DatadicListIF() {
+                        new FindListPageAPI(userInfo, TreeFormModelId,projectBean, blockBean.getId(), new FindListPageAPI.DatadicListIF() {
                             @Override
                             public void datadicListResult(boolean isOk, List<ResDataBean> netDataList) {
 
@@ -616,7 +638,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
             }
 
 
-            new FindListPageAPI(userInfo,TreeFormModelId, projectBean, gridBean.getId(), new FindListPageAPI.DatadicListIF() {
+            new FindListPageAPI(userInfo,TreeFormModelId, projectBean, blockBean.getId(), new FindListPageAPI.DatadicListIF() {
                 @Override
                 public void datadicListResult(boolean isOk, List<ResDataBean> netDataList) {
 
@@ -709,7 +731,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
             if (resultCode == 1) {
 
 
-                selectDB(gridBean.getId());
+                selectDB(blockBean.getId());
 
             }
         }
@@ -719,7 +741,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
             if (resultCode == 1) {
 
 
-                selectDB(gridBean.getId());
+                selectDB(blockBean.getId());
 
             }
         }
@@ -757,7 +779,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
 
     private void getData() {
 
-        new FindListPageAPI(page, pageSize, userInfo, TreeFormModelId, projectBean, gridBean.getId(), new FindListPageAPI.DatadicListCountIF() {
+        new FindListPageAPI(page, pageSize, userInfo, TreeFormModelId, projectBean, blockBean.getId(), new FindListPageAPI.DatadicListCountIF() {
             @Override
             public void datadicListResult(boolean isOk, List<ResDataBean> list, int allCount) {
 
@@ -793,7 +815,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                 refreshLayout.finishLoadMore();
                 loadMore = false;
             }
-                gridBean.setChildTreeCount(treeslist.size());
+                blockBean.setChildTreeCount(treeslist.size());
 
 
             }

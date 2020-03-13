@@ -1,7 +1,6 @@
 package com.hollysmart.gridslib;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
@@ -38,7 +37,6 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.PolygonOptions;
 import com.amap.api.maps.model.animation.Animation;
-import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.Overlay;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -50,7 +48,7 @@ import com.hollysmart.formlib.apis.ResDataGetAPI;
 import com.hollysmart.formlib.beans.DongTaiFormBean;
 import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
-import com.hollysmart.gridslib.beans.GridBean;
+import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.main.MainPresenter;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
@@ -86,7 +84,7 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
     public AMapLocationClient mLocationClient = null;
 
     private boolean isCheck;
-    private GridBean roadbean;
+    private BlockBean roadbean;
     private ResDataBean tree_resDataBean;
     private ProjectBean projectBean;
     private DongTaiFormBean dongTaiFormBean;
@@ -176,7 +174,7 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
             isCheck = getIntent().getBooleanExtra("ischeck", false);
             TreeFormModelId = getIntent().getStringExtra("TreeFormModelId");
             tv_projectName.setText("树木地图");
-            roadbean = (GridBean) getIntent().getSerializableExtra("gridBean");
+            roadbean = (BlockBean) getIntent().getSerializableExtra("gridBean");
         }
 
 
@@ -231,13 +229,13 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
      * 绘制表格
      */
 
-    private void drawGrid(GridBean gridBean) {
+    private void drawGrid(BlockBean blockBean) {
 
-        if (gridBean == null) {
+        if (blockBean == null) {
             return;
         }
 
-        List<LatLng> rectangles = createRectangle(gridBean);
+        List<LatLng> rectangles = createRectangle(blockBean);
 
         if (rectangles != null) {
 //            mGaoDeMap.addPolygon(new PolygonOptions()
@@ -298,12 +296,12 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
 
     }
 
-    private List<LatLng> createRectangle(GridBean gridBean) {
+    private List<LatLng> createRectangle(BlockBean blockBean) {
         List<LatLng> latLngs = new ArrayList<>();
-        latLngs.add(new LatLng(gridBean.getFdLbLat(), gridBean.getFdRtLng()));
-        latLngs.add(new LatLng(gridBean.getFdRtLat(), gridBean.getFdRtLng()));
-        latLngs.add(new LatLng(gridBean.getFdRtLat(), gridBean.getFdLbLng()));
-        latLngs.add(new LatLng(gridBean.getFdLbLat(), gridBean.getFdLbLng()));
+        latLngs.add(new LatLng(blockBean.getFdLbLat(), blockBean.getFdRtLng()));
+        latLngs.add(new LatLng(blockBean.getFdRtLat(), blockBean.getFdRtLng()));
+        latLngs.add(new LatLng(blockBean.getFdRtLat(), blockBean.getFdLbLng()));
+        latLngs.add(new LatLng(blockBean.getFdLbLat(), blockBean.getFdLbLng()));
         return latLngs;
     }
 

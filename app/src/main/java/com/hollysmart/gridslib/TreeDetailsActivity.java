@@ -20,7 +20,6 @@ import com.hollysmart.apis.GetResModelAPI;
 import com.hollysmart.apis.GetResModelVersionAPI;
 import com.hollysmart.apis.UpLoadFormPicAPI;
 import com.hollysmart.beans.DictionaryBean;
-import com.hollysmart.beans.GPS;
 import com.hollysmart.beans.JDPicInfo;
 import com.hollysmart.beans.ResModelBean;
 import com.hollysmart.beans.cgformRuleBean;
@@ -39,7 +38,7 @@ import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.bjwillowgov.R;
 //import com.hollysmart.gridslib.apis.GetTreeNumAPI;
-import com.hollysmart.gridslib.beans.GridBean;
+import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.CCM_Bitmap;
@@ -101,7 +100,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
 
     private ResDataBean tree_resDataBean;
-    private GridBean roadBean;
+    private BlockBean roadBean;
     private ProjectBean projectBean;
 
     private String PcToken;
@@ -131,7 +130,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
         setLpd();
 
         tree_resDataBean = (ResDataBean) getIntent().getSerializableExtra("resDataBean");
-        roadBean = (GridBean) getIntent().getSerializableExtra("roadbean");
+        roadBean = (BlockBean) getIntent().getSerializableExtra("roadbean");
         resFromBeanLsit = (List<DongTaiFormBean>) getIntent().getSerializableExtra("formBeanList");
         treeList = (List<ResDataBean>) getIntent().getSerializableExtra("treeList");
         formPicMap = (HashMap<String, List<JDPicInfo>>) getIntent().getSerializableExtra("formPicMap");

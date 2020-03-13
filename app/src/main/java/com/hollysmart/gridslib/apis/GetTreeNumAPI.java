@@ -6,7 +6,7 @@
 //import com.hollysmart.formlib.beans.DongTaiFormBean;
 //import com.hollysmart.formlib.beans.FormModelBean;
 //import com.hollysmart.formlib.beans.ResDataBean;
-//import com.hollysmart.gridslib.beans.GridBean;
+//import com.hollysmart.gridslib.beans.BlockBean;
 //import com.hollysmart.utils.Mlog;
 //import com.hollysmart.utils.Utils;
 //import com.hollysmart.utils.taskpool.INetModel;
@@ -29,10 +29,10 @@
 //
 //
 //    private String PcToken;
-//    private GridBean roadBean;
+//    private BlockBean roadBean;
 //    private GetTreeNumAPIIF datadicListIF;
 //
-//    public GetTreeNumAPI(String PcToken, GridBean roadBean, GetTreeNumAPIIF datadicListIF) {
+//    public GetTreeNumAPI(String PcToken, BlockBean roadBean, GetTreeNumAPIIF datadicListIF) {
 //        this.PcToken = PcToken;
 //        this.roadBean = roadBean;
 //        this.datadicListIF = datadicListIF;
