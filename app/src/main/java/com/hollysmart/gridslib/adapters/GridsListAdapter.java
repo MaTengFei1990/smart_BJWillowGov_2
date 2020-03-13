@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /***
  * 表格列表的适配器
@@ -46,6 +47,8 @@ public class GridsListAdapter extends CommonAdapter<BlockAndStatusBean> {
 
     boolean ischeck = false; //是否只能查看 true  只能查看不能编辑；
 
+    Map<String, String> map = new HashMap<String , String>();
+
     public GridsListAdapter(String PcToken, Context context, String TreeFormModelId, List<BlockAndStatusBean> blockBeanList, ProjectBean projectBean, boolean ischeck) {
         super(context, blockBeanList, R.layout.adapter_grids_slide);
         this.context = context;
@@ -65,6 +68,15 @@ public class GridsListAdapter extends CommonAdapter<BlockAndStatusBean> {
 
     public void setMapBtnClickListener(setMapBtnClickListener mapBtnClickListener) {
         this.mapBtnClickListener = mapBtnClickListener;
+    }
+
+
+    public Map<String, String> getMap() {
+        return map;
+    }
+
+    public void setMap(Map<String, String> map) {
+        this.map = map;
     }
 
     @Override
@@ -138,6 +150,7 @@ public class GridsListAdapter extends CommonAdapter<BlockAndStatusBean> {
                 intent.putExtra("blockBean", resDataBean);
                 intent.putExtra("TreeFormModelId", TreeFormModelId);
                 intent.putExtra("ischeck", ischeck);
+                intent.putExtra("exter", (Serializable) map);
                 intent.putExtra("PcToken", PcToken);
                 intent.putExtra("position", position);
                 activity.startActivityForResult(intent,7);

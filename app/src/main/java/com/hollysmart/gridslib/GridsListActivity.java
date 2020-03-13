@@ -624,6 +624,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                                         resDataManageAdapter = new GridsListAdapter(PcToken,mContext,  TreeFormModelId, blockBeanList, projectBean, ischeck);
                                         lv_roadList.setAdapter(resDataManageAdapter);
                                         resDataManageAdapter.setMapBtnClickListener(GridsListActivity.this);
+                                        resDataManageAdapter.setMap(map);
                                         int space = 20;
                                         lv_roadList.addItemDecoration(new SpacesItemDecoration(space));
                                         selectDB(projectBean.getId());
@@ -963,14 +964,12 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
             }
         }
 //        //在地图页面修改了地图修改
-//        if (requestCode == 7) {
-//
-//            int position = data.getIntExtra("position", 0);
-//            BlockBean gridBean = (BlockBean) data.getSerializableExtra("gridBean");
-//
-//            blockBeanList.get(position).setChildTreeCount(gridBean.getChildTreeCount());
-//            resDataManageAdapter.notifyDataSetChanged();
-//        }
+        if (requestCode == 7) {
+            if (resultCode == 1) {
+                selectDB(projectBean.getId());
+
+            }
+        }
     }
 
 

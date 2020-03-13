@@ -151,6 +151,8 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
         projectBean = (ProjectBean) getIntent().getSerializableExtra("projectBean");
         position =  getIntent().getIntExtra("position",0);
         addtreeFalg =  getIntent().getStringExtra("addtreeFalg");
+        map = (Map<String, String>) getIntent().getSerializableExtra("exter");
+
         setLpd();
         if (addtreeFalg != null) {
             ResModelDao resModelDao = new ResModelDao(mContext);
@@ -253,17 +255,22 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                 break;
             case R.id.tv_success:
 
-                gridsSuccess();
+                blocksComplate();
 
                 break;
         }
     }
 
-    private void gridsSuccess() {
+    private void blocksComplate() {
 
-        new BlocksComplateAPI(userInfo, projectBean, blockBean, new BlocksComplateAPI.BlocksScomplateIF() {
+        new BlocksComplateAPI(userInfo, map.get("id"), blockBean, new BlocksComplateAPI.BlocksScomplateIF() {
             @Override
-            public void blocksScomplateResult(boolean isOk, List<ResDataBean> menuBeanList) {
+            public void blocksScomplateResult(boolean isOk) {
+
+                if (isOk) {
+                    setResult(1);
+                    finish();
+                }
 
             }
         }).request();

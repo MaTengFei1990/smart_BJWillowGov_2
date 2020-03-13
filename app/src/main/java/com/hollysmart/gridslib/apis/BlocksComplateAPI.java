@@ -25,14 +25,14 @@ public class BlocksComplateAPI implements INetModel {
 
 
     private UserInfo userInfo;
-    private ProjectBean projectBean;
+    private String id;
     private BlockBean blockBean;
     private BlocksScomplateIF blocksScomplateIF;
 
 
-    public BlocksComplateAPI(UserInfo userInfo, ProjectBean projectBean, BlockBean blockBean, BlocksScomplateIF blocksScomplateIF) {
+    public BlocksComplateAPI(UserInfo userInfo, String  id, BlockBean blockBean, BlocksScomplateIF blocksScomplateIF) {
         this.userInfo = userInfo;
-        this.projectBean = projectBean;
+        this.id = id;
         this.blockBean = blockBean;
         this.blocksScomplateIF = blocksScomplateIF;
     }
@@ -43,7 +43,7 @@ public class BlocksComplateAPI implements INetModel {
         try {
             object.put("blockNum ", blockBean.getFdBlockNum());
             object.put("blockCode ", blockBean.getFdBlockCode());
-            object.put("taskid ", projectBean.getId());
+            object.put("taskid ",id);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -56,7 +56,7 @@ public class BlocksComplateAPI implements INetModel {
             @Override
             public void onError(Call call, Exception e, int id) {
                 e.printStackTrace();
-                blocksScomplateIF.blocksScomplateResult(false, null);
+                blocksScomplateIF.blocksScomplateResult(false);
             }
 
             @Override
@@ -66,20 +66,20 @@ public class BlocksComplateAPI implements INetModel {
                 try {
                     JSONObject object = new JSONObject(response);
                     int status = object.getInt("status");
-                    if (status == 200) {
-                        blocksScomplateIF.blocksScomplateResult(true, null);
+                    if (status == 1) {
+                        blocksScomplateIF.blocksScomplateResult(true);
                     } else {
-                        blocksScomplateIF.blocksScomplateResult(false, null);
+                        blocksScomplateIF.blocksScomplateResult(false);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    blocksScomplateIF.blocksScomplateResult(false, null);
+                    blocksScomplateIF.blocksScomplateResult(false);
                 }
             }
         });
     }
 
     public interface BlocksScomplateIF {
-        void blocksScomplateResult(boolean isOk, List<ResDataBean> menuBeanList);
+        void blocksScomplateResult(boolean isOk);
     }
 }

@@ -126,6 +126,7 @@ public class SearchGridsActivity extends StyleAnimActivity implements SearchGrid
 
 
         resDataManageAdapter = new GridsListAdapter(PcToken,mContext, roadFormModelId, roadBeanList, projectBean, ischeck);
+        resDataManageAdapter.setMap(map);
         lv_roadList.setAdapter(resDataManageAdapter);
 
 

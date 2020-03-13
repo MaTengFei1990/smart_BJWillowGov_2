@@ -159,6 +159,10 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
                 bean.setPropertyLabel(roadbean.getFdBlockCode());
             }
 
+            if (!isCheck&&bean.getJavaField().equals("tree_number")) {
+                bean.setPropertyLabel("1");
+            }
+
 
         }
         cancelbean = new DictionaryBean();
