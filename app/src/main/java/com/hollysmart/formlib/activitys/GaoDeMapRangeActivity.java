@@ -91,6 +91,7 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
 
     private int flagtype = 0;
     private LatLng centerlatlng = null;
+    private boolean isNewAdd = false;
 
     //多边形顶点位置
     private List<LatLng> points = new ArrayList<>();
@@ -120,6 +121,7 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
 
         tree_resDataBean = (ResDataBean) getIntent().getSerializableExtra("tree_resDataBean");
         projectBean = (ProjectBean) getIntent().getSerializableExtra("projectBean");
+        isNewAdd = getIntent().getBooleanExtra("isNewAdd", false);
 
         isEdit = dongTaiFormBean.getIsEdit();
 
@@ -141,18 +143,19 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
 
         }else {
 
-            treeList = (List<ResDataBean>) getIntent().getSerializableExtra("treeList");
+            if (!Utils.isEmpty(isEdit) && isEdit.equals("0")) {
+
+                findViewById(R.id.btn_add).setVisibility(View.GONE);
+                findViewById(R.id.btn_chexiao).setVisibility(View.GONE);
+                findViewById(R.id.bn_dingwei).setVisibility(View.GONE);
+                iv_center.setVisibility(View.GONE);
+            }else {
+                if (isNewAdd) {
+                    treeList = (List<ResDataBean>) getIntent().getSerializableExtra("treeList");
+                }
+            }
         }
 
-        if (!Utils.isEmpty(isEdit) && isEdit.equals("0")) {
-
-            findViewById(R.id.btn_add).setVisibility(View.GONE);
-            findViewById(R.id.btn_chexiao).setVisibility(View.GONE);
-            findViewById(R.id.bn_dingwei).setVisibility(View.GONE);
-            iv_center.setVisibility(View.GONE);
-        }else {
-            treeList = (List<ResDataBean>) getIntent().getSerializableExtra("treeList");
-        }
 
         if (dongTaiFormBean != null && (!Utils.isEmpty(dongTaiFormBean.getPropertyLabel()))) {
 

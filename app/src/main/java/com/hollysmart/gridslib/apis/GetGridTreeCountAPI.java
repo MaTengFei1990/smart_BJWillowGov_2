@@ -1,6 +1,7 @@
 package com.hollysmart.gridslib.apis;
 
 import com.hollysmart.db.UserInfo;
+import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.utils.Mlog;
@@ -30,14 +31,17 @@ public class GetGridTreeCountAPI implements INetModel {
 
     private UserInfo userInfo;
     private BlockBean roadBean;
+    private ProjectBean projectBean;
     private OnNetRequestListener onNetRequestListener;
     private String  parentId;
     private String  resmodelid;
+    private String  fd_restaskid;
 
 
-    public GetGridTreeCountAPI(UserInfo userInfo, String resmodelid, BlockBean roadBean, OnNetRequestListener onNetRequestListener) {
+    public GetGridTreeCountAPI(UserInfo userInfo, String resmodelid, BlockBean roadBean, ProjectBean projectBean, OnNetRequestListener onNetRequestListener) {
         this.userInfo = userInfo;
         this.roadBean = roadBean;
+        this.projectBean = projectBean;
         this.onNetRequestListener = onNetRequestListener;
         this.parentId = roadBean.getId();
         this.resmodelid = resmodelid;
@@ -49,7 +53,7 @@ public class GetGridTreeCountAPI implements INetModel {
         try {
             object.put("pageNo", "1");
             object.put("pageSize", "1000");
-            object.put("fd_restaskid", roadBean.getId()) ;
+            object.put("fd_restaskid", projectBean.getId()) ;
             object.put("fd_resmodelid", resmodelid);
 
             if (!Utils.isEmpty(parentId)) {

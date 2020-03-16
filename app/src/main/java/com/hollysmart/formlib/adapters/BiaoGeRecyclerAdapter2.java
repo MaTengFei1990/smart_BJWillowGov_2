@@ -66,6 +66,8 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
     private boolean isCheck = false; //是否是查看，true查看，不能编辑；
     private DictionaryBean cancelbean;
 
+    private boolean isNewAdd;
+
     private List<ResDataBean>treeList=new ArrayList<>();
 
     JDPicInfo picBeannull = new JDPicInfo(0, null, null, null, 1, "false");
@@ -170,6 +172,14 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
         cancelbean = new DictionaryBean();
         cancelbean.setValue("");
         cancelbean.setLabel("取消");
+    }
+
+    public boolean isNewAdd() {
+        return isNewAdd;
+    }
+
+    public void setNewAdd(boolean newAdd) {
+        isNewAdd = newAdd;
     }
 
     public List<ResDataBean> getTreeList() {
@@ -1597,6 +1607,7 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
                     if (treeList != null) {
                         intent.putExtra("treeList", (Serializable)treeList);
                     }
+                    intent.putExtra("isNewAdd",isNewAdd);
                     Activity activity = (Activity) mContext;
                     activity.startActivityForResult(intent, 6);
                 }
@@ -1617,6 +1628,7 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
                     if (treeList != null) {
                         intent.putExtra("treeList",(Serializable) treeList);
                     }
+                    intent.putExtra("isNewAdd",isNewAdd);
                     Activity activity = (Activity) mContext;
                     activity.startActivityForResult(intent, 6);
                 }
@@ -1637,6 +1649,7 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
                     if (treeList != null) {
                         intent.putExtra("treeList",(Serializable) treeList);
                     }
+                    intent.putExtra("isNewAdd",isNewAdd);
                     Activity activity = (Activity) mContext;
                     activity.startActivityForResult(intent, 6);
                 }

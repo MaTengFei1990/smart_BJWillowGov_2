@@ -852,69 +852,73 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                     loadMore = false;
                 }
 
-//                getTreeNum();
+                getTreeNum(0,10);
 
 
             }
 
-            private void getTreeNum() {
-                final TaskPool taskPool=new TaskPool();
 
-                OnNetRequestListener listener=new OnNetRequestListener() {
-                    @Override
-                    public void onFinish() {
-                        lpd.cancel();
-                        if (blockBeanList != null && blockBeanList.size() > 0) {
-                            lay_fragment_ProdutEmpty.setVisibility(View.GONE);
-                            lv_roadList.setVisibility(View.VISIBLE);
-                        }else {
-                            lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
-                            lv_roadList.setVisibility(View.GONE);
-                        }
-                        resDataManageAdapter.notifyDataSetChanged();
-                    }
-
-
-                    @Override
-                    public void OnNext() {
-
-                        taskPool.execute(this);
-                    }
-
-                    @Override
-                    public void OnResult(boolean isOk, String msg, Object object) {
-                        taskPool.execute(this);
-                    }
-                };
-
-                if (blockBeanList != null && blockBeanList.size() > 0) {
-
-                    for (int i = 0; i < blockBeanList.size(); i++) {
-
-                        BlockAndStatusBean blockAndStatusBean = blockBeanList.get(i);
-                        final BlockBean resDataBean = blockAndStatusBean.getBlock();
-
-                        taskPool.addTask(new GetGridTreeCountAPI(userInfo, TreeFormModelId, resDataBean, listener));
-
-                    }
-
-                    taskPool.execute(listener);
-                } else {
-
-                    lpd.cancel();
-                    if (blockBeanList != null && blockBeanList.size() > 0) {
-                        lay_fragment_ProdutEmpty.setVisibility(View.GONE);
-                        lv_roadList.setVisibility(View.VISIBLE);
-                    } else {
-                        lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
-                        lv_roadList.setVisibility(View.GONE);
-                    }
-                }
-            }
         }).request();
 
 
     }
+
+
+    final TaskPool taskPool=new TaskPool();
+    private void getTreeNum(int start,int count) {
+
+        OnNetRequestListener listener=new OnNetRequestListener() {
+            @Override
+            public void onFinish() {
+                lpd.cancel();
+                if (blockBeanList != null && blockBeanList.size() > 0) {
+                    lay_fragment_ProdutEmpty.setVisibility(View.GONE);
+                    lv_roadList.setVisibility(View.VISIBLE);
+                }else {
+                    lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
+                    lv_roadList.setVisibility(View.GONE);
+                }
+                resDataManageAdapter.notifyDataSetChanged();
+            }
+
+
+            @Override
+            public void OnNext() {
+
+                taskPool.execute(this);
+            }
+
+            @Override
+            public void OnResult(boolean isOk, String msg, Object object) {
+                taskPool.execute(this);
+            }
+        };
+
+        if (blockBeanList != null && blockBeanList.size() > 0) {
+
+            for (int i = start; i < start+count; i++) {
+
+                BlockAndStatusBean blockAndStatusBean = blockBeanList.get(i);
+                final BlockBean resDataBean = blockAndStatusBean.getBlock();
+
+                taskPool.addTask(new GetGridTreeCountAPI(userInfo, TreeFormModelId, resDataBean,projectBean, listener));
+
+            }
+
+            taskPool.execute(listener);
+        } else {
+
+            lpd.cancel();
+            if (blockBeanList != null && blockBeanList.size() > 0) {
+                lay_fragment_ProdutEmpty.setVisibility(View.GONE);
+                lv_roadList.setVisibility(View.VISIBLE);
+            } else {
+                lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
+                lv_roadList.setVisibility(View.GONE);
+            }
+        }
+    }
+
 
 
 

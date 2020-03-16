@@ -44,26 +44,37 @@
             android:padding="10dp"
             android:gravity="center|right"
             android:textColor="@color/baise"
-            android:layout_toLeftOf="@+id/tv_maplsit"/>
-        <TextView
-            android:id="@+id/tv_maplsit"
+            android:layout_toLeftOf="@+id/ll_all"/>
+
+        <LinearLayout
+            android:id="@+id/ll_all"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:padding="10dp"
-            android:text="地图"
+            android:layout_alignParentRight="true"
             android:gravity="center|left"
-            android:visibility="invisible"
-            android:textColor="@color/baise"
-            android:layout_alignParentRight="true"/>
-        <TextView
-            android:id="@+id/tv_success"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:padding="10dp"
-            android:text="完成"
-            android:gravity="center|left"
-            android:textColor="@color/baise"
-            android:layout_alignParentRight="true"/>
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:id="@+id/tv_maplsit"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:padding="10dp"
+                android:text="地图"
+                android:gravity="center|left"
+                android:visibility="gone"
+                android:textColor="@color/baise"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                android:id="@+id/tv_success"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:padding="10dp"
+                android:text="完成"
+                android:gravity="center|left"
+                android:textColor="@color/baise"
+                android:layout_alignParentRight="true"/>
+
+
+        </LinearLayout>
 
     </RelativeLayout>
 

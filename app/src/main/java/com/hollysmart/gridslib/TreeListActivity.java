@@ -153,6 +153,14 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
         addtreeFalg =  getIntent().getStringExtra("addtreeFalg");
         map = (Map<String, String>) getIntent().getSerializableExtra("exter");
 
+        if (ischeck) {
+            findViewById(R.id.tv_maplsit).setVisibility(View.VISIBLE);
+            findViewById(R.id.tv_success).setVisibility(View.GONE);
+        } else {
+            findViewById(R.id.tv_maplsit).setVisibility(View.GONE);
+            findViewById(R.id.tv_success).setVisibility(View.VISIBLE);
+        }
+
         setLpd();
         if (addtreeFalg != null) {
             ResModelDao resModelDao = new ResModelDao(mContext);
@@ -395,6 +403,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
             intent.putExtra("sportEditFlag", true);
             formPicMap.clear();
             intent.putExtra("formPicMap", (Serializable) formPicMap);
+            intent.putExtra("treeList", (Serializable) treeslist);
             intent.putExtra("roadbean", (Serializable) blockBean);
             intent.putExtra("projectBean", (Serializable) projectBean);
 

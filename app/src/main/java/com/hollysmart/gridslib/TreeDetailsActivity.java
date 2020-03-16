@@ -337,6 +337,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
                                                 recy_view.setAdapter(biaoGeRecyclerAdapter);
                                                 biaoGeRecyclerAdapter.setTreeList(treeList);
+                                                biaoGeRecyclerAdapter.setNewAdd(isNewAdd);
 
                                                 recy_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
                                                     @Override
@@ -427,6 +428,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
         biaoGeRecyclerAdapter = new BiaoGeRecyclerAdapter2(mContext, formBeanList, ischeck,roadBean,tree_resDataBean,projectBean);
         recy_view.setAdapter(biaoGeRecyclerAdapter);
         biaoGeRecyclerAdapter.setTreeList(treeList);
+        biaoGeRecyclerAdapter.setNewAdd(isNewAdd);
         recy_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -603,6 +605,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
                     recy_view.setAdapter(biaoGeRecyclerAdapter);
                     biaoGeRecyclerAdapter.setTreeList(treeList);
+                    biaoGeRecyclerAdapter.setNewAdd(isNewAdd);
 
                     recy_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override

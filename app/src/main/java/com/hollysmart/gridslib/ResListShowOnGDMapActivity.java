@@ -174,7 +174,7 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
             isCheck = getIntent().getBooleanExtra("ischeck", false);
             TreeFormModelId = getIntent().getStringExtra("TreeFormModelId");
             tv_projectName.setText("树木地图");
-            roadbean = (BlockBean) getIntent().getSerializableExtra("gridBean");
+            roadbean = (BlockBean) getIntent().getSerializableExtra("blockBean");
         }
 
 
