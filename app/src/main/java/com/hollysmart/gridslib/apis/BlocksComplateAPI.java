@@ -41,14 +41,16 @@ public class BlocksComplateAPI implements INetModel {
     public void request() {
         JSONObject object = new JSONObject();
         try {
-            object.put("blockNum ", blockBean.getFdBlockNum());
-            object.put("blockCode ", blockBean.getFdBlockCode());
-            object.put("taskid ",id);
+            object.put("blockNum", blockBean.getFdBlockNum());
+            object.put("blockCode", blockBean.getFdBlockCode());
+            object.put("taskid",id);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String urlStr = Values.SERVICE_URL + "/api/blocks/complate";
+        String urlStr = Values.SERVICE_URL + "api/blocks/complate";
+        Mlog.d("object-------" + object.toString());
+        Mlog.d("网格采集完成 urlStr-------" + urlStr);
         OkHttpUtils.postString().url(urlStr)
                 .content(object.toString()).addHeader("Authorization", userInfo.getAccess_token())
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))

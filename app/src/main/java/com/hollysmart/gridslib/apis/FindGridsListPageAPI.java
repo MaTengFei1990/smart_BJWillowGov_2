@@ -10,6 +10,7 @@ import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.taskpool.INetModel;
 import com.hollysmart.value.Values;
+import com.umeng.commonsdk.statistics.common.MLog;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -42,7 +43,11 @@ public class FindGridsListPageAPI implements INetModel {
     @Override
     public void request() {
 
-        String urlStr = Values.SERVICE_URL_PC + "/xdsapi/api/blocks/list";
+        String urlStr = Values.SERVICE_URL + "api/blocks/list";
+        MLog.d("网格列表-----" + urlStr);
+        MLog.d("officeid---" + userInfo.getOffice().getId());
+        MLog.d("taskid--" + id);
+        MLog.d("page---" + page + "");
         OkHttpUtils.get().url(urlStr)
                 .addHeader("Authorization", userInfo.getAccess_token())
                 .addParams("officeid", userInfo.getOffice().getId())

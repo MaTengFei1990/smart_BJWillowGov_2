@@ -160,7 +160,9 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
             }
 
             if (!isCheck&&bean.getJavaField().equals("tree_number")) {
-                bean.setPropertyLabel("1");
+                if (Utils.isEmpty(bean.getPropertyLabel())) {
+                    bean.setPropertyLabel("1");
+                }
             }
 
 

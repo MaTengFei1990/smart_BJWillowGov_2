@@ -268,6 +268,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
             public void blocksScomplateResult(boolean isOk) {
 
                 if (isOk) {
+                    Utils.showToast(mContext,"采集完成");
                     setResult(1);
                     finish();
                 }
