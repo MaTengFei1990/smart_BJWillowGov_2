@@ -463,25 +463,24 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
         }
         holder.et_value.clearFocus();
 
-        /// 是否可修改  0：不能修改 1：可以修改
-
-        if (!Utils.isEmpty(bean.getIsEdit())) {
-
-            if ("0".equals(bean.getIsEdit())) {
-
-                holder.et_value.setEnabled(false);
-            } else {
-                holder.et_value.setEnabled(true);
-            }
-
-        }
-
         if (isCheck) {
             holder.et_value.setEnabled(false);
 
         } else {
-            holder.et_value.setEnabled(true);
+            /// 是否可修改  0：不能修改 1：可以修改
+            if (!Utils.isEmpty(bean.getIsEdit())) {
+
+                if ("0".equals(bean.getIsEdit())) {
+
+                    holder.et_value.setEnabled(false);
+                } else {
+                    holder.et_value.setEnabled(true);
+                }
+
+            }
         }
+
+
 
 
 

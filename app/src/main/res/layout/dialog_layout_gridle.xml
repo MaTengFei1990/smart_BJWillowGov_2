@@ -29,7 +29,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
 
-        android:text="1、从道路右侧，最外侧开始，从起点到终点，S形采集；"
+        android:text=" 1、每个网格只能有一个人采集，不允许两人或多人登录同一个账号同时采集一个网格；"
 
         />
     <TextView
@@ -40,7 +40,7 @@
         android:padding="5dp"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
-        android:text="2、每条道路只能有一个人采集，不允许两人或者多人登录同一个账号同时采集一条路；"
+        android:text="2、提交任务之前，每个网格里的杨柳树必须采集完毕，不允许漏采，因为提交任务之后系统不支持补采操作；"
         />
     <TextView
         android:layout_width="match_parent"
@@ -50,7 +50,7 @@
         android:layout_marginLeft="20dp"
         android:textSize="@dimen/text_da"
         android:padding="5dp"
-        android:text="3、提交任务之前，每条道路上的行道树必须采集完毕，不允许漏采，因为提交任务之后系统不支持补采操作；"
+        android:text="3、大网格的尺寸是：500米*500米，每个大网格分为100个50米*50米的小网格；"
         />
     <TextView
         android:layout_width="match_parent"
@@ -60,7 +60,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
         android:padding="5dp"
-        android:text="4、系统自动生成连续的树木编号，删除树木会导致断号现象，所以，请谨慎使用删除树木功能。"
+        android:text="4、树木编号格式为，网格号-子网格号-树木序号，示例：318-1-1。"
         />
 
 

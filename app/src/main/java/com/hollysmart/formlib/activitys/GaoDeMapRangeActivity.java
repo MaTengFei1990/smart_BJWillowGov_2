@@ -30,6 +30,7 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.Polygon;
 import com.amap.api.maps.model.PolygonOptions;
 import com.amap.api.maps.model.animation.Animation;
 import com.baidu.mapapi.map.Overlay;
@@ -229,7 +230,6 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
     private LatLng dingWeiDian;
     private String TreeFormModelId;
 
-    private ResDataBean roadBean;
 
     private String propertyLabel;
 
@@ -775,6 +775,18 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
         if (latLng == null) {
             return;
         }
+        List<LatLng> rectangles = createRectangle(roadbean);
+
+        if (rectangles != null) {
+            boolean contents = polygonCon(mGaoDeMap, rectangles, latLng);
+            if (!contents) {
+                Utils.showDialog(mContext, "选择点不在网格范围内，请重新选择");
+               return;
+            }
+
+        }
+
+
 
         switch (flagtype) {
 
@@ -819,6 +831,30 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
 
 
     }
+
+
+
+    /**
+     * 某个点是否在区域内
+     * @param aMap 地图元素
+     * @param latLngList 区域坐标合集
+     * @param latLng 需要判断的点
+     * @return
+     */
+    public  boolean polygonCon(AMap aMap, List<LatLng> latLngList ,LatLng latLng ) {
+        PolygonOptions options = new PolygonOptions();
+        for (LatLng i : latLngList) {
+            options.add(i);
+        }
+        options.visible(false); //设置区域是否显示
+        Polygon polygon = aMap.addPolygon(options);
+        boolean contains = polygon.contains(latLng);
+        polygon.remove();
+        return contains;
+
+    }
+
+
 
     private void drawRangeInMap(int type) {
         mGaoDeMap.clear();

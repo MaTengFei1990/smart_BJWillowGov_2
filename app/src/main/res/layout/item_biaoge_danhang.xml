@@ -41,6 +41,7 @@
         android:textColor="@color/huise_text"
         android:layout_marginRight="30dp"
         android:text=""
+        android:imeOptions="actionNone"
         android:textCursorDrawable="@null"
         android:gravity="center|right"
         android:background="@color/touming"
