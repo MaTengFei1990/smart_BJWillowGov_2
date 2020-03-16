@@ -89,7 +89,7 @@
 
                     <Button
                         android:id="@+id/btn_map"
-                        android:layout_width="50dp"
+                        android:layout_width="40dp"
                         android:layout_height="30dp"
                         android:background="@color/lanse_bg"
                         android:text="地图"
@@ -100,7 +100,7 @@
                         android:textSize="@dimen/text_zhong"/>
 
                     <TextView
-                        android:layout_width="80dp"
+                        android:layout_width="70dp"
                         android:layout_height="30dp"
                         android:background="@color/lanse_bg"
                         android:text="树木列表"
