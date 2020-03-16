@@ -283,7 +283,7 @@ public class TreeListAdapter extends CommonAdapter<ResDataBean> {
                     public void onResDataDeleteResult(boolean isOk, String msg) {
 
                         if (isOk) {
-//                            selectDB(roadbean.getFdTaskId());
+                            selectDB(roadbean.getId());
                         }
 
                     }
