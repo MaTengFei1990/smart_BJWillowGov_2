@@ -60,7 +60,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
         android:padding="5dp"
-        android:text="4、树木编号格式为，网格号-子网格号-树木序号，示例：318-1-1。"
+        android:text="4、树木编号格式为，网格号-子网格号-树木序号，示例:0318-002-001。"
         />
 
 
