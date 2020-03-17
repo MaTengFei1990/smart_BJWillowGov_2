@@ -105,6 +105,7 @@ public class GetGridTreeCountAPI implements INetModel {
                             menuBeanList.add(resDataBean);
                         }
                         roadBean.setChildTreeCount(menuBeanList.size());
+                        roadBean.setFlagLoad("1");
 
                         onNetRequestListener.OnNext();
                     } else {

@@ -74,6 +74,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+import com.umeng.commonsdk.statistics.common.MLog;
 
 import java.io.File;
 import java.io.Serializable;
@@ -319,6 +320,38 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         refreshLayout.setRefreshHeader(new MyClassicsHeader(this));
         refreshLayout.setOnLoadMoreListener(this);
         refreshLayout.setOnRefreshListener(this);
+
+
+        lv_roadList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+
+                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                //判断是当前layoutManager是否为LinearLayoutManager
+                // 只有LinearLayoutManager才有查找第一个和最后一个可见view位置的方法
+                if (layoutManager instanceof LinearLayoutManager) {
+                    LinearLayoutManager linearManager = (LinearLayoutManager) layoutManager;
+                    //获取最后一个可见view的位置
+                    int lastItemPosition = linearManager.findLastVisibleItemPosition();
+                    //获取第一个可见view的位置
+                    int firstItemPosition = linearManager.findFirstVisibleItemPosition();
+
+                    getTreeNum(firstItemPosition,lastItemPosition);
+                }
+
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+
+
+
     }
 
     private List<BlockAndStatusBean> blockBeanList;
@@ -864,6 +897,14 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     }
 
 
+
+
+
+
+
+
+
+
     final TaskPool taskPool=new TaskPool();
     private void getTreeNum(int start,int count) {
 
@@ -896,12 +937,15 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
         if (blockBeanList != null && blockBeanList.size() > 0) {
 
-            for (int i = start; i < start+count; i++) {
+            for (int i = start; i < count; i++) {
 
                 BlockAndStatusBean blockAndStatusBean = blockBeanList.get(i);
                 final BlockBean resDataBean = blockAndStatusBean.getBlock();
+                if (Utils.isEmpty(resDataBean.getFlagLoad())) {
 
-                taskPool.addTask(new GetGridTreeCountAPI(userInfo, TreeFormModelId, resDataBean,projectBean, listener));
+                    taskPool.addTask(new GetGridTreeCountAPI(userInfo, TreeFormModelId, resDataBean,projectBean, listener));
+                }
+
 
             }
 

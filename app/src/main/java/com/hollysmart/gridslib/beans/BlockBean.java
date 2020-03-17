@@ -30,6 +30,8 @@ public class BlockBean implements Serializable {
     private String fdAreaId;
     @DatabaseField(columnName = "fdAreaName")
     private String fdAreaName;
+    @DatabaseField(columnName = "flagLoad") //是否加载数量的标记；
+    private String flagLoad;
 
 
     private FormModelBean formModel;
@@ -126,6 +128,15 @@ public class BlockBean implements Serializable {
 
     public void setFdAreaName(String fdAreaName) {
         this.fdAreaName = fdAreaName;
+    }
+
+
+    public String getFlagLoad() {
+        return flagLoad;
+    }
+
+    public void setFlagLoad(String flagLoad) {
+        this.flagLoad = flagLoad;
     }
 }
 
