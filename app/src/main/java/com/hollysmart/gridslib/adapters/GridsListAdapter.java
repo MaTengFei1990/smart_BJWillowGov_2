@@ -103,7 +103,7 @@ public class GridsListAdapter extends CommonAdapter<BlockAndStatusBean> {
         final TextView tv_check = holder.getView(R.id.tv_check);
         final TextView tv_gridNum = holder.getView(R.id.tv_gridNum);
         final TextView tv_area = holder.getView(R.id.tv_area);
-        final Button btn_map = holder.getView(R.id.btn_map);
+        final Button btn_treelist = holder.getView(R.id.btn_treelist);
 
         tv_gridNum.setText(blockBean.getFdBlockCode());
         tv_area.setText(blockBean.getFdAreaName());
@@ -137,7 +137,7 @@ public class GridsListAdapter extends CommonAdapter<BlockAndStatusBean> {
         });
 
 
-        slSlide.setOnClickListener(new View.OnClickListener() {
+        btn_treelist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, TreeListActivity.class);
@@ -174,7 +174,7 @@ public class GridsListAdapter extends CommonAdapter<BlockAndStatusBean> {
         });
 
 
-        btn_map.setOnClickListener(new View.OnClickListener() {
+        slSlide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

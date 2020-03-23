@@ -93,19 +93,22 @@
                         android:layout_height="30dp"
                         android:background="@color/lanse_bg"
                         android:text="地图"
+                        android:visibility="gone"
                         android:layout_alignParentRight="true"
                         android:textColor="@color/baise"
                         android:layout_marginRight="20dp"
                         android:layout_centerVertical="true"
                         android:textSize="@dimen/text_zhong"/>
 
-                    <TextView
+                    <Button
+                        android:id="@+id/btn_treelist"
                         android:layout_width="70dp"
                         android:layout_height="30dp"
                         android:background="@color/lanse_bg"
-                        android:text="树木列表"
+                        android:text="树木采集"
                         android:gravity="center"
                         android:enabled="false"
+                         android:layout_alignParentRight="true"
                         android:layout_toLeftOf="@+id/btn_map"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="20dp"
