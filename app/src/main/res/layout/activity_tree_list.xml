@@ -37,14 +37,15 @@
             <!--android:background="@color/touming"/>-->
 
         <TextView
-            android:id="@+id/tv_guifan"
+            android:id="@+id/tv_shibie"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:text="规范"
+            android:text="识别"
             android:padding="10dp"
             android:gravity="center|right"
             android:textColor="@color/baise"
             android:layout_toLeftOf="@+id/ll_all"/>
+
 
         <LinearLayout
             android:id="@+id/ll_all"
@@ -52,6 +53,16 @@
             android:layout_alignParentRight="true"
             android:gravity="center|left"
             android:layout_height="fill_parent">
+
+
+            <TextView
+                android:id="@+id/tv_guifan"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:text="规范"
+                android:padding="10dp"
+                android:gravity="center|right"
+                android:textColor="@color/baise"/>
 
             <TextView
                 android:id="@+id/tv_maplsit"

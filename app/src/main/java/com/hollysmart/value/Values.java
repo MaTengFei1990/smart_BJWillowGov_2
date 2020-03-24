@@ -6,8 +6,8 @@ import android.os.Environment;
 
 public class Values {
 
-	public static final String SERVIXE_SHOUYE = "http://test.hollysmart.com.cn:9001/xdsapi/html/xx.html";     // 北京绿地  正式
-	public static final String SERVICE_URL = "http://test.hollysmart.com.cn:9001/xdsapi/";
+	public static final String SERVIXE_SHOUYE = "http://test.hollysmart.com.cn:9001/ylfxapi/html/xx.html";     // 北京绿地  正式
+	public static final String SERVICE_URL = "http://test.hollysmart.com.cn:9001/ylfxapi/";
 	public static final String SERVICE_URL_PC = "http://test.hollysmart.com.cn:9001/";         //北京绿地  正式
 
 
@@ -21,7 +21,7 @@ public class Values {
 	public static final String SERVICE_URL_ADMIN_FORM = SERVICE_URL_FORM + "/admin";//
 
 
-	public static final String SDCARD_ROOT = "smart_greenSpace";
+	public static final String SDCARD_ROOT = "smart_bjwillowGov";
 	public static final String RELOAD_DATA = "reload_data";
 	public static final String SDCARD_FUJIAN = "fujian";
 	public static final String SDCARD_PIC = "pic";

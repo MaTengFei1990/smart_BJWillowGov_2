@@ -1,16 +1,27 @@
 package com.hollysmart.gridslib;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
+import android.net.Uri;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.WebResourceResponse;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.d.lib.xrv.LRecyclerView;
 import com.google.gson.Gson;
@@ -20,6 +31,7 @@ import com.google.gson.reflect.TypeToken;
 import com.hollysmart.apis.ResModelListAPI;
 import com.hollysmart.beans.JDPicInfo;
 import com.hollysmart.beans.ResModelBean;
+import com.hollysmart.bjwillowgov.BuildConfig;
 import com.hollysmart.db.JDPicDao;
 import com.hollysmart.db.LastTreeResDataDao;
 import com.hollysmart.db.ResDataDao;
@@ -39,6 +51,7 @@ import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.CCM_DateTime;
+import com.hollysmart.utils.GetAssetsFiles;
 import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.Utils;
 import com.hollysmart.value.Values;
@@ -51,8 +64,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,6 +117,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
         bn_add.setOnClickListener(this);
         findViewById(R.id.ll_search).setOnClickListener(this);
         findViewById(R.id.tv_guifan).setOnClickListener(this);
+        findViewById(R.id.tv_shibie).setOnClickListener(this);
         findViewById(R.id.tv_success).setOnClickListener(this);
 
 
@@ -266,6 +283,151 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                 blocksComplate();
 
                 break;
+            case R.id.tv_shibie:
+                verifyStoragePermissions(this);
+
+                showWordtoAssets();
+                break;
+        }
+    }
+
+
+    private int REQUEST_EXTERNAL_STORAGE=109;
+
+
+    //动态获取内存存储权限
+    public  void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int writepermission = ActivityCompat.checkSelfPermission(activity,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int readpermission = ActivityCompat.checkSelfPermission(activity,
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        if ((writepermission != PackageManager.PERMISSION_GRANTED)&&(readpermission != PackageManager.PERMISSION_GRANTED)) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(activity,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE} ,
+                    REQUEST_EXTERNAL_STORAGE);
+        }
+    }
+
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 109:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    // 权限请求成功的操作
+                    CreateDir();
+
+                    showWordtoAssets();
+                } else {
+                    // 权限请求失败的操作
+                    Utils.showToast(mContext, "请在权限管理中设置存储权限，不然会影响正常使用");
+                }
+                break;
+        }
+
+    }
+
+
+    private void CreateDir() {
+        CreateDir(Values.SDCARD_DIR);
+        CreateDir(Values.SDCARD_FILE(Values.SDCARD_PIC));
+        CreateDir(Values.SDCARD_FILE(Values.SDCARD_FUJIAN));
+        CreateDir(Values.SDCARD_FILE(Values.SDCARD_PIC_WODE));
+        CreateDir(Values.SDCARD_FILE("apk"));
+
+    }
+
+    private File CreateDir(String folder) {
+        File dir = new File(folder);
+        dir.mkdirs();
+        return dir;
+    }
+
+
+
+
+
+    private void showWordtoAssets() {
+
+        String file = Values.SDCARD_FILE(Values.SDCARD_FILE) + "bianbie.docx";
+
+        File dir = new File(file);//文件夹dir
+        File[] files = dir.listFiles();//文件夹下的所有文件或文件夹
+
+        if (files != null) {
+
+            for (int i = 0; i < files.length; i++) {
+                File file1 = files[i];
+                if (file1.getName().contains("bianbie.docx")) {
+                    openFile(file1.getAbsolutePath());
+                }
+
+            }
+
+        } else {
+
+            String Assetpath =  "bianbie.docx";
+
+//            String path = mContext.getFilesDir().getPath() + "/"+Assetpath;
+            String path = Values.SDCARD_FILE(Values.SDCARD_FUJIAN) +Assetpath;
+
+
+//             GetAssetsFiles.copyAssetAndWrite(mContext, Assetpath);
+            GetAssetsFiles.putAssetsToSDCard(mContext, Assetpath, path);
+
+            openFile(path);
+        }
+
+
+
+
+    }
+
+    boolean openFile(String path) {
+        try {
+            Mlog.d("文件路径 ：" + path);
+            File file = new File(path);
+            Uri uri = null;
+            String type = null;
+            if (Build.VERSION.SDK_INT >= 24) {
+//                uri = Uri.parse(path);
+                uri = FileProvider.getUriForFile(mContext, BuildConfig.APPLICATION_ID + ".fileprovider" , file);
+            } else {
+                uri = Uri.fromFile(file);
+            }
+            if (path.contains("doc") || path.contains("wps")) {
+                type = "application/msword";
+            } else if (path.contains("xls")) {
+                type = "application/vnd.ms-excel";
+            } else if (path.contains("pdf")) {
+                type = "application/pdf";
+            } else if (path.contains("txt")) {
+                type = "text/html";
+            } else if (path.contains("jpg")) {
+                type = "image/jpeg";
+            }
+
+            Intent intent = new Intent();
+            intent.setAction(android.content.Intent.ACTION_VIEW);
+
+            intent.setDataAndType(uri, type);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            try {
+                mContext.startActivity(intent);
+                return true;
+            } catch (ActivityNotFoundException e) {
+                e.printStackTrace();
+                Toast.makeText(mContext, "请下载相关应用程序打开文件", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
