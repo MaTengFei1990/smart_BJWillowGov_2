@@ -113,26 +113,26 @@ public class TreeListAdapter extends CommonAdapter<ResDataBean> {
         }
 
 
-        holder.setText(R.id.tv_jingquName, resDataBean.getFd_resname());
+        holder.setText(R.id.tv_jingquName, resDataBean.getNumber());
 
-        String resName = resDataBean.getFd_resname();
-
-        String showName = "";
-        try{
-
-            if (!Utils.isEmpty(resName)) {
-
-                String[] resNames = resName.split("-");
-                showName = resNames[2] + "-" + resNames[3];
-
-                holder.setText(R.id.tv_jingquName, showName);
-
-            }
-
-        }catch (Exception e){
-
-                e.fillInStackTrace();
-        }
+//        String resName = resDataBean.getFd_resname();
+//
+//        String showName = "";
+//        try{
+//
+//            if (!Utils.isEmpty(resName)) {
+//
+//                String[] resNames = resName.split("-");
+//                showName = resNames[2] + "-" + resNames[3];
+//
+//                holder.setText(R.id.tv_jingquName, showName);
+//
+//            }
+//
+//        }catch (Exception e){
+//
+//                e.fillInStackTrace();
+//        }
 
         List<DongTaiFormBean> cgformFieldList = new ArrayList<>();
         if (formModel != null) {

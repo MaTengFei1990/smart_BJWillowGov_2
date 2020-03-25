@@ -102,7 +102,7 @@ public class SearchTreeActivity extends StyleAnimActivity implements  SearchList
 
         TreeFormModelId = getIntent().getStringExtra("TreeFormModelId");
 
-        roadBean = (BlockBean) getIntent().getSerializableExtra("roadBean");
+        roadBean = (BlockBean) getIntent().getSerializableExtra("blockBean");
         projectBean = (ProjectBean) getIntent().getSerializableExtra("projectBean");
 
         ischeck = getIntent().getBooleanExtra("ischeck", false);

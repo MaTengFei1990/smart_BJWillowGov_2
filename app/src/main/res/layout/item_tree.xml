@@ -31,6 +31,7 @@
                     android:id="@+id/tv_jingquName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:ellipsize="end"
                     android:gravity="center"
                     android:maxEms="10"
@@ -42,7 +43,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="8dp"
                     android:layout_height="wrap_content">
 
                     <TextView
@@ -52,8 +53,8 @@
                         android:gravity="center"
                         android:maxEms="10"
                         android:singleLine="true"
-                        android:text="长势："
-                        android:textColor="@color/huise_line"
+                        android:text="生长情况："
+                        android:textColor="@color/huise_text"
                         android:textSize="@dimen/text_xiao" />
                     <TextView
                         android:id="@+id/tv_growing"
@@ -92,7 +93,30 @@
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:layout_height="wrap_content">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:maxEms="10"
+                        android:singleLine="true"
+                        android:text="树种："
+                        android:textColor="@color/huise_text"
+                        android:textSize="@dimen/text_xiao" />
+                    <TextView
+                        android:id="@+id/tv_treetype"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:maxEms="10"
+                        android:singleLine="true"
+                        android:textColor="@color/huise_line"
+                        android:textSize="@dimen/text_xiao" />
 
 
 
@@ -134,8 +158,7 @@
             </LinearLayout>
 
 
-            <TextView
-                android:id="@+id/tv_treetype"
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -143,6 +166,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="30dp"
                 android:textColor="@color/huise_text"
+                android:src="@mipmap/search_arrow_right"
                 android:textSize="@dimen/text_zhong" />
 
         </RelativeLayout>
