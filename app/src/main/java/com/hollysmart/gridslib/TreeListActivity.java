@@ -67,6 +67,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -259,8 +260,6 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
 
             case R.id.rl_bottom:
                 addTrees();
-
-
                 break;
 
             case R.id.ll_search:
@@ -459,10 +458,36 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
 
             if (TreeFormModelId.equals(resModelList.get(i).getId())) {
 
-
                 resModelBean = resModelList.get(i);
             }
         }
+
+        String code = blockBean.getFdBlockCode();
+
+        if (treeslist != null && treeslist.size() > 0) {
+            ResDataBean resDataBean = treeslist.get(treeslist.size() - 1);
+
+            String number = resDataBean.getNumber();
+
+            if (number != null) {
+
+                String last = number.split("-")[number.split("-").length - 1];
+
+                int i = Integer.parseInt(last);
+
+                int newcode = i + 1;
+
+                //如果数字1是整型,如下处理：
+                DecimalFormat decimalFormat =new DecimalFormat("000");
+                code = code +"-"+ decimalFormat.format(newcode);
+
+            } else {
+                code = code + "-001";
+            }
+
+        }
+
+
 
         LastTreeResDataDao lastTreeResDataDao = new LastTreeResDataDao(mContext);
         LastTreeDataBean upDataBean = lastTreeResDataDao.getLastId();//上一个资源
@@ -493,6 +518,10 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                     if (formBean.getJavaField().equals("tree_number")) {
 
                         formBean.setPropertyLabel("1");
+                    }
+                    if (formBean.getJavaField().equals("number")) {
+
+                        formBean.setPropertyLabel(code);
                     }
                     if (formBean.getJavaField().equals("tree_dangerous")) {
 
@@ -548,6 +577,15 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
 
             startActivityForResult(intent, 4);
         } else {
+
+            for (DongTaiFormBean formBean : formBeanList) {
+
+
+                if (formBean.getJavaField().equals("number")) {
+
+                    formBean.setPropertyLabel(code);
+                }
+            }
 
             ResDataBean resDataBean = new ResDataBean();
             String createTime = new CCM_DateTime().Datetime2();
