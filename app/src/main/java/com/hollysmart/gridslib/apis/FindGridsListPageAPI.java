@@ -53,7 +53,7 @@ public class FindGridsListPageAPI implements INetModel {
             public void onError(Call call, Exception e, int id) {
                 e.printStackTrace();
                 if (datadicListIF != null) {
-                    datadicListIF.datadicListResult(false, null,0);
+                    datadicListIF.datadicListResult(false, null,0,0,0);
                 }
 
             }
@@ -74,14 +74,16 @@ public class FindGridsListPageAPI implements INetModel {
 
                         if (datadicListIF != null) {
                             int count = object.getInt("count");
+                            int okCount = object.getInt("okCount");
+                            int total = object.getInt("total");
 
-                            datadicListIF.datadicListResult(true, menuBeanList, count);
+                            datadicListIF.datadicListResult(true, menuBeanList, count,okCount,total);
                         }
 
                     } else {
                         if (datadicListIF != null) {
 
-                            datadicListIF.datadicListResult(false, null,0);
+                            datadicListIF.datadicListResult(false, null,0,0,0);
                         }
 
                     }
@@ -89,7 +91,7 @@ public class FindGridsListPageAPI implements INetModel {
                     e.printStackTrace();
                     if (datadicListIF != null) {
 
-                        datadicListIF.datadicListResult(false, null,0);
+                        datadicListIF.datadicListResult(false, null,0,0,0);
                     }
 
                 }
@@ -98,6 +100,6 @@ public class FindGridsListPageAPI implements INetModel {
     }
 
     public interface DatadicListIF {
-        void datadicListResult(boolean isOk, List<BlockAndStatusBean> menuBeanList, int count);
+        void datadicListResult(boolean isOk, List<BlockAndStatusBean> menuBeanList, int count, int okCount,int total);
     }
 }

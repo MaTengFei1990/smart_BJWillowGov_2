@@ -126,6 +126,8 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     ImageButton bn_closeMap;
     @BindView(R.id.rl_mapContent)
     RelativeLayout rl_mapContent;
+    @BindView(R.id.tv_okcoutAndtotal)
+    TextView tv_okcoutAndtotal;
 
 
 
@@ -850,8 +852,10 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
         new FindGridsListPageAPI(page,userInfo,map.get("id"), new FindGridsListPageAPI.DatadicListIF() {
             @Override
-            public void datadicListResult(boolean isOk, List<BlockAndStatusBean> netDataList, int count) {
+            public void datadicListResult(boolean isOk, List<BlockAndStatusBean> netDataList, int count,int okcount,int total) {
                 if (isOk) {
+                    tv_okcoutAndtotal.setText(okcount+"/"+total);
+
                     if (isRefresh) {
                         blockBeanList.clear();
                     }

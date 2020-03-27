@@ -29,14 +29,15 @@
             android:textColor="@color/baise"
             android:textSize="@dimen/tv_size_big"/>
 
-        <!--<ImageView-->
-            <!--android:id="@+id/iv_maplsit"-->
-            <!--android:layout_width="60dp"-->
-            <!--android:layout_height="fill_parent"-->
-            <!--android:padding="13dp"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:src="@mipmap/icon_map_list"-->
-            <!--android:background="@color/touming"/>-->
+        <TextView
+            android:id="@+id/tv_okcoutAndtotal"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:padding="10dp"
+            android:gravity="center"
+            android:layout_marginRight="20dp"
+            android:textColor="@color/baise"
+            android:layout_alignParentRight="true"/>
         <TextView
             android:id="@+id/tv_maplsit"
             android:layout_width="60dp"

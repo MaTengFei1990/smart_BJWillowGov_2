@@ -478,13 +478,15 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                 int newcode = i + 1;
 
                 //如果数字1是整型,如下处理：
-                DecimalFormat decimalFormat =new DecimalFormat("000");
-                code = code +"-"+ decimalFormat.format(newcode);
+                DecimalFormat decimalFormat = new DecimalFormat("000");
+                code = code + "-" + decimalFormat.format(newcode);
 
             } else {
                 code = code + "-001";
             }
 
+        } else {
+            code = code + "-001";
         }
 
 
