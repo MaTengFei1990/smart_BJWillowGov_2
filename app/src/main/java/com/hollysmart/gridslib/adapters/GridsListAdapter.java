@@ -1,11 +1,14 @@
 package com.hollysmart.gridslib.adapters;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.d.lib.slidelayout.SlideLayout;
 import com.d.lib.slidelayout.SlideManager;
@@ -17,9 +20,11 @@ import com.hollysmart.db.UserInfo;
 import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.gridslib.RoadDetailsActivity;
 import com.hollysmart.gridslib.TreeListActivity;
+import com.hollysmart.gridslib.apis.BlocksPropertyAPI;
 import com.hollysmart.gridslib.beans.BlockAndStatusBean;
 import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.utils.ACache;
+import com.hollysmart.utils.Utils;
 import com.hollysmart.value.Values;
 
 import java.io.File;
@@ -104,6 +109,8 @@ public class GridsListAdapter extends CommonAdapter<BlockAndStatusBean> {
         final TextView tv_gridNum = holder.getView(R.id.tv_gridNum);
         final TextView tv_area = holder.getView(R.id.tv_area);
         final Button btn_treelist = holder.getView(R.id.btn_treelist);
+        final Button btn_Property = holder.getView(R.id.btn_Property);
+        final TextView tv_property = holder.getView(R.id.tv_property);
 
         tv_gridNum.setText(blockBean.getFdBlockCode());
         tv_area.setText(blockBean.getFdAreaName());
@@ -111,6 +118,16 @@ public class GridsListAdapter extends CommonAdapter<BlockAndStatusBean> {
         if (ischeck) {
             tv_delete.setVisibility(View.GONE);
             tv_check.setText("查看");
+            btn_Property.setVisibility(View.GONE);
+        }else{
+
+            btn_Property.setVisibility(View.VISIBLE);
+        }
+
+        if ("2".equals(userInfo.getUserLevel())) {
+            btn_Property.setVisibility(View.VISIBLE);
+        }else {
+            btn_Property.setVisibility(View.GONE);
         }
 
         if (blockAndStatusBean.getFdStatus().equals("1")) {
@@ -120,6 +137,36 @@ public class GridsListAdapter extends CommonAdapter<BlockAndStatusBean> {
             tv_gridNumTitle.setTextColor(mContext.getResources().getColor(R.color.heise));
             tv_gridNum.setTextColor(mContext.getResources().getColor(R.color.heise));
         }
+
+        String[] positives={"该网格无法调查","该网格部分可调查","该网格无树木","该网格可调查几类"};
+
+        if (!Utils.isEmpty(blockBean.getBlockProperty())) {
+            switch (blockBean.getBlockProperty()) {
+
+                case "1":
+                    tv_property.setText(positives[0]);
+                    break;
+                case "2":
+                    tv_property.setText(positives[1]);
+                    break;
+                case "3":
+                    tv_property.setText(positives[2]);
+                    break;
+                case "4":
+                    tv_property.setText(positives[3]);
+                    break;
+                default:
+                    break;
+
+            }
+
+        }else {
+            tv_property.setText("");
+        }
+
+
+
+
 
         holder.setText(R.id.tv_countOfTree, "树木数量" + blockBean.getChildTreeCount() + "棵");
 
@@ -154,6 +201,64 @@ public class GridsListAdapter extends CommonAdapter<BlockAndStatusBean> {
                 intent.putExtra("PcToken", PcToken);
                 intent.putExtra("position", position);
                 activity.startActivityForResult(intent,7);
+            }
+        });
+
+        btn_Property.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, TreeListActivity.class);
+
+                BlockAndStatusBean blockAndStatusBean = blockBeanList.get(position);
+               final BlockBean resDataBean = blockAndStatusBean.getBlock();
+
+
+                String[] positives={"该网格无法调查","该网格部分可调查","该网格无树木","该网格可调查几类"};
+                AlertDialog.Builder builder=new AlertDialog.Builder(context);
+                builder.setSingleChoiceItems(positives,0, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                blockBean.setBlockProperty(which + 1+"");
+
+
+
+                            }
+                        });
+
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        if (Utils.isEmpty(blockBean.getBlockProperty())) {
+                            blockBean.setBlockProperty("1");
+                        }
+
+                        new BlocksPropertyAPI(userInfo, map.get("id"), blockBean, new BlocksPropertyAPI.BlocksScomplateIF() {
+                            @Override
+                            public void blocksScomplateResult(boolean isOk) {
+
+                                if (isOk) {
+                                    notifyDataSetChanged();
+
+                                    dialog.dismiss();
+
+                                }
+
+                            }
+                        }).request();
+
+                    }
+                });
+
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.show();
+
             }
         });
 

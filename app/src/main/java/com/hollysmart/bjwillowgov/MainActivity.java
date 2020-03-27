@@ -372,59 +372,99 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
 
     private void startFormActivity(String url) {
 
-        webView.evaluateJavascript("javascript:app.getPCToken()", new ValueCallback<String>() {
-            @Override
-            public void onReceiveValue(String value) {
-                if (!Utils.isEmpty(value)) {
 
-                    String PcToken = "";
-                    String substring = value.substring(1, value.length() - 1);
-                    PcToken = "Bearer " + substring;
+        String[] scada = url.split("scada.html\\?");
+        Map<String, String> map = new HashMap<String , String>();
+        if (scada!=null&&scada.length>1) {
 
-                    String[] scada = url.split("scada.html\\?");
-                    Map<String, String> map = new HashMap<String , String>();
-                    if (scada!=null&&scada.length>1) {
-
-                        String[] valuse = scada[1].split("&");
+            String[] valuse = scada[1].split("&");
 
 
 
-                        if (valuse.length > 0) {
+            if (valuse.length > 0) {
 
-                            for (int i = 0; i < valuse.length; i++) {
+                for (int i = 0; i < valuse.length; i++) {
 
-                                String s = valuse[i];
+                    String s = valuse[i];
 
-                                String[] split = s.split("=");
-                                try {
-                                    map.put(split[0], URLDecoder.decode(split[1],"UTF-8"));
-                                } catch (UnsupportedEncodingException e) {
-                                    e.printStackTrace();
-                                }
-
-
-                            }
-
-
-                        }
-
-
-
+                    String[] split = s.split("=");
+                    try {
+                        map.put(split[0], URLDecoder.decode(split[1],"UTF-8"));
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
                     }
 
-
-                    Intent intent = new Intent(mContext, GridsListActivity.class);
-                    intent.putExtra("exter", (Serializable) map);
-                    intent.putExtra("ischeck", false);
-                    intent.putExtra("PcToken", PcToken);
-                    startActivity(intent);
 
                 }
 
 
-
             }
-        });
+
+
+
+        }
+
+
+        Intent intent = new Intent(mContext, GridsListActivity.class);
+        intent.putExtra("exter", (Serializable) map);
+        intent.putExtra("ischeck", false);
+        startActivity(intent);
+
+
+
+//        webView.evaluateJavascript("javascript:app.getPCToken()", new ValueCallback<String>() {
+//            @Override
+//            public void onReceiveValue(String value) {
+//                if (!Utils.isEmpty(value)) {
+//
+//                    String PcToken = "";
+//                    String substring = value.substring(1, value.length() - 1);
+//                    PcToken = "Bearer " + substring;
+//
+//                    String[] scada = url.split("scada.html\\?");
+//                    Map<String, String> map = new HashMap<String , String>();
+//                    if (scada!=null&&scada.length>1) {
+//
+//                        String[] valuse = scada[1].split("&");
+//
+//
+//
+//                        if (valuse.length > 0) {
+//
+//                            for (int i = 0; i < valuse.length; i++) {
+//
+//                                String s = valuse[i];
+//
+//                                String[] split = s.split("=");
+//                                try {
+//                                    map.put(split[0], URLDecoder.decode(split[1],"UTF-8"));
+//                                } catch (UnsupportedEncodingException e) {
+//                                    e.printStackTrace();
+//                                }
+//
+//
+//                            }
+//
+//
+//                        }
+//
+//
+//
+//                    }
+//
+//
+//                    Intent intent = new Intent(mContext, GridsListActivity.class);
+//                    intent.putExtra("exter", (Serializable) map);
+//                    intent.putExtra("ischeck", false);
+//                    intent.putExtra("PcToken", PcToken);
+//                    startActivity(intent);
+//
+//                }
+//
+//
+//
+//            }
+//        });
 
 
     }
