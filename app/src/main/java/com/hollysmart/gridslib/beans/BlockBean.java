@@ -33,9 +33,6 @@ public class BlockBean implements Serializable {
     @DatabaseField(columnName = "flagLoad") //是否加载数量的标记；
     private String flagLoad;
 
-    @DatabaseField(columnName = "blockProperty")
-    private String blockProperty;
-
 
     private FormModelBean formModel;
     private int childTreeCount;
@@ -142,13 +139,6 @@ public class BlockBean implements Serializable {
         this.flagLoad = flagLoad;
     }
 
-    public String getBlockProperty() {
-        return blockProperty;
-    }
-
-    public void setBlockProperty(String blockProperty) {
-        this.blockProperty = blockProperty;
-    }
 }
 
 

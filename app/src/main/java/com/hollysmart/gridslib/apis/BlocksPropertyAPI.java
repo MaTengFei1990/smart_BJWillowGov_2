@@ -1,6 +1,7 @@
 package com.hollysmart.gridslib.apis;
 
 import com.hollysmart.db.UserInfo;
+import com.hollysmart.gridslib.beans.BlockAndStatusBean;
 import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.taskpool.INetModel;
@@ -19,12 +20,11 @@ public class BlocksPropertyAPI implements INetModel {
 
     private UserInfo userInfo;
     private String id;
-    private BlockBean blockBean;
+    private BlockAndStatusBean blockBean;
     private BlocksScomplateIF blocksScomplateIF;
-    private int blockProperty;
 
 
-    public BlocksPropertyAPI(UserInfo userInfo, String  id, BlockBean blockBean, BlocksScomplateIF blocksScomplateIF) {
+    public BlocksPropertyAPI(UserInfo userInfo, String  id, BlockAndStatusBean blockBean, BlocksScomplateIF blocksScomplateIF) {
         this.userInfo = userInfo;
         this.id = id;
         this.blockBean = blockBean;
@@ -35,8 +35,8 @@ public class BlocksPropertyAPI implements INetModel {
     public void request() {
         JSONObject object = new JSONObject();
         try {
-            object.put("blockNum", blockBean.getFdBlockNum());
-            object.put("blockCode", blockBean.getFdBlockCode());
+            object.put("blockNum", blockBean.getBlock().getFdBlockNum());
+            object.put("blockCode", blockBean.getBlock().getFdBlockCode());
             object.put("taskid",id);
             object.put("blockProperty",blockBean.getBlockProperty());
 

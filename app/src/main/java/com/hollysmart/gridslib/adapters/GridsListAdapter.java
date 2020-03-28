@@ -124,7 +124,7 @@ public class GridsListAdapter extends CommonAdapter<BlockAndStatusBean> {
             btn_Property.setVisibility(View.VISIBLE);
         }
 
-        if ("2".equals(userInfo.getUserLevel())) {
+        if ("2".equals(userInfo.getUserType())) {
             btn_Property.setVisibility(View.VISIBLE);
         }else {
             btn_Property.setVisibility(View.GONE);
@@ -138,10 +138,10 @@ public class GridsListAdapter extends CommonAdapter<BlockAndStatusBean> {
             tv_gridNum.setTextColor(mContext.getResources().getColor(R.color.heise));
         }
 
-        String[] positives={"该网格无法调查","该网格部分可调查","该网格无树木","该网格可调查几类"};
+        String[] positives={"该网格无法调查","该网格部分可调查","该网格无雌株"};
 
-        if (!Utils.isEmpty(blockBean.getBlockProperty())) {
-            switch (blockBean.getBlockProperty()) {
+        if (!Utils.isEmpty(blockAndStatusBean.getBlockProperty())) {
+            switch (blockAndStatusBean.getBlockProperty()) {
 
                 case "1":
                     tv_property.setText(positives[0]);
@@ -152,10 +152,8 @@ public class GridsListAdapter extends CommonAdapter<BlockAndStatusBean> {
                 case "3":
                     tv_property.setText(positives[2]);
                     break;
-                case "4":
-                    tv_property.setText(positives[3]);
-                    break;
                 default:
+                    tv_property.setText("");
                     break;
 
             }
@@ -213,13 +211,13 @@ public class GridsListAdapter extends CommonAdapter<BlockAndStatusBean> {
                final BlockBean resDataBean = blockAndStatusBean.getBlock();
 
 
-                String[] positives={"该网格无法调查","该网格部分可调查","该网格无树木","该网格可调查几类"};
+                String[] positives={"该网格无法调查","该网格部分可调查","该网格无雌株"};
                 AlertDialog.Builder builder=new AlertDialog.Builder(context);
                 builder.setSingleChoiceItems(positives,0, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-                                blockBean.setBlockProperty(which + 1+"");
+                                blockAndStatusBean.setBlockProperty(which + 1+"");
 
 
 
@@ -230,11 +228,11 @@ public class GridsListAdapter extends CommonAdapter<BlockAndStatusBean> {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        if (Utils.isEmpty(blockBean.getBlockProperty())) {
-                            blockBean.setBlockProperty("1");
+                        if (Utils.isEmpty(blockAndStatusBean.getBlockProperty())) {
+                            blockAndStatusBean.setBlockProperty("1");
                         }
 
-                        new BlocksPropertyAPI(userInfo, map.get("id"), blockBean, new BlocksPropertyAPI.BlocksScomplateIF() {
+                        new BlocksPropertyAPI(userInfo, map.get("id"), blockAndStatusBean, new BlocksPropertyAPI.BlocksScomplateIF() {
                             @Override
                             public void blocksScomplateResult(boolean isOk) {
 

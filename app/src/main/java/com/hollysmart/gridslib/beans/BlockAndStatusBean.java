@@ -6,6 +6,7 @@ public class BlockAndStatusBean implements Serializable {
 
    private BlockBean block;
    private String fdStatus;
+   private String blockProperty;
 
     public BlockBean getBlock() {
         return block;
@@ -21,5 +22,13 @@ public class BlockAndStatusBean implements Serializable {
 
     public void setFdStatus(String fdStatus) {
         this.fdStatus = fdStatus;
+    }
+
+    public String getBlockProperty() {
+        return blockProperty;
+    }
+
+    public void setBlockProperty(String blockProperty) {
+        this.blockProperty = blockProperty;
     }
 }
