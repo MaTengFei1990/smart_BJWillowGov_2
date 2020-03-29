@@ -11,12 +11,15 @@ import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.taskpool.INetModel;
 import com.hollysmart.value.Values;
 import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.builder.GetBuilder;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 
@@ -30,12 +33,16 @@ public class FindGridsListPageAPI implements INetModel {
     private int page=0;
     private UserInfo userInfo;
     private  String id;
+    Map<String, String> map;
+    private boolean ischek;
     private DatadicListIF datadicListIF;
 
-    public FindGridsListPageAPI(int page, UserInfo userInfo, String id, DatadicListIF datadicListIF) {
+    public FindGridsListPageAPI(boolean ischek,  Map<String, String> map,int page, UserInfo userInfo, String id, DatadicListIF datadicListIF) {
         this.page = page;
         this.userInfo = userInfo;
+        this.ischek = ischek;
         this.id = id;
+        this.map = map;
         this.datadicListIF = datadicListIF;
     }
 
@@ -43,12 +50,17 @@ public class FindGridsListPageAPI implements INetModel {
     public void request() {
 
         String urlStr = Values.SERVICE_URL + "api/blocks/list";
-        OkHttpUtils.get().url(urlStr)
+        GetBuilder getBuilder = OkHttpUtils.get().url(urlStr)
                 .addHeader("Authorization", userInfo.getAccess_token())
-                .addParams("officeid", userInfo.getOffice().getId())
                 .addParams("page", page+"")
-                .addParams("taskid", id)
-                .build().execute(new StringCallback() {
+                .addParams("taskid", id);
+        if (ischek) {
+            getBuilder.addParams("officeid", map.get("unitid"));
+
+        } else {
+            getBuilder.addParams("officeid", userInfo.getOffice().getId());
+        }
+        getBuilder.build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
                 e.printStackTrace();

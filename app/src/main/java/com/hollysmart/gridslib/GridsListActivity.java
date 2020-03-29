@@ -629,7 +629,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         if (map != null && map.size() > 0) {
             lpd.show();
 
-            new getResTaskListAPI(userInfo.getAccess_token(), map.get("id"), 100, new getResTaskListAPI.ResTaskListIF() {
+            new getResTaskListAPI(userInfo.getAccess_token(), map.get("id"),map.get("unitid"), 100, new getResTaskListAPI.ResTaskListIF() {
                 @Override
                 public void onResTaskListResult(boolean isOk, ProjectBean protBean, String msg) {
 
@@ -850,7 +850,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
     private void getdataList(){
 
-        new FindGridsListPageAPI(page,userInfo,map.get("id"), new FindGridsListPageAPI.DatadicListIF() {
+        new FindGridsListPageAPI(ischeck,map,page,userInfo,map.get("id"), new FindGridsListPageAPI.DatadicListIF() {
             @Override
             public void datadicListResult(boolean isOk, List<BlockAndStatusBean> netDataList, int count,int okcount,int total) {
                 if (isOk) {
@@ -876,8 +876,11 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                         }
                     }
                     blockBeanList.addAll(netDataList);
-                    resDataManageAdapter.notifyDataSetChanged();
-                    lpd.cancel();
+                    if (resDataManageAdapter != null) {
+                        resDataManageAdapter.notifyDataSetChanged();
+                        lpd.cancel();
+
+                    }
                 }
 
                 if (isRefresh) {
@@ -923,7 +926,10 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                     lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
                     lv_roadList.setVisibility(View.GONE);
                 }
-                resDataManageAdapter.notifyDataSetChanged();
+                if (resDataManageAdapter != null) {
+
+                    resDataManageAdapter.notifyDataSetChanged();
+                }
             }
 
 

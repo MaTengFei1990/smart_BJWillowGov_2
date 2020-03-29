@@ -211,7 +211,7 @@ public class ResDataListActivity extends StyleAnimActivity {
 
     private void getResTaskById(){
 
-        new getResTaskListAPI(userInfo.getAccess_token(), map.get("id"), 1000, new getResTaskListAPI.ResTaskListIF() {
+        new getResTaskListAPI(userInfo.getAccess_token(), map.get("id"), map.get("unitid"),1000, new getResTaskListAPI.ResTaskListIF() {
             @Override
             public void onResTaskListResult(boolean isOk, ProjectBean probean, String msg) {
 

@@ -33,11 +33,13 @@ public class getResTaskListAPI implements INetModel {
     private int pageNo;
     private String  token;
     private String fdTaskId;
+    private String officeId;
 
-    public getResTaskListAPI(String token,String fdTaskId,int pageNo, ResTaskListIF resTaskListIF) {
+    public getResTaskListAPI(String token,String fdTaskId,String officeId,int pageNo, ResTaskListIF resTaskListIF) {
         this.pageNo = pageNo;
         this.token = token;
         this.fdTaskId = fdTaskId;
+        this.officeId = officeId;
         this.resTaskListIF = resTaskListIF;
     }
 
@@ -46,10 +48,13 @@ public class getResTaskListAPI implements INetModel {
         JSONObject object = new JSONObject();
         try {
             object.put("fdTaskId", fdTaskId);
+            object.put("fOfficeId", officeId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Mlog.d("getResTaskListAPI----obj" + object.toString());
         String urlStr = Values.SERVICE_URL_FORM + "/admin/api/restask/get";
+        Mlog.d("getResTaskListAPI----urlStr" + urlStr);
         OkHttpUtils.postString().url(urlStr)
                 .content(object.toString()).addHeader("Authorization", token)
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))
