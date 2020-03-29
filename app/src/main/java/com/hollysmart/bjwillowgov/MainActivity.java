@@ -532,7 +532,7 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @JavascriptInterface
-    private void toTopAndRefresh(final WebView webView, String url) {
+    public void toTopAndRefresh(final WebView webView, String url) {
                     String method ="javascript:toTopAndRefresh()" ;
                     webView.evaluateJavascript(method, new ValueCallback<String>() {
                         @Override
@@ -796,7 +796,7 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
     }
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @JavascriptInterface
-    private void jumpto(final WebView webView, final String link) {
+    public void jumpto(final WebView webView, final String link) {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, final String url) {

@@ -257,7 +257,6 @@ public class CCM_Bitmap {
 	/**
 	 * Ratio and generate thumb to the path specified
 	 * 
-	 * @param image
 	 * @param outPath
 	 * @param pixelW target pixel of width
 	 * @param pixelH target pixel of height

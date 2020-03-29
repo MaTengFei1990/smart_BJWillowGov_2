@@ -316,8 +316,7 @@ public class CCM_DateTime {
 	  }  
 	  /** 
 	   * 得到几天前的时间 
-	   * @param d 
-	   * @param day 
+	   * @param day
 	   * @return 
 	   */  
 	  public String getDateBefore(int day){
@@ -345,8 +344,7 @@ public class CCM_DateTime {
 	  }  
 	  /** 
 	   * 得到几天后的时间 
-	   * @param d 
-	   * @param day 
+	   * @param day
 	   * @return 
 	   */  
 	  public String getDateAfter(int day){
@@ -357,8 +355,7 @@ public class CCM_DateTime {
 	  }  
 	  /** 
 	   * 得到几月前的时间 
-	   * @param d 
-	   * @param day 
+	   * @param month
 	   * @return 
 	   */  
 	  public String getMonthBefore(int month){
@@ -460,7 +457,7 @@ public class CCM_DateTime {
 	/**
 	 * 格式化日期 yyyy-MM-dd HH:mm:ss 2011-12-29 12:42:27 to 今天 12:42
 	 * 
-	 * @param time
+	 * @param t
 	 */
 	public String FormatSimpleDate(String t) {
 		if (t != null && !t.equals("")) {
@@ -598,7 +595,7 @@ public class CCM_DateTime {
 	 * 信息中心
 	 * 格式化日期 yyyy-MM-dd HH:mm:ss 2011-12-29 12:42:27 
 	 * 如果是当天只显示时间，否则只显示月日
-	 * @param datetime 2012-05-07 15:51
+	 * @param t 2012-05-07 15:51
 	 * 
 	 * */
 	public String FormatSimpleDate_InfoCenter(String t){

@@ -1,7 +1,6 @@
 <resources>
 
     <!-- Base application theme. -->
-    <color name="tram">#00000000</color>
 
     <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar"></style>
 
@@ -52,17 +51,6 @@
         <attr name="circleColor" format="color" />
         <attr name="textColor" format="color" />
     </declare-styleable>
-
-    <style name="DialogAnimation">
-        <item name="android:windowEnterAnimation">@anim/abc_slide_in_bottom</item>
-        <item name="android:windowExitAnimation">@anim/abc_slide_out_bottom</item>
-    </style>
-
-
-    <style name="dialog_style" parent="android:Theme.Dialog">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
-    </style>
 
 
 </resources>
