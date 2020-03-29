@@ -23,6 +23,7 @@ import com.hollysmart.beans.DictionaryBean;
 import com.hollysmart.beans.JDPicInfo;
 import com.hollysmart.beans.ResModelBean;
 import com.hollysmart.beans.cgformRuleBean;
+import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.db.DictionaryDao;
 import com.hollysmart.db.LastTreeResDataDao;
 import com.hollysmart.db.ResDataDao;
@@ -36,8 +37,6 @@ import com.hollysmart.formlib.beans.FormModelBean;
 import com.hollysmart.formlib.beans.LastTreeDataBean;
 import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
-import com.hollysmart.bjwillowgov.R;
-//import com.hollysmart.gridslib.apis.GetTreeNumAPI;
 import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
@@ -60,6 +59,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+//import com.hollysmart.gridslib.apis.GetTreeNumAPI;
 
 public class TreeDetailsActivity extends StyleAnimActivity {
 

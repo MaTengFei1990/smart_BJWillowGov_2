@@ -10,8 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hollysmart.beans.StateBean;
-import com.hollysmart.listener.TextClickListener;
 import com.hollysmart.bjwillowgov.R;
+import com.hollysmart.listener.TextClickListener;
 
 import java.util.List;
 

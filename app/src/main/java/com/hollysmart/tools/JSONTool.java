@@ -3,9 +3,9 @@ package com.hollysmart.tools;
 import android.content.Context;
 
 import com.hollysmart.beans.JDPicInfo;
-import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.db.JDPicDao;
 import com.hollysmart.db.ResDataDao;
+import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.utils.CCM_DateTime;
 import com.hollysmart.utils.Mlog;
 

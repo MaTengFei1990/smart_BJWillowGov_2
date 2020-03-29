@@ -8,11 +8,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.d.lib.xrv.LRecyclerView;
+import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.db.UserInfo;
 import com.hollysmart.dialog.LoadingProgressDialog;
 import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
-import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.gridslib.adapters.TreeListAdapter;
 import com.hollysmart.gridslib.apis.SearchListAPI;
 import com.hollysmart.gridslib.beans.BlockBean;

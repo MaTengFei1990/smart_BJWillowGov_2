@@ -3,8 +3,8 @@ package com.hollysmart.formlib.adapters.viewholder;
 import android.view.View;
 import android.widget.TextView;
 
-import com.hollysmart.formlib.beans.DongTaiFormBean;
 import com.hollysmart.bjwillowgov.R;
+import com.hollysmart.formlib.beans.DongTaiFormBean;
 import com.hollysmart.views.linearlayoutforlistview.MyLinearLayoutForListView;
 
 import java.util.List;

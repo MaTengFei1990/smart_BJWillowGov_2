@@ -15,23 +15,23 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.d.lib.xrv.LRecyclerView;
-import com.hollysmart.formlib.adapters.ProjectItemAdapter;
 import com.hollysmart.adapter.TitleViewAdapter;
 import com.hollysmart.apis.ResModelListAPI;
-import com.hollysmart.formlib.apis.RestaskDeleteAPI;
-import com.hollysmart.formlib.apis.SaveResTaskAPI;
-import com.hollysmart.formlib.apis.getResTaskListAPI;
-import com.hollysmart.formlib.beans.ProjectBean;
-import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.beans.ResModelBean;
 import com.hollysmart.beans.StateBean;
+import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.db.ProjectDao;
 import com.hollysmart.db.ResDataDao;
 import com.hollysmart.db.ResModelDao;
 import com.hollysmart.db.UserInfo;
 import com.hollysmart.dialog.LoadingProgressDialog;
+import com.hollysmart.formlib.adapters.ProjectItemAdapter;
+import com.hollysmart.formlib.apis.RestaskDeleteAPI;
+import com.hollysmart.formlib.apis.SaveResTaskAPI;
+import com.hollysmart.formlib.apis.getResTaskListAPI;
+import com.hollysmart.formlib.beans.ProjectBean;
+import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.listener.TextClickListener;
-import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.Utils;
@@ -44,7 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static android.support.v7.widget.RecyclerView.*;
+import static android.support.v7.widget.RecyclerView.LayoutManager;
 
 
 /***

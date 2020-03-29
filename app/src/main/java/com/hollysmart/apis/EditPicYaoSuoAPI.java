@@ -2,7 +2,6 @@ package com.hollysmart.apis;
 
 import android.content.Context;
 
-import com.hollysmart.beans.JDPicInfo;
 import com.hollysmart.beans.PicBean;
 import com.hollysmart.utils.taskpool.INetModel;
 import com.hollysmart.utils.taskpool.OnNetRequestListener;

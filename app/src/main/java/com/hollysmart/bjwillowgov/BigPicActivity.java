@@ -17,7 +17,6 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.hollysmart.beans.JDPicInfo;
 import com.hollysmart.imageview.GestureImageView;
-import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.value.Values;
 

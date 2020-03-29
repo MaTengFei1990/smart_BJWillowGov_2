@@ -36,21 +36,21 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.Overlay;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
-import com.hollysmart.formlib.apis.GetNetResListAPI;
-import com.hollysmart.formlib.apis.ResDataGetAPI;
-import com.hollysmart.formlib.apis.SaveResRouateAPI;
 import com.hollysmart.beans.GPS;
 import com.hollysmart.beans.LatLngToJL;
 import com.hollysmart.beans.LuXianInfo;
 import com.hollysmart.beans.PointInfo;
-import com.hollysmart.formlib.beans.ProjectBean;
-import com.hollysmart.formlib.beans.ResDataBean;
+import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.db.ProjectDao;
 import com.hollysmart.db.UserInfo;
 import com.hollysmart.dialog.SheetDialogFragment;
+import com.hollysmart.formlib.apis.GetNetResListAPI;
+import com.hollysmart.formlib.apis.ResDataGetAPI;
+import com.hollysmart.formlib.apis.SaveResRouateAPI;
+import com.hollysmart.formlib.beans.ProjectBean;
+import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.main.MainPresenter;
 import com.hollysmart.main.MainView;
-import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.CCM_DateTime;
@@ -151,9 +151,6 @@ public class ProjectDetails2Activity extends StyleAnimActivity implements OnClic
     @Nullable
     @BindView(R.id.ll_add_jingdian)
     LinearLayout ll_add_jingdian;
-    @Nullable
-    @BindView(R.id.ll_add_fenxiang)
-    LinearLayout ll_add_fenxiang;
     @Nullable
     @BindView(R.id.panel_card_view)
     RelativeLayout panel_card_view;

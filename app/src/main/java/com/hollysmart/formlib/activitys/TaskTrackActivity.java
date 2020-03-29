@@ -18,13 +18,13 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.d.lib.xrv.LRecyclerView;
-import com.hollysmart.formlib.adapters.RouteManagerAdapter;
-import com.hollysmart.formlib.apis.GetRouteListDataAPI;
 import com.hollysmart.beans.LuXianInfo;
-import com.hollysmart.formlib.beans.ResDataBean;
+import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.db.LuXianDao;
 import com.hollysmart.db.UserInfo;
-import com.hollysmart.bjwillowgov.R;
+import com.hollysmart.formlib.adapters.RouteManagerAdapter;
+import com.hollysmart.formlib.apis.GetRouteListDataAPI;
+import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.tools.KMLTool;
 import com.hollysmart.utils.ACache;

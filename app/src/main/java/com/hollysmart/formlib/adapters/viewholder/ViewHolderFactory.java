@@ -1,7 +1,6 @@
 package com.hollysmart.formlib.adapters.viewholder;
 
 import com.hollysmart.formlib.adapters.TypeEnum;
-import com.umeng.socialize.media.Base;
 
 public class ViewHolderFactory {
 

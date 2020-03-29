@@ -1,6 +1,5 @@
 package com.hollysmart.formlib.beans;
 
-import com.hollysmart.formlib.beans.ResDataBean;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 

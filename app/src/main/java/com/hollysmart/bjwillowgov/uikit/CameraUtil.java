@@ -1,10 +1,5 @@
 package com.hollysmart.bjwillowgov.uikit;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.security.MessageDigest;
-
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -16,6 +11,11 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
 import android.text.format.DateFormat;
 import android.util.Log;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.security.MessageDigest;
 
 public final class CameraUtil {
 

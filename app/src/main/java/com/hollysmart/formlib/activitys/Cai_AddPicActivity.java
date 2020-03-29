@@ -25,10 +25,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hollysmart.formlib.beans.DongTaiFormBean;
-import com.hollysmart.interfaces.MyInterfaces;
 import com.hollysmart.bjwillowgov.BuildConfig;
 import com.hollysmart.bjwillowgov.R;
+import com.hollysmart.formlib.beans.DongTaiFormBean;
+import com.hollysmart.interfaces.MyInterfaces;
 import com.hollysmart.popuwindows.PopupXiangCe;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.FileTool;

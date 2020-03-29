@@ -5,8 +5,8 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 
-import com.hollysmart.formlib.beans.DongTaiFormBean;
 import com.hollysmart.bjwillowgov.R;
+import com.hollysmart.formlib.beans.DongTaiFormBean;
 
 import java.util.List;
 

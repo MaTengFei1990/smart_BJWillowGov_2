@@ -7,12 +7,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.d.lib.xrv.LRecyclerView;
-import com.hollysmart.formlib.adapters.ProjectItemAdapter;
-import com.hollysmart.formlib.beans.ProjectBean;
+import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.db.ProjectDao;
 import com.hollysmart.db.UserInfo;
 import com.hollysmart.dialog.LoadingProgressDialog;
-import com.hollysmart.bjwillowgov.R;
+import com.hollysmart.formlib.adapters.ProjectItemAdapter;
+import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.Utils;

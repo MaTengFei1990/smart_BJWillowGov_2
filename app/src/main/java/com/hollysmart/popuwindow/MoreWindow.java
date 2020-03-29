@@ -25,9 +25,9 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
 import com.hollysmart.animtor.KickBackAnimator;
-import com.hollysmart.formlib.activitys.EditPicActivity;
 import com.hollysmart.bjwillowgov.EditTextActivity;
 import com.hollysmart.bjwillowgov.R;
+import com.hollysmart.formlib.activitys.EditPicActivity;
 import com.hollysmart.utils.fastBlur.FastBlur;
 
 import java.util.ArrayList;

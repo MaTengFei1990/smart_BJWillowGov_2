@@ -4,8 +4,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hollysmart.formlib.beans.DongTaiFormBean;
 import com.hollysmart.bjwillowgov.R;
+import com.hollysmart.formlib.beans.DongTaiFormBean;
 
 import java.util.List;
 

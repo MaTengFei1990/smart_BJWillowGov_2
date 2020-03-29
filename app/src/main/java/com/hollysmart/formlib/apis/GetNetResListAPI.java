@@ -1,8 +1,8 @@
 package com.hollysmart.formlib.apis;
 
+import com.hollysmart.db.UserInfo;
 import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
-import com.hollysmart.db.UserInfo;
 import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.taskpool.INetModel;
 import com.hollysmart.value.Values;

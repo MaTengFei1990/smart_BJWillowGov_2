@@ -1,11 +1,6 @@
 package com.hollysmart.gridslib.apis;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.hollysmart.db.UserInfo;
-import com.hollysmart.formlib.beans.ProjectBean;
-import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.taskpool.INetModel;
@@ -15,8 +10,6 @@ import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.MediaType;

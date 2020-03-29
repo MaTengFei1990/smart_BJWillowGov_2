@@ -13,8 +13,8 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.hollysmart.interfaces.MyInterfaces;
 import com.hollysmart.bjwillowgov.R;
+import com.hollysmart.interfaces.MyInterfaces;
 import com.hollysmart.utils.loctionpic.ImageBucket;
 
 import java.util.List;

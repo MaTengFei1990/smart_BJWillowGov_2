@@ -12,10 +12,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hollysmart.bjwillowgov.R;
+import com.hollysmart.db.UserInfo;
 import com.hollysmart.formlib.apis.ResDataGetAPI;
 import com.hollysmart.formlib.beans.ResDataBean;
-import com.hollysmart.db.UserInfo;
-import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.Mlog;

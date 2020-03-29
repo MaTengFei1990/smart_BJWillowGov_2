@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
-import cn.qqtheme.framework.util.ScreenUtils;
 import cn.qqtheme.framework.util.LogUtils;
+import cn.qqtheme.framework.util.ScreenUtils;
 
 /**
  * 底部弹窗基类

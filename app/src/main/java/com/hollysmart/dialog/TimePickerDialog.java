@@ -13,7 +13,6 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-
 import com.hollysmart.bjwillowgov.R;
 
 import java.util.ArrayList;

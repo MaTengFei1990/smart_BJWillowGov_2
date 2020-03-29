@@ -9,16 +9,15 @@ import android.widget.LinearLayout;
 
 import com.d.lib.xrv.LRecyclerView;
 import com.hollysmart.beans.JDPicInfo;
+import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.db.UserInfo;
 import com.hollysmart.dialog.LoadingProgressDialog;
 import com.hollysmart.formlib.beans.DongTaiFormBean;
 import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
-import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.gridslib.adapters.GridsListAdapter;
 import com.hollysmart.gridslib.apis.SearchGridsListPageAPI;
 import com.hollysmart.gridslib.beans.BlockAndStatusBean;
-import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.Utils;

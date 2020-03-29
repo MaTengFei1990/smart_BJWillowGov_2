@@ -10,11 +10,11 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.hollysmart.formlib.beans.DongTaiFormBean;
 import com.hollysmart.beans.JDPicInfo;
 import com.hollysmart.bjwillowgov.BigPicActivity;
-import com.hollysmart.formlib.activitys.Cai_AddPicActivity;
 import com.hollysmart.bjwillowgov.R;
+import com.hollysmart.formlib.activitys.Cai_AddPicActivity;
+import com.hollysmart.formlib.beans.DongTaiFormBean;
 import com.hollysmart.utils.Utils;
 import com.hollysmart.value.Values;
 import com.hollysmart.views.linearlayoutforlistview.LinearLayoutBaseAdapter;

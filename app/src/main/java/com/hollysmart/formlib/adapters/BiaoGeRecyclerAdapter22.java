@@ -19,6 +19,7 @@ import com.google.gson.reflect.TypeToken;
 import com.hollysmart.beans.DictionaryBean;
 import com.hollysmart.beans.JDPicInfo;
 import com.hollysmart.beans.cgformRuleBean;
+import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.dialog.BsSelectDialog;
 import com.hollysmart.dialog.RoadPlateBsSelectDialog;
 import com.hollysmart.dialog.TimePickerDialog;
@@ -37,7 +38,6 @@ import com.hollysmart.formlib.adapters.viewholder.ViewHolderUtils;
 import com.hollysmart.formlib.beans.DongTaiFormBean;
 import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
-import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.Utils;
 

@@ -1,7 +1,5 @@
 package com.hollysmart.formlib.beans;
 
-import com.hollysmart.formlib.beans.DongTaiFormBean;
-
 import java.io.Serializable;
 import java.util.List;
 

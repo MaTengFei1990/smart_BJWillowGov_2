@@ -2,7 +2,6 @@ package com.hollysmart.gridslib.apis;
 
 import com.hollysmart.db.UserInfo;
 import com.hollysmart.gridslib.beans.BlockAndStatusBean;
-import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.taskpool.INetModel;
 import com.hollysmart.value.Values;
