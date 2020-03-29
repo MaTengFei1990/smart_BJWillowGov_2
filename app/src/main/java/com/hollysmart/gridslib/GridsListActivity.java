@@ -629,7 +629,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         if (map != null && map.size() > 0) {
             lpd.show();
 
-            new getResTaskListAPI(userInfo.getAccess_token(), map.get("id"),map.get("unitid"), 100, new getResTaskListAPI.ResTaskListIF() {
+            new getResTaskListAPI(userInfo.getAccess_token(), map, new getResTaskListAPI.ResTaskListIF() {
                 @Override
                 public void onResTaskListResult(boolean isOk, ProjectBean protBean, String msg) {
 

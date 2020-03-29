@@ -15,7 +15,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.MediaType;
@@ -30,16 +32,14 @@ public class getResTaskListAPI implements INetModel {
 
 
     private ResTaskListIF resTaskListIF;
-    private int pageNo;
     private String  token;
     private String fdTaskId;
     private String officeId;
 
-    public getResTaskListAPI(String token,String fdTaskId,String officeId,int pageNo, ResTaskListIF resTaskListIF) {
-        this.pageNo = pageNo;
+    public getResTaskListAPI(String token, Map<String, String> map, ResTaskListIF resTaskListIF) {
         this.token = token;
-        this.fdTaskId = fdTaskId;
-        this.officeId = officeId;
+        this.fdTaskId =  map.get("id");
+        this.officeId = map.get("unitid");
         this.resTaskListIF = resTaskListIF;
     }
 
