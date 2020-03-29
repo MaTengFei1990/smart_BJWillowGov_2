@@ -98,9 +98,7 @@ public class ResDataListActivity extends StyleAnimActivity {
         soundList = new ArrayList<>();
         mJingDians = new ArrayList<>();
 
-
         map = (Map<String, String>) getIntent().getSerializableExtra("exter");
-
         ischeck = getIntent().getBooleanExtra("ischeck", false);
         setLpd();
         selectDB();
@@ -255,50 +253,6 @@ public class ResDataListActivity extends StyleAnimActivity {
         }).request();
     }
 
-//    private void getResTaskById() {
-//        new getResTaskListAPI(userInfo.getAccess_token(), map.get("id"), 10000, new getResTaskListAPI.ResTaskListIF() {
-//            @Override
-//            public void onResTaskListResult(boolean isOk, List<ProjectBean> probean,String msg) {
-//
-//                if (isOk) {
-//                        projectBean = probean;
-//
-//                        new GetResModelAPI(userInfo.getAccess_token(), projectBean.getfTaskmodel(), new GetResModelAPI.GetResModelIF() {
-//                            @Override
-//                            public void ongetResModelIFResult(boolean isOk, ResModelBean resModelBen) {
-//
-//                                if (isOk) {//获取到网络数据
-//                                    lpd.cancel();
-//
-//                                    ResModelDao resModelDao = new ResModelDao(mContext);
-//                                    resModelDao.addOrUpdate(resModelBen);
-//                                    String getfJsonData = resModelBen.getfJsonData();
-//                                    Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm").create();
-//                                    List<DongTaiFormBean> newFormList = mGson.fromJson(getfJsonData, new TypeToken<List<DongTaiFormBean>>() {
-//                                    }.getType());
-//
-//                                    resDataManageAdapter = new ResDataManageAdapter(mContext, mJingDians, picList, soundList, projectBean, newFormList, ischeck);
-//                                    lv_jingdian.setAdapter(resDataManageAdapter);
-//                                    selectDB(projectBean.getId());
-//
-//                                }
-//
-//
-//                            }
-//                        }).request();
-//
-//
-//                } else {
-//                    lpd.cancel();
-//
-//                    if (!Utils.isEmpty(msg)) {
-//                        Utils.showDialog(mContext, msg);
-//                        findViewById(R.id.bn_add).setVisibility(View.GONE);
-//                    }
-//                }
-//
-//        }).request();
-//    }
 
 
     // 查询

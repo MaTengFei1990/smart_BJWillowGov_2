@@ -123,35 +123,6 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
     private OtherMap otherMap;
     private ButtomDialogView buttomDialogView;
 
-    boolean isAddressBook = false;
-
-    private BroadcastReceiver br = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if("com.gqt.accept".equals(intent.getAction())){
-
-            }else if("com.gqt.hangup".equals(intent.getAction())){
-            }
-        }
-    };
-
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver(){
-
-        @Override
-        public void onReceive(Context arg0, Intent intent) {
-            // TODO Auto-generated method stub
-            if("com.gqt.loginout".equals(intent.getAction())){
-                MainActivity.this.finish();
-            }
-        }
-
-    };
-
-
-
-
-
 
     // 获取当前时间格式HH:mm:ss  jibingeng 2015-09-23
     public String getTime() {
@@ -409,63 +380,6 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
         intent.putExtra("exter", (Serializable) map);
         intent.putExtra("ischeck", false);
         startActivity(intent);
-
-
-
-//        webView.evaluateJavascript("javascript:app.getPCToken()", new ValueCallback<String>() {
-//            @Override
-//            public void onReceiveValue(String value) {
-//                if (!Utils.isEmpty(value)) {
-//
-//                    String PcToken = "";
-//                    String substring = value.substring(1, value.length() - 1);
-//                    PcToken = "Bearer " + substring;
-//
-//                    String[] scada = url.split("scada.html\\?");
-//                    Map<String, String> map = new HashMap<String , String>();
-//                    if (scada!=null&&scada.length>1) {
-//
-//                        String[] valuse = scada[1].split("&");
-//
-//
-//
-//                        if (valuse.length > 0) {
-//
-//                            for (int i = 0; i < valuse.length; i++) {
-//
-//                                String s = valuse[i];
-//
-//                                String[] split = s.split("=");
-//                                try {
-//                                    map.put(split[0], URLDecoder.decode(split[1],"UTF-8"));
-//                                } catch (UnsupportedEncodingException e) {
-//                                    e.printStackTrace();
-//                                }
-//
-//
-//                            }
-//
-//
-//                        }
-//
-//
-//
-//                    }
-//
-//
-//                    Intent intent = new Intent(mContext, GridsListActivity.class);
-//                    intent.putExtra("exter", (Serializable) map);
-//                    intent.putExtra("ischeck", false);
-//                    intent.putExtra("PcToken", PcToken);
-//                    startActivity(intent);
-//
-//                }
-//
-//
-//
-//            }
-//        });
-
 
     }
 
@@ -1946,10 +1860,6 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
 
             scaledBitmap = FastBlur.toBlur(scaledBitmap, (int) 15);
 
-
-//            newFragment =  CustomViewAnyPositionDialog.getInstance(mContext);
-
-
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             scaledBitmap.compress(Bitmap.CompressFormat.PNG, 80, baos);
             bitmapByte = baos.toByteArray();
@@ -1974,14 +1884,6 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
         IntentFilter filter = new IntentFilter(Values.RELOAD_DATA);
         getContext().registerReceiver(receiver, filter);
 
-
-        registerReceiver(broadcastReceiver, new IntentFilter("com.gqt.loginout"));
-
-        IntentFilter filter2 = new IntentFilter();
-        filter2.addAction("com.gqt.accept");
-        filter2.addAction("com.gqt.hangup");
-        registerReceiver(br, filter2);
-
     }
 
 
@@ -1991,12 +1893,6 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
 
         }
 
-        if (br != null) {
-            MainActivity.this.unregisterReceiver(br);
-        }
-        if (broadcastReceiver != null) {
-            MainActivity.this.unregisterReceiver(broadcastReceiver);
-        }
     }
 
 

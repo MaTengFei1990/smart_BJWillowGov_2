@@ -159,7 +159,6 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         initMap(savedInstanceState);
 
     }
@@ -386,11 +385,9 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
         if (ischeck) {
             rl_bottom.setVisibility(View.GONE);
-
             getResTaskById();
 
         } else {
-
             createResTask();
 
         }
