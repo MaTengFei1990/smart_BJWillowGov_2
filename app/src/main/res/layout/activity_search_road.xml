@@ -60,17 +60,125 @@
 
     </LinearLayout>
 
-
-    <com.d.lib.xrv.LRecyclerView
-        android:id="@+id/lv_roadList"
-        android:layout_below="@+id/ll_search"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:divider="@color/touming"
+        android:layout_below="@+id/ll_search"
         android:layout_above="@+id/rl_bottom"
-        android:visibility="gone"
-        android:dividerHeight="0sp">
-    </com.d.lib.xrv.LRecyclerView>
+        android:orientation="vertical">
+
+
+
+
+        <com.d.lib.xrv.LRecyclerView
+            android:id="@+id/lv_roadList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:divider="@color/touming"
+
+            android:visibility="gone"
+            android:layout_weight="1"
+            android:dividerHeight="0sp">
+        </com.d.lib.xrv.LRecyclerView>
+
+
+        <RelativeLayout
+            android:id="@+id/rl_mapContent"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:layout_height="match_parent">
+
+
+
+
+            <com.amap.api.maps.MapView
+                android:id="@+id/bmapView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:clickable="true" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:gravity="right"
+                android:orientation="vertical">
+
+
+                <ImageButton
+                    android:id="@+id/bn_closeMap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@color/touming"
+                    android:src="@mipmap/close_map" />
+
+                <ImageButton
+                    android:id="@+id/bn_weixing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/touming"
+                    android:src="@mipmap/icon1_01" />
+
+                <ImageButton
+                    android:id="@+id/bn_dingwei"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/touming"
+                    android:layout_marginTop="3dip"
+                    android:src="@mipmap/icon1_03" />
+
+                <ImageButton
+                    android:id="@+id/imagbtn_enlarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dip"
+                    android:background="@color/touming"
+                    android:src="@mipmap/icon1_04" />
+
+                <ImageButton
+                    android:id="@+id/imagbtn_zoomOut"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/touming"
+                    android:layout_marginTop="3dip"
+                    android:src="@mipmap/icon1_05" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="网格编号(子网格号):"/>
+                <TextView
+                    android:id="@+id/tv_griNumber"
+                    android:textSize="@dimen/text_zhong"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+
+
+            </LinearLayout>
+
+
+
+
+
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
 
     <LinearLayout
@@ -86,15 +194,15 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:src="@mipmap/icon_empty"
-            android:scaleType="fitXY"/>
+            android:scaleType="fitXY"
+            android:src="@mipmap/icon_empty" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
             android:text="无数据，请添加道路"
             android:textSize="@dimen/text_zhong" />
     </LinearLayout>
