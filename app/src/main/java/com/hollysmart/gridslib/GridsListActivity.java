@@ -64,8 +64,10 @@ import com.hollysmart.gridslib.beans.BlockAndStatusBean;
 import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
+import com.hollysmart.utils.BaiDuLatLng;
 import com.hollysmart.utils.CCM_DateTime;
 import com.hollysmart.utils.Mlog;
+import com.hollysmart.utils.OtherMap;
 import com.hollysmart.utils.Utils;
 import com.hollysmart.utils.taskpool.OnNetRequestListener;
 import com.hollysmart.utils.taskpool.TaskPool;
@@ -123,6 +125,8 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     TextView tv_griNumber;
     @BindView(R.id.bn_closeMap)
     ImageButton bn_closeMap;
+    @BindView(R.id.btn_guide)
+    ImageButton btn_guide;
     @BindView(R.id.rl_mapContent)
     RelativeLayout rl_mapContent;
     @BindView(R.id.tv_okcoutAndtotal)
@@ -304,6 +308,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         tv_maplsit.setOnClickListener(this);
         rl_bottom.setOnClickListener(this);
         bn_closeMap.setOnClickListener(this);
+        btn_guide.setOnClickListener(this);
 
         findViewById(R.id.imagbtn_enlarge).setOnClickListener(this);
         findViewById(R.id.imagbtn_zoomOut).setOnClickListener(this);
@@ -550,6 +555,38 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                 break;
             case R.id.imagbtn_zoomOut:
                 ZoomChange(false);
+                break;
+            case R.id.btn_guide:
+
+                OtherMap otherMap = new OtherMap(mContext);
+                otherMap.selectDialog(new OtherMap.MapIf() {
+                    @Override
+                    public void selectMap(int tag) {
+                        String unitName = currrentBlockBeanshownOnMap.getFdBlockCode();
+
+                        double fdLbLat = currrentBlockBeanshownOnMap.getFdLbLat();
+                        double fdRtLat = currrentBlockBeanshownOnMap.getFdRtLat();
+
+                        double fdLbLng = currrentBlockBeanshownOnMap.getFdLbLng();
+                        double fdRtLng = currrentBlockBeanshownOnMap.getFdRtLng();
+
+                        double centerlat = (fdLbLat + fdRtLat)/2;
+                        double centerlng = (fdLbLng + fdRtLng)/2;
+
+                        if (tag == otherMap.GAODETAG) {
+
+                            otherMap.startGaoDeMap(centerlat, centerlng, unitName);
+                        }
+                        if (tag == otherMap.BAIDUTAG) {
+                            com.baidu.mapapi.model.LatLng latLng = new BaiDuLatLng().gToB(centerlat, centerlng);
+                            otherMap.startBaiduMap(latLng.latitude, latLng.longitude, unitName);
+
+                        }
+
+
+
+                    }
+                });
                 break;
         }
     }

@@ -56,14 +56,12 @@ public class OtherMap {
         }
     }
     public void startGaoDeMap(double mlat,double mlng, String unitName){
-//      intent = Intent.getIntent("androidamap://path?sourceApplication=GasStation&sid=BGVIS1
-//      &slat=34.264642646862&slon=108.95108518068&sname=当前位置&did=BGVIS2&dlat=36.3&dlon=116.2&dname=终点位置&dev=1&m=2&t=0");
 
         double locLat = LocationInfo.getInstance().getLat();
         double locLng = LocationInfo.getInstance().getLng();
         try {
             //androidamap://route?sourceApplication=softname&slat=36.2&slon=116.1&sname=abc&dlat=36.3&dlon=116.2&dname=def&dev=0&m=0&t=1
-            String map = "androidamap://route?sourceApplication=园景通&slat=" + locLat +"&slon="+ locLng
+            String map = "androidamap://route?sourceApplication=北京飞絮防治&slat=" + locLat +"&slon="+ locLng
                     +"&sname=" + "我的位置" + "&dlat=" + mlat+ "&dlon=" + mlng+ "&dname=" + unitName + "&dev=1&m=0&t=2";
             Intent intent = new Intent("android.intent.action.VIEW",
                     android.net.Uri.parse(map));
@@ -78,26 +76,28 @@ public class OtherMap {
 
 
     private boolean isInstallByread(String packageName) {
+
         return new File("/data/data/" + packageName).exists();
     }
     private List<MapBean> maps = new ArrayList<>();
     public final int GAODETAG = 1;
     public final int BAIDUTAG = 2;
+    public static final String PN_GAODE_MAP = "com.autonavi.minimap";// 高德地图包名
+    public static final String PN_BAIDU_MAP = "com.baidu.BaiduMap"; // 百度地图包名
+
     private void initMapData(){
-        String gaode = "com.autonavi.minimap";
-        String baidu = "com.baidu.BaiduMap";
-        if (isInstallByread(gaode)){
+        if (isInstallByread(PN_GAODE_MAP)){
             MapBean mapBean = new MapBean();
             mapBean.setId(GAODETAG);
             mapBean.setName("高德地图");
-            mapBean.setPkg(gaode);
+            mapBean.setPkg(PN_GAODE_MAP);
             maps.add(mapBean);
         }
-        if (isInstallByread(baidu)){
+        if (isInstallByread(PN_BAIDU_MAP)){
             MapBean mapBean = new MapBean();
             mapBean.setId(BAIDUTAG);
             mapBean.setName("百度地图");
-            mapBean.setPkg(baidu);
+            mapBean.setPkg(PN_BAIDU_MAP);
             maps.add(mapBean);
         }
     }
