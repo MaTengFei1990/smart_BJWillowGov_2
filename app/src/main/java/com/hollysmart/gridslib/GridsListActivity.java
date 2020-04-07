@@ -153,6 +153,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     private boolean isRefresh=false;
     private boolean loadMore=false;
     private int  pageSize=100;
+    private final int SEARCH_GRID = 340;
 
 
     @Override
@@ -527,7 +528,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                 searchIntent.putExtra("TreeFormModelId", TreeFormModelId);
                 searchIntent.putExtra("PcToken", PcToken);
                 searchIntent.putExtra("DongTainewFormList", (Serializable)DongTainewFormList);
-                startActivity(searchIntent);
+                startActivityForResult(searchIntent,SEARCH_GRID);
 
                 break;
             case R.id.bn_closeMap:
@@ -1023,6 +1024,11 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                 selectDB(projectBean.getId());
 
             }
+        }
+//        //查询中修改；
+        if (requestCode == SEARCH_GRID) {
+                selectDB(projectBean.getId());
+
         }
     }
 

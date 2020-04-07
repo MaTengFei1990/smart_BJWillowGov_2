@@ -1,9 +1,11 @@
 package com.hollysmart.gridslib;
 
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -47,6 +49,7 @@ import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.gridslib.adapters.GridsListAdapter;
 import com.hollysmart.gridslib.apis.FindListPageAPI;
+import com.hollysmart.gridslib.apis.GetGridTreeCountAPI;
 import com.hollysmart.gridslib.apis.SearchGridsListPageAPI;
 import com.hollysmart.gridslib.beans.BlockAndStatusBean;
 import com.hollysmart.gridslib.beans.BlockBean;
@@ -54,6 +57,8 @@ import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.Utils;
+import com.hollysmart.utils.taskpool.OnNetRequestListener;
+import com.hollysmart.utils.taskpool.TaskPool;
 import com.hollysmart.value.Values;
 
 import java.io.File;
@@ -377,6 +382,34 @@ public class SearchGridsActivity extends StyleAnimActivity implements
         resDataManageAdapter.setMapBtnClickListener(SearchGridsActivity.this);
         lv_roadList.setAdapter(resDataManageAdapter);
 
+        lv_roadList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+
+                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                //判断是当前layoutManager是否为LinearLayoutManager
+                // 只有LinearLayoutManager才有查找第一个和最后一个可见view位置的方法
+                if (layoutManager instanceof LinearLayoutManager) {
+                    LinearLayoutManager linearManager = (LinearLayoutManager) layoutManager;
+                    //获取最后一个可见view的位置
+                    int lastItemPosition = linearManager.findLastVisibleItemPosition();
+                    //获取第一个可见view的位置
+                    int firstItemPosition = linearManager.findFirstVisibleItemPosition();
+
+                    getTreeNum(firstItemPosition,lastItemPosition);
+                }
+
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+
 
     }
 
@@ -507,6 +540,8 @@ public class SearchGridsActivity extends StyleAnimActivity implements
             lay_fragment_ProdutEmpty.setVisibility(View.GONE);
             resDataManageAdapter.notifyDataSetChanged();
 
+            getTreeNum(0,10);
+
 
         }else {
             roadBeanList.clear();
@@ -514,6 +549,69 @@ public class SearchGridsActivity extends StyleAnimActivity implements
             lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
         }
 
+    }
+
+
+
+    final TaskPool taskPool=new TaskPool();
+    private void getTreeNum(int start,int count) {
+
+        OnNetRequestListener listener=new OnNetRequestListener() {
+            @Override
+            public void onFinish() {
+                lpd.cancel();
+                if (roadBeanList != null && roadBeanList.size() > 0) {
+                    lay_fragment_ProdutEmpty.setVisibility(View.GONE);
+                    lv_roadList.setVisibility(View.VISIBLE);
+                }else {
+                    lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
+                    lv_roadList.setVisibility(View.GONE);
+                }
+                if (resDataManageAdapter != null) {
+
+                    resDataManageAdapter.notifyDataSetChanged();
+                }
+            }
+
+
+            @Override
+            public void OnNext() {
+
+                taskPool.execute(this);
+            }
+
+            @Override
+            public void OnResult(boolean isOk, String msg, Object object) {
+                taskPool.execute(this);
+            }
+        };
+
+        if (roadBeanList != null && roadBeanList.size() > 0) {
+
+            for (int i = start; i < count; i++) {
+
+                BlockAndStatusBean blockAndStatusBean = roadBeanList.get(i);
+                final BlockBean resDataBean = blockAndStatusBean.getBlock();
+                if (Utils.isEmpty(resDataBean.getFlagLoad())) {
+
+                    taskPool.addTask(new GetGridTreeCountAPI(userInfo, TreeFormModelId, resDataBean,projectBean, listener));
+                }
+
+
+            }
+
+            taskPool.execute(listener);
+        } else {
+
+            lpd.cancel();
+            if (roadBeanList != null && roadBeanList.size() > 0) {
+                lay_fragment_ProdutEmpty.setVisibility(View.GONE);
+                lv_roadList.setVisibility(View.VISIBLE);
+            } else {
+                lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
+                lv_roadList.setVisibility(View.GONE);
+            }
+        }
     }
 
 
@@ -768,4 +866,50 @@ public class SearchGridsActivity extends StyleAnimActivity implements
         super.onSaveInstanceState(outState);
         mMapView.onSaveInstanceState(outState);
     }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 4) {
+
+            if (resultCode == 1) {
+
+                String search = ed_search.getText().toString();
+
+                if (!Utils.isEmpty(search)) {
+                    search(search);
+
+                }
+
+
+            }
+        }
+        //在地图页面修改了地图修改
+        if (requestCode == 6) {
+
+            if (resultCode == 1) {
+
+
+                String search = ed_search.getText().toString();
+
+                if (!Utils.isEmpty(search)) {
+                    search(search);
+
+                }
+
+            }
+        }
+//        //在地图页面修改了地图修改
+        if (requestCode == 7) {
+            String search = ed_search.getText().toString();
+
+            if (!Utils.isEmpty(search)) {
+                search(search);
+
+            }
+        }
+    }
+
 }
