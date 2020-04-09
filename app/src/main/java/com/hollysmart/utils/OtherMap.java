@@ -38,7 +38,7 @@ public class OtherMap {
             builder.create().show();
 
         }else {
-            Toast.makeText(context, "您的手机尚未安装百度地图和高德地图，建议您先安装地图软件", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "您的手机尚未安装高德地图，建议您先安装高德地图软件", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -96,13 +96,13 @@ public class OtherMap {
             mapBean.setPkg(PN_GAODE_MAP);
             maps.add(mapBean);
         }
-        if (isInstallByread(PN_BAIDU_MAP)){
-            MapBean mapBean = new MapBean();
-            mapBean.setId(BAIDUTAG);
-            mapBean.setName("百度地图");
-            mapBean.setPkg(PN_BAIDU_MAP);
-            maps.add(mapBean);
-        }
+//        if (isInstallByread(PN_BAIDU_MAP)){
+//            MapBean mapBean = new MapBean();
+//            mapBean.setId(BAIDUTAG);
+//            mapBean.setName("百度地图");
+//            mapBean.setPkg(PN_BAIDU_MAP);
+//            maps.add(mapBean);
+//        }
     }
     public interface MapIf{
         void selectMap(int tag);
