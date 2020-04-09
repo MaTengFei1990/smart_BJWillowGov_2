@@ -42,6 +42,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.reflect.TypeToken;
 import com.hollysmart.apis.GetResModelAPI;
 import com.hollysmart.apis.ResModelListAPI;
+import com.hollysmart.beans.GPS;
 import com.hollysmart.beans.JDPicInfo;
 import com.hollysmart.beans.ResModelBean;
 import com.hollysmart.bjwillowgov.R;
@@ -66,6 +67,7 @@ import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.BaiDuLatLng;
 import com.hollysmart.utils.CCM_DateTime;
+import com.hollysmart.utils.GPSConverterUtils;
 import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.OtherMap;
 import com.hollysmart.utils.Utils;
@@ -573,13 +575,19 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                         double centerlat = (fdLbLat + fdRtLat)/2;
                         double centerlng = (fdLbLng + fdRtLng)/2;
 
+
+                        Mlog.d("centerlat===" + centerlat + "----centerlng====" + centerlng);
+
                         if (tag == otherMap.GAODETAG) {
 
                             otherMap.startGaoDeMap(centerlat, centerlng, unitName);
                         }
                         if (tag == otherMap.BAIDUTAG) {
-                            com.baidu.mapapi.model.LatLng latLng = new BaiDuLatLng().gToB(centerlat, centerlng);
-                            otherMap.startBaiduMap(latLng.latitude, latLng.longitude, unitName);
+
+                            GPS gps = new GPSConverterUtils().gcj02_To_Bd09(centerlat, centerlng);
+
+//                            double[] latLng = new BaiDuLatLng().gaoDeToBaidu(centerlat, centerlng);
+                            otherMap.startBaiduMap(gps.getLat(), gps.getLon(), unitName);
 
                         }
 

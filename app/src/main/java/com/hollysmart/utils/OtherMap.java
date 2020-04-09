@@ -46,6 +46,7 @@ public class OtherMap {
 
         double locLat = LocationInfo.getInstance().getLat();
         double locLng = LocationInfo.getInstance().getLng();
+        Mlog.d("startBaiduMap---LocationInfo.getInstance()+=====mlat=" + mlat + "-----mlng===" + mlng);
         try {
             String map = "intent://map/direction?origin=latlng:"+ locLat + "," + locLng +"|name:我的位置"
                     +"&destination=latlng:"+mlat + ","+  mlng + "|name:" + unitName + "&mode=driving&referer=Autohome|GasStation#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end";
@@ -59,10 +60,12 @@ public class OtherMap {
 
         double locLat = LocationInfo.getInstance().getLat();
         double locLng = LocationInfo.getInstance().getLng();
+
+        Mlog.d("startGaoDeMap--LocationInfo.getInstance()+=====locLat=" + locLat + "-----locLng===" + locLng);
         try {
             //androidamap://route?sourceApplication=softname&slat=36.2&slon=116.1&sname=abc&dlat=36.3&dlon=116.2&dname=def&dev=0&m=0&t=1
             String map = "androidamap://route?sourceApplication=北京飞絮防治&slat=" + locLat +"&slon="+ locLng
-                    +"&sname=" + "我的位置" + "&dlat=" + mlat+ "&dlon=" + mlng+ "&dname=" + unitName + "&dev=1&m=0&t=2";
+                    +"&sname=" + "我的位置" + "&dlat=" + mlat+ "&dlon=" + mlng+ "&dname=" + unitName + "&dev=0&m=0&t=2";
             Intent intent = new Intent("android.intent.action.VIEW",
                     android.net.Uri.parse(map));
             intent.setPackage("com.autonavi.minimap");
