@@ -963,7 +963,6 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                     blockBeanList.addAll(netDataList);
                     if (resDataManageAdapter != null) {
                         resDataManageAdapter.notifyDataSetChanged();
-                        lpd.cancel();
 
                     }
                 }
@@ -1042,8 +1041,13 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                     resDataManageAdapter.notifyDataSetChanged();
                 }
 
+                if (nearByBeanList != null && nearByBeanList.size() > 0) {
 
-                getNearbyTreeNum(0, nearByBeanList.size() - 1);
+                    getNearbyTreeNum(0, nearByBeanList.size() - 1);
+                }
+
+
+                lpd.cancel();
 
             }
         }).request();
