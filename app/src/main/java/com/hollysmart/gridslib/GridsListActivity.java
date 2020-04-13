@@ -58,6 +58,8 @@ import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.gridslib.adapters.GridsListAdapter;
 import com.hollysmart.gridslib.adapters.MyClassicsHeader;
+import com.hollysmart.gridslib.adapters.NewGridsListAdapter;
+import com.hollysmart.gridslib.apis.BlocksNearAPI;
 import com.hollysmart.gridslib.apis.FindGridsListPageAPI;
 import com.hollysmart.gridslib.apis.FindListPageAPI;
 import com.hollysmart.gridslib.apis.GetGridTreeCountAPI;
@@ -95,7 +97,7 @@ import butterknife.ButterKnife;
 public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoadMoreListener, AMapLocationListener,
         LocationSource, AMap.OnMarkerClickListener, AMap.OnInfoWindowClickListener,
         AMap.InfoWindowAdapter, AMap.OnMapLoadedListener, AMap.OnCameraChangeListener,
-        Animation.AnimationListener, View.OnClickListener, AMap.OnMapClickListener, GridsListAdapter.setMapBtnClickListener {
+        Animation.AnimationListener, View.OnClickListener, AMap.OnMapClickListener, NewGridsListAdapter.setMapBtnClickListener {
 
     @Override
     public int layoutResID() {
@@ -149,6 +151,8 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     public AMapLocationClient mLocationClient = null;
 
     private UiSettings uiSettings;
+
+    private AMapLocation mapLocation;
 
 
 
@@ -261,7 +265,9 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
                     Log.i("zjc", aMapLocation.getCity());
 
-                    mLocationClient.stopLocation();//停止定位
+//                    mLocationClient.stopLocation();//停止定位
+
+                    mapLocation = aMapLocation;
 
                 } else {
 
@@ -346,7 +352,37 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                     //获取第一个可见view的位置
                     int firstItemPosition = linearManager.findFirstVisibleItemPosition();
 
-                    getTreeNum(firstItemPosition,lastItemPosition);
+                    Mlog.d("firstItemPosition====" + firstItemPosition);
+                    Mlog.d("lastItemPosition====" + lastItemPosition);
+
+
+                    if (NearblockBeanList != null && NearblockBeanList.size() > 0) {
+
+                        Mlog.d("NearblockBeanList.size====" + NearblockBeanList.size());
+
+
+                        if (firstItemPosition > NearblockBeanList.size() + 2) {
+
+                            getTreeNum(firstItemPosition - NearblockBeanList.size() - 2, lastItemPosition - NearblockBeanList.size() - 2);
+
+                        } else {
+
+//                            getNearbyTreeNum(0, NearblockBeanList.size());
+                        }
+
+
+
+                    } else {
+
+                        Mlog.d("NearblockBeanList.size====null");
+
+                        getTreeNum(firstItemPosition, lastItemPosition -2);
+
+                    }
+
+
+
+
                 }
 
 
@@ -363,7 +399,8 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     }
 
     private List<BlockAndStatusBean> blockBeanList;
-    private GridsListAdapter resDataManageAdapter;
+    private List<BlockAndStatusBean> NearblockBeanList;
+    private NewGridsListAdapter resDataManageAdapter;
     Map<String, String> map = new HashMap<String , String>();
     private HashMap<String, List<JDPicInfo>> formPicMap = new HashMap<String, List<JDPicInfo>>();
 
@@ -382,6 +419,12 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         setLpd();
         lay_fragment_ProdutEmpty.setVisibility(View.GONE);
         blockBeanList = new ArrayList<>();
+        NearblockBeanList = new ArrayList<>();
+
+        BlockAndStatusBean nullBlock = new BlockAndStatusBean();
+        nullBlock.setNullAddFlag("true");
+
+        NearblockBeanList.add(nullBlock);
 
 
 
@@ -698,7 +741,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                                         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
                                         lv_roadList.setLayoutManager(layoutManager);
 
-                                        resDataManageAdapter = new GridsListAdapter(PcToken,mContext,  TreeFormModelId, blockBeanList, projectBean, ischeck);
+                                        resDataManageAdapter = new NewGridsListAdapter(PcToken,mContext,  TreeFormModelId, blockBeanList, projectBean, ischeck);
                                         lv_roadList.setAdapter(resDataManageAdapter);
                                         resDataManageAdapter.setMapBtnClickListener(GridsListActivity.this);
                                         resDataManageAdapter.setMap(map);
@@ -937,12 +980,136 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                 getTreeNum(0,10);
 
 
+                getNearByblocks();
+
+
             }
 
 
         }).request();
 
 
+
+    }
+
+
+
+    private void getNearByblocks() {
+
+        double latitude = 0;
+        double longitude = 0;
+        NearblockBeanList.clear();
+
+        if (mapLocation != null) {
+
+            latitude = mapLocation.getLatitude();
+            longitude = mapLocation.getLongitude();
+
+            Mlog.d("latitude+....." + latitude);
+            Mlog.d("longitude+....." + longitude);
+
+        }
+
+        //获取附近的网格
+        new BlocksNearAPI(ischeck, map, page, userInfo, map.get("id"), latitude+"", longitude+"", new BlocksNearAPI.NearBlockListIF() {
+            @Override
+            public void datadicListResult(boolean isOk, List<BlockAndStatusBean> nearByBeanList) {
+
+                if (isOk) {
+                    if (nearByBeanList != null && nearByBeanList.size() > 0) {
+
+                        NearblockBeanList.addAll(nearByBeanList);
+
+                        resDataManageAdapter.setnearbyblocks(NearblockBeanList);
+                    } else {
+                        BlockAndStatusBean nullBlock = new BlockAndStatusBean();
+                        nullBlock.setNullAddFlag("true");
+
+                        NearblockBeanList.add(nullBlock);
+
+                        resDataManageAdapter.setnearbyblocks(NearblockBeanList);
+
+                    }
+
+
+                } else {
+                    BlockAndStatusBean nullBlock = new BlockAndStatusBean();
+                    nullBlock.setNullAddFlag("true");
+
+                    NearblockBeanList.add(nullBlock);
+
+                    resDataManageAdapter.setnearbyblocks(NearblockBeanList);
+                    resDataManageAdapter.notifyDataSetChanged();
+                }
+
+
+                getNearbyTreeNum(0, nearByBeanList.size() - 1);
+
+            }
+        }).request();
+
+    }
+
+
+    final TaskPool nearbytaskPool=new TaskPool();
+    private void getNearbyTreeNum(int start,int count) {
+
+        OnNetRequestListener listener=new OnNetRequestListener() {
+            @Override
+            public void onFinish() {
+                lpd.cancel();
+                if (NearblockBeanList != null && NearblockBeanList.size() > 0) {
+                    lay_fragment_ProdutEmpty.setVisibility(View.GONE);
+                    lv_roadList.setVisibility(View.VISIBLE);
+                }else {
+                    lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
+                    lv_roadList.setVisibility(View.GONE);
+                }
+                if (resDataManageAdapter != null) {
+
+                    resDataManageAdapter.notifyDataSetChanged();
+                }
+            }
+
+
+            @Override
+            public void OnNext() {
+
+                nearbytaskPool.execute(this);
+            }
+
+            @Override
+            public void OnResult(boolean isOk, String msg, Object object) {
+                nearbytaskPool.execute(this);
+            }
+        };
+
+        if (NearblockBeanList != null && NearblockBeanList.size() > 0) {
+
+            for (int i = start; i < count; i++) {
+
+                BlockAndStatusBean blockAndStatusBean = NearblockBeanList.get(i);
+                final BlockBean resDataBean = blockAndStatusBean.getBlock();
+                if (Utils.isEmpty(resDataBean.getFlagLoad())) {
+
+                    nearbytaskPool.addTask(new GetGridTreeCountAPI(userInfo, TreeFormModelId, resDataBean,projectBean, listener));
+                }
+
+
+            }
+
+            nearbytaskPool.execute(listener);
+        } else {
+
+            lpd.cancel();
+            if (NearblockBeanList != null && NearblockBeanList.size() > 0) {
+                lay_fragment_ProdutEmpty.setVisibility(View.GONE);
+                lv_roadList.setVisibility(View.VISIBLE);
+            } else {
+                lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
+                lv_roadList.setVisibility(View.GONE);
+            }
+        }
     }
 
 
@@ -1115,6 +1282,9 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     @Override
     public void onLocationChanged(AMapLocation aMapLocation) {
 
+        Mlog.d("aMapLocation===" + aMapLocation.getLatitude() + "," + aMapLocation.getLongitude() + "----" + aMapLocation.getAddress());
+
+        mapLocation = aMapLocation;
     }
 
     @Override

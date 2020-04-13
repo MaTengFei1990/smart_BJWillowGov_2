@@ -7,6 +7,7 @@ public class BlockAndStatusBean implements Serializable {
    private BlockBean block;
    private String fdStatus;
    private String blockProperty;
+   private String nullAddFlag;
 
     public BlockBean getBlock() {
         return block;
@@ -30,5 +31,13 @@ public class BlockAndStatusBean implements Serializable {
 
     public void setBlockProperty(String blockProperty) {
         this.blockProperty = blockProperty;
+    }
+
+    public String getNullAddFlag() {
+        return nullAddFlag;
+    }
+
+    public void setNullAddFlag(String nullAddFlag) {
+        this.nullAddFlag = nullAddFlag;
     }
 }
