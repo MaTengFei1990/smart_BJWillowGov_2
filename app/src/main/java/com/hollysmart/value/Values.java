@@ -6,17 +6,17 @@ import android.os.Environment;
 
 public class Values {
 
-//	public static final String SERVIXE_SHOUYE = "http://ylfxzl.bjylfw.cn/html/xx.html";     // 北京绿地 正式
-//	public static final String SERVICE_URL = "http://ylfxzl.bjylfw.cn/";     		  //北京绿地 正式
-//    //集成表单需要的接口；
-//    public static final String SERVICE_URL_FORM = "http://ylfxzl.bjylfw.cn:3011";// 北京绿地 正式
+	public static final String SERVIXE_SHOUYE = "http://ylfxzl.bjylfw.cn/html/xx.html";     // 北京绿地 正式
+	public static final String SERVICE_URL = "http://ylfxzl.bjylfw.cn/";     		  //北京绿地 正式
+    //集成表单需要的接口；
+    public static final String SERVICE_URL_FORM = "http://ylfxzl.bjylfw.cn:3011";// 北京绿地 正式
 
 
 
-    public static final String SERVIXE_SHOUYE = "http://test.hollysmart.com.cn:9001/ylfxapi/html/xx.html";     // 北京绿地  测试
-    public static final String SERVICE_URL = "http://test.hollysmart.com.cn:9001/ylfxapi/";
-    // 集成表单需要的接口；
-    public static final String SERVICE_URL_FORM = "http://test.hollysmart.com.cn:3011";//北京绿地 测试
+//    public static final String SERVIXE_SHOUYE = "http://test.hollysmart.com.cn:9001/ylfxapi/html/xx.html";     // 北京绿地  测试
+//    public static final String SERVICE_URL = "http://test.hollysmart.com.cn:9001/ylfxapi/";
+//    // 集成表单需要的接口；
+//    public static final String SERVICE_URL_FORM = "http://test.hollysmart.com.cn:3011";//北京绿地 测试
 
 
     public static final String SERVICE_URL_ADMIN_FORM = SERVICE_URL_FORM + "/admin";//
