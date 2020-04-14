@@ -926,9 +926,10 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 //                resDataBean.setJdPicInfos(jdPicInfoList);
 
             }
+            getNearByblocks();
 
 
-            getdataList();
+//            getdataList();
         }
 
     }
@@ -977,10 +978,6 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                 }
 
                 getTreeNum(0,10);
-
-
-                getNearByblocks();
-
 
             }
 
@@ -1046,8 +1043,8 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                     getNearbyTreeNum(0, nearByBeanList.size() - 1);
                 }
 
+                getdataList();
 
-                lpd.cancel();
 
             }
         }).request();
@@ -1131,7 +1128,6 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         OnNetRequestListener listener=new OnNetRequestListener() {
             @Override
             public void onFinish() {
-                lpd.cancel();
                 if (blockBeanList != null && blockBeanList.size() > 0) {
                     lay_fragment_ProdutEmpty.setVisibility(View.GONE);
                     lv_roadList.setVisibility(View.VISIBLE);
@@ -1143,6 +1139,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
                     resDataManageAdapter.notifyDataSetChanged();
                 }
+                lpd.cancel();
             }
 
 
@@ -1175,7 +1172,6 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
             taskPool.execute(listener);
         } else {
 
-            lpd.cancel();
             if (blockBeanList != null && blockBeanList.size() > 0) {
                 lay_fragment_ProdutEmpty.setVisibility(View.GONE);
                 lv_roadList.setVisibility(View.VISIBLE);
