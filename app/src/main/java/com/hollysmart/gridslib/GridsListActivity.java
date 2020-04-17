@@ -97,6 +97,8 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
+
 /***
  * 网格类表；
  */
@@ -424,6 +426,8 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     private LoadingProgressDialog lpd;
     private String PcToken;
 
+    private int ComplateCount = 0;
+
     private   List<DongTaiFormBean> DongTainewFormList;
     @Override
     public void init() {
@@ -662,6 +666,11 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     private int showType=0; //   0 : ok/all    1: ok红色/all     2: 未完成/all
     private void onkCountAndTotal() {
 
+        int scrollState = lv_roadList.getScrollState();
+
+        if (scrollState!=LRecyclerView.SCROLL_STATE_IDLE) {
+            return;
+        }
 
         if (showType == 0) {
             showType++;
@@ -671,27 +680,14 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
             showType--;
 
         }
+        Mlog.d("onclick----- onkCountAndTotal----showType====" + showType);
 
+        page = 1;
 
         gressBar_count.setVisibility(View.VISIBLE);
         tv_okcoutAndtotal.setVisibility(View.GONE);
 
-        if (showType == 2) {
-
-            selectDB(projectBean.getId());
-
-
-        }
-
-        if (showType == 1) {
-            selectDB(projectBean.getId());
-        }
-
-
-
-
-
-
+        selectDB(projectBean.getId());
 
 
 
@@ -990,12 +986,14 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     }
 
     private void getdataList(int type){
+        Mlog.d("getdataList----type==" + type);
         if (type == 0) {
             new FindGridsListPageAPI(ischeck,map,page,userInfo,map.get("id"), new FindGridsListPageAPI.DatadicListIF() {
                 @Override
                 public void datadicListResult(boolean isOk, List<BlockAndStatusBean> netDataList, int count,int okcount,int total) {
                     if (isOk) {
                         totalCount = total;
+                        ComplateCount = okcount;
                         String showString = okcount + "/" + total;
                         tv_okcoutAndtotal.setText(showString);
 
@@ -1051,6 +1049,74 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
         if (type == 1) {
 
+            new BlocksComplatelyAPI(ischeck,map,page,userInfo,map.get("id"), new BlocksComplatelyAPI.BLockListcompletelyIF() {
+                @Override
+                public void datadicListResult(boolean isOk, List<BlockAndStatusBean> netDataList, int count,int okcount,int total) {
+                    if (isOk) {
+                        gressBar_count.setVisibility(View.GONE);
+                        tv_okcoutAndtotal.setVisibility(View.VISIBLE);
+
+                        String showString = ComplateCount + "/" + totalCount;
+                        SpannableString spannableString = new SpannableString(showString);
+                        //设置要显示的颜色
+                        ForegroundColorSpan okColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.hongse_text));
+                        //spannableString.setSpan("显示的颜色","起始下标","终止下标", "指定包不包括下标");
+                        spannableString.setSpan(okColorSpan,0,showString.indexOf("/"),spannableString.length());
+
+                        tv_okcoutAndtotal.setText(spannableString);
+
+                        if (isRefresh) {
+                            blockBeanList.clear();
+                        }
+                        if (blockBeanList.size() > 0 || netDataList.size() >0 ){
+                            lay_fragment_ProdutEmpty.setVisibility(View.GONE);
+                        }else {
+                            lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
+                        }
+
+                        if (page > count) {
+                            refreshLayout.setEnableLoadMore(false);
+                            refreshLayout.finishLoadMore();
+                            refreshLayout.finishLoadMoreWithNoMoreData();
+                        } else {
+                            if (!refreshLayout.isEnableLoadMore()) {
+                                refreshLayout.setEnableLoadMore(true);
+                                refreshLayout.setNoMoreData(false);//恢复没有更多数据的原始状态 1.0.5
+                            }
+                        }
+                        blockBeanList.addAll(netDataList);
+                        if (resDataManageAdapter != null) {
+                            resDataManageAdapter.notifyDataSetChanged();
+
+                        }
+                    }
+
+                    if (isRefresh) {
+                        refreshLayout.finishRefresh();
+                        isRefresh = false;
+                    }
+                    if (loadMore) {
+                        refreshLayout.finishLoadMore();
+                        loadMore = false;
+                    }
+
+                    if (netDataList.size() < 10) {
+
+                        getTreeNum(0, netDataList.size());
+
+                    } else {
+
+                        getTreeNum(0, 10);
+                    }
+
+                }
+
+
+            }).request();
+        }
+
+        if (type == 2) {
+
             new BlocksUnComplatelyListAPI(ischeck,map,page,userInfo,map.get("id"), new BlocksUnComplatelyListAPI.BLockListcompletelyIF() {
                 @Override
                 public void datadicListResult(boolean isOk, List<BlockAndStatusBean> netDataList, int count, int okcount, int total) {
@@ -1059,7 +1125,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                         gressBar_count.setVisibility(View.GONE);
                         tv_okcoutAndtotal.setVisibility(View.VISIBLE);
 
-                        String showString = okcount + "/" + totalCount;
+                        String showString =  (totalCount-ComplateCount)  + "/" + totalCount;
                         SpannableString spannableString = new SpannableString(showString);
                         //设置要显示的颜色
                         ForegroundColorSpan okColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.hongse_text));
@@ -1121,73 +1187,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
             }).request();
         }
-        if (type == 2) {
 
-            new BlocksComplatelyAPI(ischeck,map,page,userInfo,map.get("id"), new BlocksComplatelyAPI.BLockListcompletelyIF() {
-                @Override
-                public void datadicListResult(boolean isOk, List<BlockAndStatusBean> netDataList, int count,int okcount,int total) {
-                    if (isOk) {
-                        gressBar_count.setVisibility(View.GONE);
-                        tv_okcoutAndtotal.setVisibility(View.VISIBLE);
-
-                        String showString = okcount + "/" + totalCount;
-                        SpannableString spannableString = new SpannableString(showString);
-                        //设置要显示的颜色
-                        ForegroundColorSpan okColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.hongse_text));
-                        //spannableString.setSpan("显示的颜色","起始下标","终止下标", "指定包不包括下标");
-                        spannableString.setSpan(okColorSpan,0,showString.indexOf("/"),spannableString.length());
-
-                        tv_okcoutAndtotal.setText(spannableString);
-
-                        if (isRefresh) {
-                            blockBeanList.clear();
-                        }
-                        if (blockBeanList.size() > 0 || netDataList.size() >0 ){
-                            lay_fragment_ProdutEmpty.setVisibility(View.GONE);
-                        }else {
-                            lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
-                        }
-
-                        if (page > count) {
-                            refreshLayout.setEnableLoadMore(false);
-                            refreshLayout.finishLoadMore();
-                            refreshLayout.finishLoadMoreWithNoMoreData();
-                        } else {
-                            if (!refreshLayout.isEnableLoadMore()) {
-                                refreshLayout.setEnableLoadMore(true);
-                                refreshLayout.setNoMoreData(false);//恢复没有更多数据的原始状态 1.0.5
-                            }
-                        }
-                        blockBeanList.addAll(netDataList);
-                        if (resDataManageAdapter != null) {
-                            resDataManageAdapter.notifyDataSetChanged();
-
-                        }
-                    }
-
-                    if (isRefresh) {
-                        refreshLayout.finishRefresh();
-                        isRefresh = false;
-                    }
-                    if (loadMore) {
-                        refreshLayout.finishLoadMore();
-                        loadMore = false;
-                    }
-
-                    if (netDataList.size() < 10) {
-
-                        getTreeNum(0, netDataList.size());
-
-                    } else {
-
-                        getTreeNum(0, 10);
-                    }
-
-                }
-
-
-            }).request();
-        }
 
 
 
