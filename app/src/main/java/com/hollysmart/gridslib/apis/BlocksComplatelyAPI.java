@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.hollysmart.db.UserInfo;
 import com.hollysmart.gridslib.beans.BlockAndStatusBean;
+import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.taskpool.INetModel;
 import com.hollysmart.value.Values;
@@ -19,34 +20,45 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.Call;
+import okhttp3.MediaType;
 
-/**
- * Created by Lenovo on 2019/4/18.
+/***
+ * 已完成采集的网格列表
  */
 
-public class FindGridsListPageAPI implements INetModel {
+public class BlocksComplatelyAPI implements INetModel {
 
 
+    private BlockBean blockBean;
+    private BLockListcompletelyIF bLockListcompletelyIF;
     private int page=0;
     private UserInfo userInfo;
     private  String id;
     Map<String, String> map;
     private boolean ischek;
-    private DatadicListIF datadicListIF;
+    int total;
 
-    public FindGridsListPageAPI(boolean ischek,  Map<String, String> map,int page, UserInfo userInfo, String id, DatadicListIF datadicListIF) {
+    public BlocksComplatelyAPI(boolean ischek,  Map<String, String> map,int page, UserInfo userInfo, String id, BLockListcompletelyIF bLockListcompletelyIF) {
         this.page = page;
         this.userInfo = userInfo;
         this.ischek = ischek;
         this.id = id;
         this.map = map;
-        this.datadicListIF = datadicListIF;
+        this.bLockListcompletelyIF = bLockListcompletelyIF;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 
     @Override
     public void request() {
 
-        String urlStr = Values.SERVICE_URL + "api/blocks/list";
+        String urlStr = Values.SERVICE_URL + "api/blocks/listcompletely";
         GetBuilder getBuilder = OkHttpUtils.get().url(urlStr)
                 .addHeader("Authorization", userInfo.getAccess_token())
                 .addParams("page", page+"")
@@ -61,15 +73,15 @@ public class FindGridsListPageAPI implements INetModel {
             @Override
             public void onError(Call call, Exception e, int id) {
                 e.printStackTrace();
-                if (datadicListIF != null) {
-                    datadicListIF.datadicListResult(false, null,0,0,0);
+                if (bLockListcompletelyIF != null) {
+                    bLockListcompletelyIF.datadicListResult(false, null,0,0,0);
                 }
 
             }
 
             @Override
             public void onResponse(String response, int id) {
-                Mlog.d("findblocks......... = " + response);
+                Mlog.d("已完成采集的网格列表......... = " + response);
                 response = response.replace("\"\"", "null");
                 try {
                     JSONObject object = new JSONObject(response);
@@ -81,26 +93,26 @@ public class FindGridsListPageAPI implements INetModel {
                                 new TypeToken<List<BlockAndStatusBean>>() {
                                 }.getType());
 
-                        if (datadicListIF != null) {
+                        if (bLockListcompletelyIF != null) {
                             int count = object.getInt("pages");
-                            int okCount = object.getInt("okCount");
-                            int total = object.getInt("total");
 
-                            datadicListIF.datadicListResult(true, menuBeanList, count,okCount,total);
+                            Mlog.d("BlocksComplatelyAPI---pages---" + count);
+
+                            bLockListcompletelyIF.datadicListResult(true, menuBeanList, count,menuBeanList.size(),total);
                         }
 
                     } else {
-                        if (datadicListIF != null) {
+                        if (bLockListcompletelyIF != null) {
 
-                            datadicListIF.datadicListResult(false, null,0,0,0);
+                            bLockListcompletelyIF.datadicListResult(false, null,0,0,0);
                         }
 
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    if (datadicListIF != null) {
+                    if (bLockListcompletelyIF != null) {
 
-                        datadicListIF.datadicListResult(false, null,0,0,0);
+                        bLockListcompletelyIF.datadicListResult(false, null,0,0,0);
                     }
 
                 }
@@ -108,7 +120,7 @@ public class FindGridsListPageAPI implements INetModel {
         });
     }
 
-    public interface DatadicListIF {
+    public interface BLockListcompletelyIF {
         void datadicListResult(boolean isOk, List<BlockAndStatusBean> menuBeanList, int count, int okCount,int total);
     }
 }

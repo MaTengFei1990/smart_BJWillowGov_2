@@ -38,6 +38,16 @@
             android:layout_marginRight="20dp"
             android:textColor="@color/baise"
             android:layout_alignParentRight="true"/>
+        <ProgressBar
+            android:id="@+id/pro_count"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:padding="10dp"
+            android:gravity="center"
+            android:visibility="gone"
+            android:layout_marginRight="20dp"
+            android:textColor="@color/baise"
+            android:layout_alignParentRight="true"/>
         <TextView
             android:id="@+id/tv_maplsit"
             android:layout_width="60dp"
