@@ -432,9 +432,11 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
             public void blocksScomplateResult(boolean isOk) {
 
                 if (isOk) {
-                    Utils.showToast(mContext,"采集完成");
+                    Utils.showToast(mContext, "采集完成");
                     setResult(1);
                     finish();
+                } else {
+                    Utils.showToast(mContext, "修改状态失败");
                 }
 
             }
@@ -720,15 +722,17 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                             }
                         }
 
-
+                        try {
                         String formData = resModelBean.getfJsonData();
                         formBeanList.clear();
-                        try {
+
                             Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm").create();
                             List<DongTaiFormBean> dictList = mGson.fromJson(formData,
                                     new TypeToken<List<DongTaiFormBean>>() {
                                     }.getType());
-                            formBeanList.addAll(dictList);
+                            if (dictList != null && dictList.size() > 0) {
+                                formBeanList.addAll(dictList);
+                            }
                         } catch (JsonIOException e) {
                             e.printStackTrace();
                         }

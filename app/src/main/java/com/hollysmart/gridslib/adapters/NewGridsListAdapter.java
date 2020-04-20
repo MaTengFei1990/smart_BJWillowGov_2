@@ -239,6 +239,10 @@ public class NewGridsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                                         dialog.dismiss();
 
+                                    } else {
+
+                                        Utils.showToast(context, "修改属性失败");
+
                                     }
 
                                 }

@@ -147,9 +147,8 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     ProgressBar gressBar_count;
 
 
-
     private BlockBean currrentBlockBeanshownOnMap;//当前显示在地图的网格
-    private int  currrentPositionGridshownOnMap ;//当前显示在地图的网格
+    private int currrentPositionGridshownOnMap;//当前显示在地图的网格
 
     private ProjectBean projectBean;
 
@@ -165,18 +164,17 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     private AMapLocation mapLocation;
 
 
-
     private String roadFormModelId = "";
     private String TreeFormModelId = "";
 
-    private int page=1;
-    private boolean isRefresh=false;
-    private boolean loadMore=false;
-    private int  pageSize=100;
+    private int page = 1;
+    private boolean isRefresh = false;
+    private boolean loadMore = false;
+    private int pageSize = 100;
     private final int SEARCH_GRID = 340;
 
 
-    private int totalCount=0;
+    private int totalCount = 0;
 
 
     @Override
@@ -185,9 +183,6 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         initMap(savedInstanceState);
 
     }
-
-
-
 
 
     /***
@@ -385,16 +380,13 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                         }
 
 
-
                     } else {
 
                         Mlog.d("NearblockBeanList.size====null");
 
-                        getTreeNum(firstItemPosition, lastItemPosition -2);
+                        getTreeNum(firstItemPosition, lastItemPosition - 2);
 
                     }
-
-
 
 
                 }
@@ -409,26 +401,26 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         });
 
 
-
     }
 
     private List<BlockAndStatusBean> blockBeanList;
     private List<BlockAndStatusBean> NearblockBeanList;
     private NewGridsListAdapter resDataManageAdapter;
-    Map<String, String> map = new HashMap<String , String>();
+    Map<String, String> map = new HashMap<String, String>();
     private HashMap<String, List<JDPicInfo>> formPicMap = new HashMap<String, List<JDPicInfo>>();
 
-    boolean ischeck =false; //是否只能查看 true  只能查看不能编辑；
+    boolean ischeck = false; //是否只能查看 true  只能查看不能编辑；
 
     private List<ResModelBean> resModelList = new ArrayList<ResModelBean>();
-    private List<DongTaiFormBean> formBeanList=new ArrayList<>();// 当前资源的动态表单
+    private List<DongTaiFormBean> formBeanList = new ArrayList<>();// 当前资源的动态表单
 
     private LoadingProgressDialog lpd;
     private String PcToken;
 
     private int ComplateCount = 0;
 
-    private   List<DongTaiFormBean> DongTainewFormList;
+    private List<DongTaiFormBean> DongTainewFormList;
+
     @Override
     public void init() {
         isLogin();
@@ -441,7 +433,6 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         nullBlock.setNullAddFlag("true");
 
         NearblockBeanList.add(nullBlock);
-
 
 
         map = (Map<String, String>) getIntent().getSerializableExtra("exter");
@@ -469,13 +460,9 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     }
 
 
-
-
     private void getResTaskById() {
-       selectDB();
+        selectDB();
     }
-
-
 
 
     private void createResTask() {
@@ -504,15 +491,13 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
                     getResTaskById();
 
-                }else {
+                } else {
                     lpd.cancel();
                 }
 
             }
         }).request();
     }
-
-
 
 
     public void onClick(View v) {
@@ -527,7 +512,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                 mapintent.putExtra("ischeck", ischeck);
                 mapintent.putExtra("roadFormModelId", roadFormModelId);
                 mapintent.putExtra("TreeFormModelId", TreeFormModelId);
-                startActivityForResult(mapintent,6);
+                startActivityForResult(mapintent, 6);
                 break;
 
             case R.id.rl_bottom:
@@ -558,7 +543,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                 formPicMap.clear();
                 intent.putExtra("formPicMap", (Serializable) formPicMap);
 
-                startActivityForResult(intent,4);
+                startActivityForResult(intent, 4);
                 break;
 
             case R.id.ll_search:
@@ -593,8 +578,8 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                 searchIntent.putExtra("roadFormModelId", roadFormModelId);
                 searchIntent.putExtra("TreeFormModelId", TreeFormModelId);
                 searchIntent.putExtra("PcToken", PcToken);
-                searchIntent.putExtra("DongTainewFormList", (Serializable)DongTainewFormList);
-                startActivityForResult(searchIntent,SEARCH_GRID);
+                searchIntent.putExtra("DongTainewFormList", (Serializable) DongTainewFormList);
+                startActivityForResult(searchIntent, SEARCH_GRID);
 
                 break;
             case R.id.bn_closeMap:
@@ -636,8 +621,8 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                         double fdLbLng = currrentBlockBeanshownOnMap.getFdLbLng();
                         double fdRtLng = currrentBlockBeanshownOnMap.getFdRtLng();
 
-                        double centerlat = (fdLbLat + fdRtLat)/2;
-                        double centerlng = (fdLbLng + fdRtLng)/2;
+                        double centerlat = (fdLbLat + fdRtLat) / 2;
+                        double centerlng = (fdLbLng + fdRtLng) / 2;
 
 
                         Mlog.d("centerlat===" + centerlat + "----centerlng====" + centerlng);
@@ -656,25 +641,25 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                         }
 
 
-
                     }
                 });
                 break;
         }
     }
 
-    private int showType=0; //   0 : ok/all    1: ok红色/all     2: 未完成/all
+    private int showType = 0; //   0 : ok/all    1: ok红色/all     2: 未完成/all
+
     private void onkCountAndTotal() {
 
         int scrollState = lv_roadList.getScrollState();
 
-        if (scrollState!=LRecyclerView.SCROLL_STATE_IDLE) {
+        if (scrollState != LRecyclerView.SCROLL_STATE_IDLE) {
             return;
         }
 
         if (showType == 0) {
             showType++;
-        }else if (showType == 1) {
+        } else if (showType == 1) {
             showType++;
         } else if (showType == 2) {
             showType--;
@@ -688,7 +673,6 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         tv_okcoutAndtotal.setVisibility(View.GONE);
 
         selectDB(projectBean.getId());
-
 
 
     }
@@ -717,7 +701,6 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
             mGaoDeMap.setMapType(AMap.MAP_TYPE_NORMAL);
         }
     }
-
 
 
     /**
@@ -770,49 +753,48 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                 public void onResTaskListResult(boolean isOk, ProjectBean protBean, String msg) {
 
                     if (isOk) {
-                        projectBean=protBean;
+                        projectBean = protBean;
 
-                            TreeFormModelId = projectBean.getfTaskmodel().split(",")[0];
-                            new GetResModelAPI(userInfo.getAccess_token(), TreeFormModelId, new GetResModelAPI.GetResModelIF() {
-                                @Override
-                                public void ongetResModelIFResult(boolean isOk, ResModelBean resModelBen) {
+                        TreeFormModelId = projectBean.getfTaskmodel().split(",")[0];
+                        new GetResModelAPI(userInfo.getAccess_token(), TreeFormModelId, new GetResModelAPI.GetResModelIF() {
+                            @Override
+                            public void ongetResModelIFResult(boolean isOk, ResModelBean resModelBen) {
 
-                                    if (isOk) {//获取到网络数据
+                                if (isOk) {//获取到网络数据
 
-                                        ResModelDao resModelDao = new ResModelDao(mContext);
-                                        resModelDao.addOrUpdate(resModelBen);
-                                        String getfJsonData = resModelBen.getfJsonData();
-                                        Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm").create();
-                                        List<DongTaiFormBean> newFormList = mGson.fromJson(getfJsonData, new TypeToken<List<DongTaiFormBean>>() {
-                                        }.getType());
+                                    ResModelDao resModelDao = new ResModelDao(mContext);
+                                    resModelDao.addOrUpdate(resModelBen);
+                                    String getfJsonData = resModelBen.getfJsonData();
+                                    Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm").create();
+                                    List<DongTaiFormBean> newFormList = mGson.fromJson(getfJsonData, new TypeToken<List<DongTaiFormBean>>() {
+                                    }.getType());
 
-                                        DongTainewFormList=newFormList;
-
-
-                                        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
-                                        lv_roadList.setLayoutManager(layoutManager);
-
-                                        resDataManageAdapter = new NewGridsListAdapter(PcToken,mContext,  TreeFormModelId, blockBeanList, projectBean, ischeck);
-                                        lv_roadList.setAdapter(resDataManageAdapter);
-                                        resDataManageAdapter.setMapBtnClickListener(GridsListActivity.this);
-                                        resDataManageAdapter.setMap(map);
-                                        int space = 20;
-                                        lv_roadList.addItemDecoration(new SpacesItemDecoration(space));
-                                        selectDB(projectBean.getId());
-
-                                    } else {
-                                        lpd.cancel();
-                                    }
+                                    DongTainewFormList = newFormList;
 
 
+                                    LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+                                    lv_roadList.setLayoutManager(layoutManager);
+
+                                    resDataManageAdapter = new NewGridsListAdapter(PcToken, mContext, TreeFormModelId, blockBeanList, projectBean, ischeck);
+                                    lv_roadList.setAdapter(resDataManageAdapter);
+                                    resDataManageAdapter.setMapBtnClickListener(GridsListActivity.this);
+                                    resDataManageAdapter.setMap(map);
+                                    int space = 20;
+                                    lv_roadList.addItemDecoration(new SpacesItemDecoration(space));
+                                    selectDB(projectBean.getId());
+
+                                } else {
+                                    lpd.cancel();
                                 }
-                            }).request();
 
+
+                            }
+                        }).request();
 
 
                     } else {
                         lpd.cancel();
-                        projectBean=new ProjectBean();
+                        projectBean = new ProjectBean();
                         if (blockBeanList != null && blockBeanList.size() > 0) {
                             lay_fragment_ProdutEmpty.setVisibility(View.GONE);
                             lv_roadList.setVisibility(View.VISIBLE);
@@ -834,16 +816,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         }
 
 
-
-
-
-
     }
-
-
-
-
-
 
 
     // 查询
@@ -859,7 +832,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
             String[] ids = classifyIds.split(",");
             ResModelDao resModelDao = new ResModelDao(mContext);
-            for(int i=0;i<ids.length;i++) {
+            for (int i = 0; i < ids.length; i++) {
                 ResModelBean resModelBean = resModelDao.getDatById(ids[i]);
                 if (resModelBean != null) {
 
@@ -888,12 +861,9 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                             if (roadFormModelId.equals(resModelList.get(i).getId())) {
 
 
-                                 resModelBean = resModelList.get(i);
+                                resModelBean = resModelList.get(i);
                             }
                         }
-
-
-
 
 
                         String formData = resModelBean.getfJsonData();
@@ -901,7 +871,8 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                         try {
                             Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm").create();
                             List<DongTaiFormBean> dictList = mGson.fromJson(formData,
-                                    new TypeToken<List<DongTaiFormBean>>() {}.getType());
+                                    new TypeToken<List<DongTaiFormBean>>() {
+                                    }.getType());
                             formBeanList.addAll(dictList);
                         } catch (JsonIOException e) {
                             e.printStackTrace();
@@ -945,13 +916,13 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
             }
 
 
-
             String formData = resModelBean.getfJsonData();
             formBeanList.clear();
             try {
                 Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm").create();
                 List<DongTaiFormBean> dictList = mGson.fromJson(formData,
-                        new TypeToken<List<DongTaiFormBean>>() {}.getType());
+                        new TypeToken<List<DongTaiFormBean>>() {
+                        }.getType());
                 formBeanList.addAll(dictList);
             } catch (JsonIOException e) {
                 e.printStackTrace();
@@ -985,12 +956,12 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
     }
 
-    private void getdataList(int type){
+    private void getdataList(int type) {
         Mlog.d("getdataList----type==" + type);
         if (type == 0) {
-            new FindGridsListPageAPI(ischeck,map,page,userInfo,map.get("id"), new FindGridsListPageAPI.DatadicListIF() {
+            new FindGridsListPageAPI(ischeck, map, page, userInfo, map.get("id"), new FindGridsListPageAPI.DatadicListIF() {
                 @Override
-                public void datadicListResult(boolean isOk, List<BlockAndStatusBean> netDataList, int count,int okcount,int total) {
+                public void datadicListResult(boolean isOk, List<BlockAndStatusBean> netDataList, int count, int okcount, int total) {
                     if (isOk) {
                         totalCount = total;
                         ComplateCount = okcount;
@@ -1000,9 +971,9 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                         if (isRefresh) {
                             blockBeanList.clear();
                         }
-                        if (blockBeanList.size() > 0 || netDataList.size() >0 ){
+                        if (blockBeanList.size() > 0 || netDataList.size() > 0) {
                             lay_fragment_ProdutEmpty.setVisibility(View.GONE);
-                        }else {
+                        } else {
                             lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
                         }
 
@@ -1021,6 +992,9 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                             resDataManageAdapter.notifyDataSetChanged();
 
                         }
+                    } else {
+
+                        lpd.cancel();
                     }
 
                     if (isRefresh) {
@@ -1049,9 +1023,9 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
         if (type == 1) {
 
-            new BlocksComplatelyAPI(ischeck,map,page,userInfo,map.get("id"), new BlocksComplatelyAPI.BLockListcompletelyIF() {
+            new BlocksComplatelyAPI(ischeck, map, page, userInfo, map.get("id"), new BlocksComplatelyAPI.BLockListcompletelyIF() {
                 @Override
-                public void datadicListResult(boolean isOk, List<BlockAndStatusBean> netDataList, int count,int okcount,int total) {
+                public void datadicListResult(boolean isOk, List<BlockAndStatusBean> netDataList, int count, int okcount, int total) {
                     if (isOk) {
                         gressBar_count.setVisibility(View.GONE);
                         tv_okcoutAndtotal.setVisibility(View.VISIBLE);
@@ -1061,16 +1035,16 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                         //设置要显示的颜色
                         ForegroundColorSpan okColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.hongse_text));
                         //spannableString.setSpan("显示的颜色","起始下标","终止下标", "指定包不包括下标");
-                        spannableString.setSpan(okColorSpan,0,showString.indexOf("/"),spannableString.length());
+                        spannableString.setSpan(okColorSpan, 0, showString.indexOf("/"), spannableString.length());
 
                         tv_okcoutAndtotal.setText(spannableString);
 
                         if (isRefresh) {
                             blockBeanList.clear();
                         }
-                        if (blockBeanList.size() > 0 || netDataList.size() >0 ){
+                        if (blockBeanList.size() > 0 || netDataList.size() > 0) {
                             lay_fragment_ProdutEmpty.setVisibility(View.GONE);
-                        }else {
+                        } else {
                             lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
                         }
 
@@ -1089,6 +1063,9 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                             resDataManageAdapter.notifyDataSetChanged();
 
                         }
+                    } else {
+
+                        lpd.cancel();
                     }
 
                     if (isRefresh) {
@@ -1117,7 +1094,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
         if (type == 2) {
 
-            new BlocksUnComplatelyListAPI(ischeck,map,page,userInfo,map.get("id"), new BlocksUnComplatelyListAPI.BLockListcompletelyIF() {
+            new BlocksUnComplatelyListAPI(ischeck, map, page, userInfo, map.get("id"), new BlocksUnComplatelyListAPI.BLockListcompletelyIF() {
                 @Override
                 public void datadicListResult(boolean isOk, List<BlockAndStatusBean> netDataList, int count, int okcount, int total) {
 //                    Mlog.d("BlocksUnComplatelyListAPI---datadicListResult--netDataList"+netDataList.size()+"--okcount"+okcount);
@@ -1125,15 +1102,14 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                         gressBar_count.setVisibility(View.GONE);
                         tv_okcoutAndtotal.setVisibility(View.VISIBLE);
 
-                        String showString =  (totalCount-ComplateCount)  + "/" + totalCount;
+                        String showString = (totalCount - ComplateCount) + "/" + totalCount;
                         SpannableString spannableString = new SpannableString(showString);
                         //设置要显示的颜色
                         ForegroundColorSpan okColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.hongse_text));
                         //spannableString.setSpan("显示的颜色","起始下标","终止下标", "指定包不包括下标");
-                        spannableString.setSpan(okColorSpan,0,showString.indexOf("/"),spannableString.length());
+                        spannableString.setSpan(okColorSpan, 0, showString.indexOf("/"), spannableString.length());
 
                         tv_okcoutAndtotal.setText(spannableString);
-
 
 
                         if (isRefresh) {
@@ -1160,6 +1136,9 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                             resDataManageAdapter.notifyDataSetChanged();
 
                         }
+                    } else {
+
+                        lpd.cancel();
                     }
 
                     if (isRefresh) {
@@ -1189,11 +1168,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         }
 
 
-
-
-
     }
-
 
 
     private void getNearByblocks() {
@@ -1213,7 +1188,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         }
 
         //获取附近的网格
-        new BlocksNearAPI(ischeck, map, page, userInfo, map.get("id"), latitude+"", longitude+"", new BlocksNearAPI.NearBlockListIF() {
+        new BlocksNearAPI(ischeck, map, page, userInfo, map.get("id"), latitude + "", longitude + "", new BlocksNearAPI.NearBlockListIF() {
             @Override
             public void datadicListResult(boolean isOk, List<BlockAndStatusBean> nearByBeanList) {
 
@@ -1258,17 +1233,18 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     }
 
 
-    final TaskPool nearbytaskPool=new TaskPool();
-    private void getNearbyTreeNum(int start,int count) {
+    final TaskPool nearbytaskPool = new TaskPool();
 
-        OnNetRequestListener listener=new OnNetRequestListener() {
+    private void getNearbyTreeNum(int start, int count) {
+
+        OnNetRequestListener listener = new OnNetRequestListener() {
             @Override
             public void onFinish() {
                 lpd.cancel();
                 if (NearblockBeanList != null && NearblockBeanList.size() > 0) {
                     lay_fragment_ProdutEmpty.setVisibility(View.GONE);
                     lv_roadList.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
                     lv_roadList.setVisibility(View.GONE);
                 }
@@ -1299,7 +1275,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                 final BlockBean resDataBean = blockAndStatusBean.getBlock();
                 if (Utils.isEmpty(resDataBean.getFlagLoad())) {
 
-                    nearbytaskPool.addTask(new GetGridTreeCountAPI(userInfo, TreeFormModelId, resDataBean,projectBean, listener));
+                    nearbytaskPool.addTask(new GetGridTreeCountAPI(userInfo, TreeFormModelId, resDataBean, projectBean, listener));
                 }
 
 
@@ -1320,24 +1296,17 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     }
 
 
+    final TaskPool taskPool = new TaskPool();
 
+    private void getTreeNum(int start, int count) {
 
-
-
-
-
-
-
-    final TaskPool taskPool=new TaskPool();
-    private void getTreeNum(int start,int count) {
-
-        OnNetRequestListener listener=new OnNetRequestListener() {
+        OnNetRequestListener listener = new OnNetRequestListener() {
             @Override
             public void onFinish() {
                 if (blockBeanList != null && blockBeanList.size() > 0) {
                     lay_fragment_ProdutEmpty.setVisibility(View.GONE);
                     lv_roadList.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
                     lv_roadList.setVisibility(View.GONE);
                 }
@@ -1369,7 +1338,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                 final BlockBean resDataBean = blockAndStatusBean.getBlock();
                 if (Utils.isEmpty(resDataBean.getFlagLoad())) {
 
-                    taskPool.addTask(new GetGridTreeCountAPI(userInfo, TreeFormModelId, resDataBean,projectBean, listener));
+                    taskPool.addTask(new GetGridTreeCountAPI(userInfo, TreeFormModelId, resDataBean, projectBean, listener));
                 }
 
 
@@ -1381,14 +1350,14 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
             if (blockBeanList != null && blockBeanList.size() > 0) {
                 lay_fragment_ProdutEmpty.setVisibility(View.GONE);
                 lv_roadList.setVisibility(View.VISIBLE);
+                lpd.cancel();
             } else {
                 lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
                 lv_roadList.setVisibility(View.GONE);
+                lpd.cancel();
             }
         }
     }
-
-
 
 
     /**
@@ -1416,7 +1385,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        showType=0;
+        showType = 0;
 
         if (requestCode == 4) {
 
@@ -1446,7 +1415,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         }
 //        //查询中修改；
         if (requestCode == SEARCH_GRID) {
-                selectDB(projectBean.getId());
+            selectDB(projectBean.getId());
 
         }
     }
@@ -1555,7 +1524,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
             rl_mapContent.setVisibility(View.VISIBLE);
         }
 
-        new FindListPageAPI(10000,userInfo,TreeFormModelId, projectBean, blockBean.getId(), new FindListPageAPI.DatadicListIF() {
+        new FindListPageAPI(10000, userInfo, TreeFormModelId, projectBean, blockBean.getId(), new FindListPageAPI.DatadicListIF() {
             @Override
             public void datadicListResult(boolean isOk, List<ResDataBean> netDataList) {
                 List<LatLng> points = new ArrayList<>();
@@ -1576,20 +1545,18 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                     }
 
 
-                    drawGrid(blockBean,points);
+                    drawGrid(blockBean, points);
 
                     tv_griNumber.setText(blockBean.getFdBlockCode());
 
 
-                    }
+                }
 
 
             }
         }).request();
 
     }
-
-
 
 
     /***
@@ -1608,31 +1575,31 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         if (rectangles != null) {
             mGaoDeMap.addPolygon(new PolygonOptions()
                     .addAll(rectangles)
-                    .fillColor(Color.argb(130, 158, 230,252))
+                    .fillColor(Color.argb(130, 158, 230, 252))
                     .strokeColor(Color.argb(130, 177, 152, 198))
                     .strokeWidth(5)
             );
         }
         drawMarkerTrees(netDataList);
-        setMapBounds(rectangles,netDataList);
+        setMapBounds(rectangles, netDataList);
     }
 
 
     private void drawMarkerTrees(List<LatLng> points) {
         if (points != null && points.size() > 0) {
 
-            for (int i=0;i<points.size();i++){
+            for (int i = 0; i < points.size(); i++) {
                 LatLng latLng = points.get(i);
 
                 BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.resflag_add));
-                mGaoDeMap.addMarker(new MarkerOptions().position(latLng).period(i+1).icon(bitmapDescriptor));
+                mGaoDeMap.addMarker(new MarkerOptions().position(latLng).period(i + 1).icon(bitmapDescriptor));
             }
 
         }
     }
 
 
-    private void setMapBounds(List<LatLng> latLngs,List<LatLng> points) {
+    private void setMapBounds(List<LatLng> latLngs, List<LatLng> points) {
         LatLngBounds.Builder builder = LatLngBounds.builder();
 
         for (LatLng latlng : latLngs) {
@@ -1643,7 +1610,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
         if (points != null && points.size() > 0) {
 
-            for (int i=0;i<points.size();i++){
+            for (int i = 0; i < points.size(); i++) {
                 LatLng latLng = points.get(i);
                 builder.include(latLng);
             }
@@ -1666,7 +1633,6 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         latLngs.add(new LatLng(blockBean.getFdLbLat(), blockBean.getFdLbLng()));
         return latLngs;
     }
-
 
 
     public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
