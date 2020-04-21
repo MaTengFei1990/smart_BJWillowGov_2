@@ -1386,6 +1386,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         showType = 0;
+        page = 1;
 
         if (requestCode == 4) {
 

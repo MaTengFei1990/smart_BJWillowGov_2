@@ -74,7 +74,7 @@ public class SearchGridsListPageAPI implements INetModel {
                                 }.getType());
 
                         if (searchDataIF != null) {
-                            int count = object.getInt("count");
+                            int count = object.getInt("pages");
 
                             searchDataIF.searchDatadicListResult(true, menuBeanList, count);
                         }

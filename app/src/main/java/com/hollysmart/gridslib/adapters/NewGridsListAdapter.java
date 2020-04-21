@@ -98,7 +98,9 @@ public class NewGridsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         if (!Utils.isEmpty(blockAndStatusBean.getNullAddFlag()) && blockAndStatusBean.getNullAddFlag().equals("true")) {
 
-            holder.setText(R.id.tv_gridNumTitle, "您所在的区域无网格，请尝试下拉刷新");
+            final TextView tv_gridNumTitle = holder.getView(R.id.tv_gridNumTitle);
+            tv_gridNumTitle.setText( "您所在的区域无网格，请尝试下拉刷新");
+            tv_gridNumTitle.setTextColor(context.getResources().getColor(R.color.heise));
 
             holder.getView(R.id.rl_all1).setVisibility(View.GONE);
             holder.getView(R.id.tv_gridNum).setVisibility(View.GONE);
