@@ -54,6 +54,8 @@
             android:background="@color/touming"
             android:hint="关键字搜索"
             android:lines="1"
+            android:imeOptions="actionSearch"
+            android:singleLine="true"
             android:textColor="@color/huise_text"
             android:textColorHint="@color/huise_text"
             android:textSize="@dimen/text_zhong" />

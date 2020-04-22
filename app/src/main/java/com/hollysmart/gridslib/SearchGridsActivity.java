@@ -1,5 +1,6 @@
 package com.hollysmart.gridslib;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -10,8 +11,11 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -344,24 +348,43 @@ public class SearchGridsActivity extends StyleAnimActivity implements
         findViewById(R.id.ll_search).setOnClickListener(this);
         isLogin();
 
-        ed_search.addTextChangedListener(new TextWatcher() {
+//        ed_search.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                search(s.toString());
+//            }
+//        });
+        ed_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
-            }
+                if (actionId == EditorInfo.IME_ACTION_SEARCH){
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                search(s.toString());
+                    Mlog.d("ed_search ------" + v.getText().toString());
+                    closeSoftKeybord(ed_search, getApplicationContext());
+                    search(v.getText().toString());
+                    return true;
+                }
+                return false;
             }
         });
 
 
+    }
+
+    public static void closeSoftKeybord(EditText mEditText, Context mContext) {
+        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
     }
 
     private ResDataBean search_resDataBean;
@@ -580,7 +603,15 @@ public class SearchGridsActivity extends StyleAnimActivity implements
             lay_fragment_ProdutEmpty.setVisibility(View.GONE);
             resDataManageAdapter.notifyDataSetChanged();
 
-            getTreeNum(0,10);
+
+            if (menuBeanList.size() < 10) {
+
+                getTreeNum(0, menuBeanList.size());
+
+            } else {
+
+                getTreeNum(0, 10);
+            }
 
 
         }else {
