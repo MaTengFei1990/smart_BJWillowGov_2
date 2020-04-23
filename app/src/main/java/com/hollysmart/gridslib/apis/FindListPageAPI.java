@@ -77,6 +77,7 @@ public class FindListPageAPI implements INetModel {
             object.put("pageSize", pageSize+"");
             object.put("fd_restaskid",projectBean.getId()) ;
             object.put("fd_resmodelid", resmodelid);
+            object.put("fd_sort", "-1");
 
             if (!Utils.isEmpty(fd_parentid)) {
                 object.put("fd_parentid", fd_parentid);

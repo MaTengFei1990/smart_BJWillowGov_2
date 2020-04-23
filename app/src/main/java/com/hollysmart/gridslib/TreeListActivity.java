@@ -462,7 +462,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
         String code = blockBean.getFdBlockCode();
 
         if (treeslist != null && treeslist.size() > 0) {
-            ResDataBean resDataBean = treeslist.get(treeslist.size() - 1);
+            ResDataBean resDataBean = treeslist.get(0);
 
             String number = resDataBean.getNumber();
 
