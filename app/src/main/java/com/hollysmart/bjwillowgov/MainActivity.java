@@ -319,7 +319,7 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
 
         }
 
-
+        Mlog.d("---startResourceListActivity-----Url" + url);
         Intent intent = new Intent(mContext, GridsListActivity.class);
         intent.putExtra("exter", (Serializable) map);
         intent.putExtra("ischeck", true);
@@ -367,6 +367,7 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
 
         }
 
+        Mlog.d("startFormActivity-----Url" + url);
 
         Intent intent = new Intent(mContext, GridsListActivity.class);
         intent.putExtra("exter", (Serializable) map);

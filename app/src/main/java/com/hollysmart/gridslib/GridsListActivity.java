@@ -544,6 +544,10 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                 break;
 
             case R.id.ll_search:
+                if (projectBean == null) {
+                    Utils.showToast(mContext, "项目id为空");
+                    return;
+                }
                 Intent searchIntent = new Intent(mContext, SearchGridsActivity.class);
 
                 ResModelBean search_resModelBean = new ResModelBean();
@@ -1335,13 +1339,13 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
                 final BlockBean resDataBean = blockAndStatusBean.getBlock();
                 if (Utils.isEmpty(resDataBean.getFlagLoad())) {
 
-                    taskPool.addTask(new GetGridTreeCountAPI(userInfo, TreeFormModelId, resDataBean, projectBean, listener));
+//                    taskPool.addTask(new GetGridTreeCountAPI(userInfo, TreeFormModelId, resDataBean, projectBean, listener));
                 }
 
 
             }
 
-            taskPool.execute(listener);
+//            taskPool.execute(listener);
         } else {
 
             if (blockBeanList != null && blockBeanList.size() > 0) {

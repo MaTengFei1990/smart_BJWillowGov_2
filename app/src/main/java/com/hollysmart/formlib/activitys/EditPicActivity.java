@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -97,7 +98,9 @@ public class EditPicActivity extends StyleAnimActivity implements
 
     private GridView gridView;
 
-    private boolean flag_discoverProblem=false;
+    private boolean flag_discoverProblem = false;
+    private RadioGroup radgroup;
+    private int degree;
 
     @Override
     public void findView() {
@@ -109,6 +112,23 @@ public class EditPicActivity extends StyleAnimActivity implements
         et_content = findViewById(R.id.et_content);
         tv_delete = findViewById(R.id.tv_delete);
         ll_gongkainei = findViewById(R.id.ll_gongkainei);
+        radgroup = findViewById(R.id.radioGroup);
+        radgroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.rb_severe:
+                        degree = 3;
+                        break;
+                    case R.id.rb_moderate:
+                        degree = 2;
+                        break;
+                    case R.id.rb_mild:
+                        degree = 1;
+                        break;
+                }
+            }
+        });
         findViewById(R.id.tv_fanhui).setOnClickListener(this);
         findViewById(R.id.ll_biaoQian).setOnClickListener(this);
         findViewById(R.id.ll_gongkai).setOnClickListener(this);
@@ -355,10 +375,10 @@ public class EditPicActivity extends StyleAnimActivity implements
 
         }
         if (isUpLoadWeiZhi) {
-            new SaveInfoAPI(id, TYPE_ID, content, latitude + "", longitude + "", position+"["+districtstr+"]", ispublic, state, tagId, Imags, this).request();
+            new SaveInfoAPI(id, TYPE_ID, content, latitude + "", longitude + "", position + "[" + districtstr + "]", ispublic, state, tagId, Imags, degree, this).request();
 
         } else {
-            new SaveInfoAPI(id, TYPE_ID, content, null, null, null, ispublic, state, tagId, Imags, this).request();
+            new SaveInfoAPI(id, TYPE_ID, content, null, null, null, ispublic, state, tagId, Imags, degree, this).request();
 
         }
 
@@ -409,7 +429,7 @@ public class EditPicActivity extends StyleAnimActivity implements
 
                         }
                     }
-                    if (picBeans.size() > MAXNUM ) {
+                    if (picBeans.size() > MAXNUM) {
                         picBeans.remove(MAXNUM);
                     }
                     adapter.notifyDataSetChanged();
@@ -417,7 +437,26 @@ public class EditPicActivity extends StyleAnimActivity implements
                 }
             }
 
+            setSeriousDegree(bean.getDegree());
+
         }
+    }
+
+
+    public void setSeriousDegree(int degree) {
+        switch (degree) {
+            case 1:
+                radgroup.getChildAt(R.id.rb_mild).setSelected(true);
+                break;
+            case 2:
+                radgroup.getChildAt(R.id.rb_moderate).setSelected(true);
+                break;
+            case 3:
+                radgroup.getChildAt(R.id.rb_severe).setSelected(true);
+                break;
+
+        }
+
     }
 
 

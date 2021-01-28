@@ -23,6 +23,7 @@ public class CaoGaoBean {
     private String tagname;
     private String ispublic;
     private String imgs;
+    private int degree; // 严重程度
 
     public String getId() {
         return id;
@@ -78,5 +79,13 @@ public class CaoGaoBean {
 
     public void setImgs(String imgs) {
         this.imgs = imgs;
+    }
+
+    public int getDegree() {
+        return degree;
+    }
+
+    public void setDegree(int degree) {
+        this.degree = degree;
     }
 }

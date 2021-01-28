@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.baidu.location.BDAbstractLocationListener;
@@ -66,7 +67,9 @@ public class EditTextActivity extends StyleAnimActivity
     private EditText et_content;
 
     private GridView gridView;
-    private boolean flag_discoverProblem=false;
+    private boolean flag_discoverProblem = false;
+    private RadioGroup radgroup;
+    private int degree;
 
     @Override
     public void findView() {
@@ -78,6 +81,24 @@ public class EditTextActivity extends StyleAnimActivity
         et_content = findViewById(R.id.et_content);
         tv_delete = findViewById(R.id.tv_delete);
         ll_gongkainei = findViewById(R.id.ll_gongkainei);
+        radgroup = findViewById(R.id.radioGroup);
+        radgroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.rb_severe:
+                        degree = 3;
+                        break;
+                    case R.id.rb_moderate:
+                        degree = 2;
+                        break;
+                    case R.id.rb_mild:
+                        degree = 1;
+                        break;
+                }
+            }
+        });
+
         findViewById(R.id.tv_fanhui).setOnClickListener(this);
         findViewById(R.id.ll_biaoQian).setOnClickListener(this);
         findViewById(R.id.ll_weiZhi).setOnClickListener(this);
@@ -303,7 +324,23 @@ public class EditTextActivity extends StyleAnimActivity
                 iv_gongkai.setImageResource(R.mipmap.check_off);
             }
 
+            setSeriousDegree(bean.getDegree());
 
+        }
+
+    }
+
+    public void setSeriousDegree(int degree) {
+        switch (degree) {
+            case 1:
+                radgroup.getChildAt(R.id.rb_mild).setSelected(true);
+                break;
+            case 2:
+                radgroup.getChildAt(R.id.rb_moderate).setSelected(true);
+                break;
+            case 3:
+                radgroup.getChildAt(R.id.rb_severe).setSelected(true);
+                break;
 
         }
 
@@ -445,7 +482,7 @@ public class EditTextActivity extends StyleAnimActivity
             public void onClick(DialogInterface dialog, int which) {
                 state = "-1";
                 lpd.show();
-                new SaveInfoAPI(id,TYPE_ID, content, latitude + "", longitude + "", position, ispublic, state, tagId, Imags, EditTextActivity.this).request();
+                new SaveInfoAPI(id, TYPE_ID, content, latitude + "", longitude + "", position, ispublic, state, tagId, Imags, degree, EditTextActivity.this).request();
 
 
             }
@@ -499,14 +536,18 @@ public class EditTextActivity extends StyleAnimActivity
             Utils.showToast(mContext, "请输入内容");
             return;
         }
+        if (degree == 0) {
+            Utils.showToast(mContext, "选择严重程度");
+            return;
+        }
         lpd.show();
         findViewById(R.id.tv_save).setEnabled(false);
         if (isUpLoadWeiZhi) {
-            new SaveInfoAPI(id, TYPE_ID, content, latitude + "", longitude + "", position+"["+districtstr+"]", ispublic, state, tagId, null, this).request();
+            new SaveInfoAPI(id, TYPE_ID, content, latitude + "", longitude + "", position + "[" + districtstr + "]", ispublic, state, tagId, null, degree, this).request();
 
         } else {
 
-            new SaveInfoAPI(id, TYPE_ID, content, null, null, null, ispublic, state, tagId, null, this).request();
+            new SaveInfoAPI(id, TYPE_ID, content, null, null, null, ispublic, state, tagId, null, degree, this).request();
         }
 
     }
