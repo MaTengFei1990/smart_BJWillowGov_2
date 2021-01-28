@@ -87,7 +87,9 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -97,7 +99,7 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="GFzjDj2wXrzfQW8VvjGHbubtCfqlCGwG" />
+            android:value="f6nzgOWRGQ82DqxRS6UbXNmXlL1pFmwC" />
 
         <service
             android:name="com.baidu.location.f"
