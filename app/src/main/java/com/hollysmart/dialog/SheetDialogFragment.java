@@ -1724,7 +1724,7 @@ public class SheetDialogFragment extends BottomSheetDialogFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Glide.with(this).pauseRequests();
+        Glide.with(getActivity()).pauseRequests();
     }
 
     /**
