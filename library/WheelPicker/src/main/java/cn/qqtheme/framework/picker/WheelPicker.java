@@ -1,9 +1,10 @@
 package cn.qqtheme.framework.picker;
 
 import android.app.Activity;
-import android.support.annotation.ColorInt;
-import android.support.annotation.IntRange;
 import android.view.View;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.IntRange;
 
 import cn.qqtheme.framework.popup.ConfirmPopup;
 import cn.qqtheme.framework.widget.WheelView;

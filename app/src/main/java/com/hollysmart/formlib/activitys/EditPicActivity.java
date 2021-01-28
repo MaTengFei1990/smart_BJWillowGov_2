@@ -13,8 +13,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +24,9 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;

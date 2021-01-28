@@ -1,17 +1,28 @@
 package com.hollysmart.formlib.adapters.viewholder;
 
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.formlib.beans.DongTaiFormBean;
 
 import java.util.List;
 
-public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
+public class ViewHolderManager extends RecyclerView.ViewHolder {
+
+    private static ViewHolderManager instance = new ViewHolderManager();
+
+    private ViewHolderManager() {
+        super(null);
+        init();
+    }
+
+    public static ViewHolderManager getInstance() {
+        return instance;
+    }
 
     public TextView tv_bitian;
     public TextView tv_name;
@@ -21,21 +32,13 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
 
     public List<DongTaiFormBean> biaoGeBeanList;
 
+    private SparseArray<Class<? extends BaseViewHolder>> viewholders = new SparseArray<>();
 
-    public BaseViewHolder(View itemView,List<DongTaiFormBean> biaoGeBeanList) {
-        super(itemView);
-        this.biaoGeBeanList = biaoGeBeanList;
-        tv_bitian = itemView.findViewById(R.id.tv_bitian);
-        tv_name = itemView.findViewById(R.id.tv_name);
-        tv_value = itemView.findViewById(R.id.tv_value);
-        tv_tishi = itemView.findViewById(R.id.tv_tishi);
-        et_value = itemView.findViewById(R.id.et_value);
-
+    private void init() {
     }
 
 
-
-    public void FieldMustInput(DongTaiFormBean bean, BaseViewHolder holder){
+    public void FieldMustInput(DongTaiFormBean bean, ViewHolderManager holder) {
 
         if (bean.getFieldMustInput()) {
             holder.tv_bitian.setVisibility(View.VISIBLE);
@@ -45,7 +48,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
 
     }
 
-    public void showTiShi(DongTaiFormBean bean, BaseViewHolder holder){
+    public void showTiShi(DongTaiFormBean bean, ViewHolderManager holder) {
 
         if (bean.isShowTiShi()) {
             holder.tv_tishi.setVisibility(View.VISIBLE);
@@ -54,7 +57,8 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
         }
 
     }
-    public void setValue(DongTaiFormBean bean, BaseViewHolder holder){
+
+    public void setValue(DongTaiFormBean bean, ViewHolderManager holder) {
 
         if (bean.getPropertyLabel() != null) {
 
@@ -68,7 +72,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
     }
 
 
-    public void setName(DongTaiFormBean bean, BaseViewHolder holder) {
+    public void setName(DongTaiFormBean bean, ViewHolderManager holder) {
 
         holder.tv_name.setText(bean.getContent());
     }

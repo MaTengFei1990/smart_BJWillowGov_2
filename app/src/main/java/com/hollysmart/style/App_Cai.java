@@ -6,8 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.support.multidex.MultiDex;
-import android.support.multidex.MultiDexApplication;
+
+import androidx.multidex.MultiDex;
+import androidx.multidex.MultiDexApplication;
 
 import com.gqt.alarm.MyAlarmManager;
 import com.gqt.helper.GQTHelper;

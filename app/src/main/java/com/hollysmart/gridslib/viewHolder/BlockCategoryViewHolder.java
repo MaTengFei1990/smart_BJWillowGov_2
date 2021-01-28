@@ -1,10 +1,7 @@
 package com.hollysmart.gridslib.viewHolder;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.d.lib.xrv.adapter.CommonHolder;

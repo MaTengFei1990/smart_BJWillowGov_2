@@ -5,8 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View.OnClickListener;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.baidu.mapapi.SDKInitializer;
 

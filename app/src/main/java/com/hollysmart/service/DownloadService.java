@@ -8,7 +8,8 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.Environment;
 import android.os.IBinder;
-import android.support.v7.app.NotificationCompat;
+
+import androidx.core.app.NotificationCompat;
 
 import com.hollysmart.bjwillowgov.MainActivity;
 import com.hollysmart.bjwillowgov.R;

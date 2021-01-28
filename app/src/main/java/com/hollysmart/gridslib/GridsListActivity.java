@@ -5,10 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -60,7 +60,6 @@ import com.hollysmart.formlib.apis.getResTaskListAPI;
 import com.hollysmart.formlib.beans.DongTaiFormBean;
 import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
-import com.hollysmart.gridslib.adapters.GridsListAdapter;
 import com.hollysmart.gridslib.adapters.MyClassicsHeader;
 import com.hollysmart.gridslib.adapters.NewGridsListAdapter;
 import com.hollysmart.gridslib.apis.BlocksComplatelyAPI;
@@ -73,7 +72,6 @@ import com.hollysmart.gridslib.beans.BlockAndStatusBean;
 import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
-import com.hollysmart.utils.BaiDuLatLng;
 import com.hollysmart.utils.CCM_DateTime;
 import com.hollysmart.utils.GPSConverterUtils;
 import com.hollysmart.utils.Mlog;
@@ -97,7 +95,6 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 /***
  * 网格类表；

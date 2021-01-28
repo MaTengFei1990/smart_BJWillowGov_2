@@ -1,6 +1,5 @@
 package cn.qqtheme.framework;
 
-import android.support.compat.BuildConfig;
 
 /**
  * ************************************************************************

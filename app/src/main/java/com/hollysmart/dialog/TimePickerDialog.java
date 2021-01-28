@@ -2,7 +2,6 @@ package com.hollysmart.dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.hollysmart.bjwillowgov.R;
 

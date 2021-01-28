@@ -4,15 +4,16 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.d.lib.xrv.LRecyclerView;
 import com.hollysmart.adapter.TitleViewAdapter;
@@ -44,7 +45,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static android.support.v7.widget.RecyclerView.LayoutManager;
 
 
 /***
@@ -499,7 +499,7 @@ public class ProjectManagerActivity extends StyleAnimActivity implements TextCli
     private LRecyclerView rcy_view;
     private RecyclerView recy_title;
 
-    private LayoutManager layoutManager;
+    private RecyclerView.LayoutManager layoutManager;
 
     private ProjectItemAdapter projectItemAdapter;
 

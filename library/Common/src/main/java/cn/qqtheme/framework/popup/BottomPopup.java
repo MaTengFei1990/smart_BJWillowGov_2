@@ -2,13 +2,14 @@ package cn.qqtheme.framework.popup;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.support.annotation.CallSuper;
-import android.support.annotation.StyleRes;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+
+import androidx.annotation.CallSuper;
+import androidx.annotation.StyleRes;
 
 import cn.qqtheme.framework.util.LogUtils;
 import cn.qqtheme.framework.util.ScreenUtils;

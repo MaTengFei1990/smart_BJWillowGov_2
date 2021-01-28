@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.appcompat.widget.AppCompatButton;
+
 import com.hollysmart.bjwillowgov.R;
 
 
@@ -14,7 +16,7 @@ import com.hollysmart.bjwillowgov.R;
  * @time 2018/12/28 3:08 PM
  */
 
-public class RecordAudioButton extends android.support.v7.widget.AppCompatButton {
+public class RecordAudioButton extends AppCompatButton {
 
     private OnVoiceButtonCallBack mOnVoiceButtonCallBack;
 

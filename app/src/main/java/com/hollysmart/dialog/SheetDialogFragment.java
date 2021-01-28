@@ -14,11 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialog;
-import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -32,8 +27,15 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentManager;
+
 import com.baidu.mapapi.model.LatLng;
 import com.bumptech.glide.Glide;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -233,7 +235,7 @@ public class SheetDialogFragment extends BottomSheetDialogFragment {
 
 
     @Override
-    public void show(android.support.v4.app.FragmentManager manager, String tag) {
+    public void show(FragmentManager manager, String tag) {
         try {
             //在每个add事务前增加一个remove事务，防止连续的add
             manager.beginTransaction().remove(this).commit();
