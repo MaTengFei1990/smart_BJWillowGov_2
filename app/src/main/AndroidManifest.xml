@@ -54,24 +54,40 @@
         <activity android:name="com.hollysmart.gridslib.ResListShowOnGDMapActivity">
 
             <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
 
 
         </activity>
-        <activity android:name="com.hollysmart.gridslib.SearchTreeActivity" />
+        <activity
+            android:name="com.hollysmart.gridslib.SearchTreeActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.hollysmart.gridslib.SearchGridsActivity"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity android:name="com.hollysmart.gridslib.TreeDetailsActivity" />
-        <activity android:name="com.hollysmart.gridslib.TreeListActivity" />
-        <activity android:name="com.hollysmart.gridslib.RoadDetailsActivity" />
-        <activity android:name="com.hollysmart.gridslib.GridsListActivity" />
-        <activity android:name="com.hollysmart.formlib.ResListShowOnMapActivity" />
-        <activity android:name="com.hollysmart.formlib.ResDataListActivity" />
-        <activity android:name="com.hollysmart.formlib.activitys.MapRangeActivity" />
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="com.hollysmart.gridslib.TreeDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.hollysmart.gridslib.TreeListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.hollysmart.gridslib.RoadDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.hollysmart.gridslib.GridsListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.hollysmart.formlib.ResListShowOnMapActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.hollysmart.formlib.ResDataListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.hollysmart.formlib.activitys.MapRangeActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.hollysmart.voicecall.VocieCallInCall2Activity"
             android:configChanges="orientation|keyboardHidden|screenSize"
