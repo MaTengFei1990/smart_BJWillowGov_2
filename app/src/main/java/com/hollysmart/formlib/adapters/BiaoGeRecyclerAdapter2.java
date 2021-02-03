@@ -2,6 +2,7 @@ package com.hollysmart.formlib.adapters;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,6 +42,7 @@ import com.hollysmart.views.linearlayoutforlistview.MyLinearLayoutForListView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -157,9 +160,6 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
                         childbean.setPropertyLabel("0");
                     }
                 }
-            }
-            if (!isCheck&&bean.getJavaField().equals("name")) {
-                bean.setPropertyLabel(roadbean.getFdBlockCode());
             }
 
             if (!isCheck&&bean.getJavaField().equals("tree_number")) {
@@ -1193,6 +1193,103 @@ public class BiaoGeRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.Vi
                                             });
                                             editdialog.show();
 
+
+                                        } else {
+
+                                            String oldPropertylabel = bean.getPropertyLabel();
+
+
+                                            if (Utils.isEmpty(oldPropertylabel)) {
+
+                                                bean.setPropertyLabel(dictionaryBean.getLabel());
+
+                                                if (bean.getCgformFieldList() != null && bean.getPropertyLabel().equals("0")) {
+
+
+                                                    notifyItemRangeRemoved(bean.getPosition() + 1, bean.getCgformFieldList().size());
+
+                                                }
+
+                                            } else if (!oldPropertylabel.equals(dictionaryBean.getLabel())) {
+
+                                                bean.setPropertyLabel(dictionaryBean.getLabel());
+
+                                                if (bean.getCgformFieldList() != null && bean.getPropertyLabel().equals("1")) {
+
+
+                                                    notifyItemRangeInserted(bean.getPosition() + 1, bean.getCgformFieldList().size());
+
+                                                }
+
+                                                if (bean.getCgformFieldList() != null && bean.getPropertyLabel().equals("0")) {
+
+
+                                                    notifyItemRangeRemoved(bean.getPosition() + 1, bean.getCgformFieldList().size());
+
+                                                }
+
+
+                                            }
+                                        }
+                                    } else if (bean.getJavaField().equals("tree_injection")) {
+
+
+                                        if (dictionaryBean.getLabel().equals("是")) {
+                                            DatePickerDialog.OnDateSetListener dateListener =
+                                                    new DatePickerDialog.OnDateSetListener() {
+                                                        @Override
+                                                        public void onDateSet(DatePicker datePicker,
+                                                                              int year, int month, int dayOfMonth) {
+                                                            //Calendar月份是从0开始,所以month要加1
+                                                            Mlog.d("你选择了" + year + "年" +
+                                                                    (month + 1) + "月" + dayOfMonth + "日");
+
+                                                            String text = year + "年" + (month + 1) + "月" + dayOfMonth + "日";
+                                                            holder.tv_value.setText(text);
+
+                                                            String oldPropertylabel = bean.getPropertyLabel();
+
+
+                                                            if (Utils.isEmpty(oldPropertylabel)) {
+
+                                                                bean.setPropertyLabel(text);
+
+                                                                if (bean.getCgformFieldList() != null && bean.getPropertyLabel().equals("0")) {
+
+
+                                                                    notifyItemRangeRemoved(bean.getPosition() + 1, bean.getCgformFieldList().size());
+
+                                                                }
+
+                                                            } else if (!oldPropertylabel.equals(text)) {
+
+                                                                bean.setPropertyLabel(text);
+
+                                                                if (bean.getCgformFieldList() != null && bean.getPropertyLabel().equals("1")) {
+
+
+                                                                    notifyItemRangeInserted(bean.getPosition() + 1, bean.getCgformFieldList().size());
+
+                                                                }
+
+                                                                if (bean.getCgformFieldList() != null && bean.getPropertyLabel().equals("0")) {
+
+
+                                                                    notifyItemRangeRemoved(bean.getPosition() + 1, bean.getCgformFieldList().size());
+
+                                                                }
+
+
+                                                            }
+                                                        }
+                                                    };
+                                            Calendar calendar = Calendar.getInstance();
+                                            DatePickerDialog datePickerDialog = new DatePickerDialog(mContext,
+                                                    dateListener,
+                                                    calendar.get(Calendar.YEAR),
+                                                    calendar.get(Calendar.MONTH),
+                                                    calendar.get(Calendar.DAY_OF_MONTH));
+                                            datePickerDialog.show();
 
                                         } else {
 

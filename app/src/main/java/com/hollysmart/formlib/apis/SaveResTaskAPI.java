@@ -73,8 +73,6 @@ public class SaveResTaskAPI implements INetModel {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     int status = jsonObject.getInt("status");
-
-
                     if ( status == 200){
                         Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm").create();
                         ProjectBean bean = mGson.fromJson(jsonObject.getString("data"),

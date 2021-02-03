@@ -80,6 +80,7 @@
                 android:layout_height="fill_parent"
                 android:padding="10dp"
                 android:text="完成"
+                android:visibility="gone"
                 android:gravity="center|left"
                 android:textColor="@color/baise"
                 android:layout_alignParentRight="true"/>

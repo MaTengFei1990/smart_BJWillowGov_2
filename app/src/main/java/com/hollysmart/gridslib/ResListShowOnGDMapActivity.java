@@ -232,9 +232,9 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
 
     private void drawGrid(BlockBean blockBean) {
 
-        if (blockBean == null) {
-            return;
-        }
+//        if (blockBean == null) {
+//            return;
+//        }
 
         List<LatLng> rectangles = createRectangle(blockBean);
 
@@ -299,10 +299,10 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
 
     private List<LatLng> createRectangle(BlockBean blockBean) {
         List<LatLng> latLngs = new ArrayList<>();
-        latLngs.add(new LatLng(blockBean.getFdLbLat(), blockBean.getFdRtLng()));
-        latLngs.add(new LatLng(blockBean.getFdRtLat(), blockBean.getFdRtLng()));
-        latLngs.add(new LatLng(blockBean.getFdRtLat(), blockBean.getFdLbLng()));
-        latLngs.add(new LatLng(blockBean.getFdLbLat(), blockBean.getFdLbLng()));
+//        latLngs.add(new LatLng(blockBean.getFdLbLat(), blockBean.getFdRtLng()));
+//        latLngs.add(new LatLng(blockBean.getFdRtLat(), blockBean.getFdRtLng()));
+//        latLngs.add(new LatLng(blockBean.getFdRtLat(), blockBean.getFdLbLng()));
+//        latLngs.add(new LatLng(blockBean.getFdLbLat(), blockBean.getFdLbLng()));
         return latLngs;
     }
 

@@ -1,5 +1,6 @@
 package com.hollysmart.dialog;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
@@ -39,10 +40,14 @@ public class TimePickerDialog {
         mContext = context;
         timePickerDialogInterface = (TimePickerDialogInterface) context;
     }
+
     public TimePickerDialog(Context context, TimePickerDialogInterface timePickerDialogInterface) {
         super();
         mContext = context;
         this.timePickerDialogInterface = timePickerDialogInterface;
+    }
+
+    public TimePickerDialog(BsSelectDialog.BsSelectIF bsSelectIF, DatePickerDialog.OnDateSetListener dateListener, int i, int i1, boolean b) {
     }
 
     /**
@@ -51,7 +56,7 @@ public class TimePickerDialog {
      * @return
      */
     private View initDatePicker() {
-        View inflate = LayoutInflater.from(mContext).inflate( R.layout.datepicker_layout, null);
+        View inflate = LayoutInflater.from(mContext).inflate(R.layout.datepicker_layout, null);
         mDatePicker = (DatePicker) inflate.findViewById(R.id.datePicker);
         resizePikcer(mDatePicker);
         return inflate;

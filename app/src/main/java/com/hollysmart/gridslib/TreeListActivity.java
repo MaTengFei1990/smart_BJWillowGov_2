@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.reflect.TypeToken;
+import com.hollysmart.apis.GetResModelAPI;
 import com.hollysmart.apis.ResModelListAPI;
 import com.hollysmart.beans.JDPicInfo;
 import com.hollysmart.beans.ResModelBean;
@@ -38,15 +39,15 @@ import com.hollysmart.db.ResDataDao;
 import com.hollysmart.db.ResModelDao;
 import com.hollysmart.db.UserInfo;
 import com.hollysmart.dialog.LoadingProgressDialog;
+import com.hollysmart.formlib.apis.SaveResTaskAPI;
+import com.hollysmart.formlib.apis.getResTaskListAPI;
 import com.hollysmart.formlib.beans.DongTaiFormBean;
 import com.hollysmart.formlib.beans.LastTreeDataBean;
 import com.hollysmart.formlib.beans.ProjectBean;
 import com.hollysmart.formlib.beans.ResDataBean;
 import com.hollysmart.gridslib.adapters.MyClassicsHeader;
 import com.hollysmart.gridslib.adapters.TreeListAdapter;
-import com.hollysmart.gridslib.apis.BlocksComplateAPI;
 import com.hollysmart.gridslib.apis.FindListPageAPI;
-import com.hollysmart.gridslib.beans.BlockBean;
 import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.ACache;
 import com.hollysmart.utils.CCM_DateTime;
@@ -142,7 +143,6 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
 
     private LoadingProgressDialog lpd;
 
-    private BlockBean blockBean;
     private String TreeFormModelId;
     private String PcToken;
     private String addtreeFalg;
@@ -154,56 +154,144 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
     public void init() {
         isLogin();
         treeslist = new ArrayList<>();
-
-
-
+        setLpd();
         ischeck = getIntent().getBooleanExtra("ischeck", false);
         PcToken = getIntent().getStringExtra("PcToken");
         TreeFormModelId = getIntent().getStringExtra("TreeFormModelId");
 
-        blockBean = (BlockBean) getIntent().getSerializableExtra("blockBean");
         projectBean = (ProjectBean) getIntent().getSerializableExtra("projectBean");
-        position =  getIntent().getIntExtra("position",0);
-        addtreeFalg =  getIntent().getStringExtra("addtreeFalg");
+        position = getIntent().getIntExtra("position", 0);
+        addtreeFalg = getIntent().getStringExtra("addtreeFalg");
         map = (Map<String, String>) getIntent().getSerializableExtra("exter");
-
         if (ischeck) {
             findViewById(R.id.tv_maplsit).setVisibility(View.VISIBLE);
-            findViewById(R.id.tv_success).setVisibility(View.GONE);
         } else {
             findViewById(R.id.tv_maplsit).setVisibility(View.GONE);
-            findViewById(R.id.tv_success).setVisibility(View.VISIBLE);
         }
+        ProjectBean project = createProject();
+        projectBean = project;
+        if (ischeck) {
+            bn_add.setVisibility(View.GONE);
+            new getResTaskListAPI(userInfo.getAccess_token(), map, new getResTaskListAPI.ResTaskListIF() {
+                @Override
+                public void onResTaskListResult(boolean isOk, ProjectBean protBean, String msg) {
 
-        setLpd();
-        if (addtreeFalg != null) {
-            ResModelDao resModelDao = new ResModelDao(mContext);
-            List<ResModelBean> allData = resModelDao.getAllData();
-            resModelList.addAll(allData);
-
-            LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
-            lv_treeList.setLayoutManager(layoutManager);
-
-            treeListAdapter = new TreeListAdapter(mContext,TreeFormModelId, projectBean, blockBean, treeslist, ischeck);
-
-            lv_treeList.setAdapter(treeListAdapter);
-
-            addTrees();
+                    if (isOk) {
+                        projectBean = protBean;
+                        setform();
+                    }
+                }
+            }).request();
         } else {
+            new SaveResTaskAPI(userInfo.getAccess_token(), projectBean, new SaveResTaskAPI.SaveResTaskIF() {
+                @Override
+                public void onSaveResTaskResult(boolean isOk, ProjectBean projectBean1) {
 
-            selectDB();
-            showGrid();
+                    if (isOk) {
+                        new getResTaskListAPI(userInfo.getAccess_token(), map, new getResTaskListAPI.ResTaskListIF() {
+                            @Override
+                            public void onResTaskListResult(boolean isOk, ProjectBean protBean, String msg) {
+
+                                if (isOk) {
+                                    projectBean = protBean;
+                                    setform();
+                                }
+                            }
+                        }).request();
+                    } else {
+                        lpd.cancel();
+                    }
+
+                }
+            }).request();
+
         }
 
+    }
+
+    private void setform() {
+        TreeFormModelId = projectBean.getfTaskmodel().split(",")[0];
+        String classifyIds = projectBean.getfTaskmodel();
+        if (classifyIds != null) {
+            String[] ids = classifyIds.split(",");
+            ResModelDao resModelDao = new ResModelDao(mContext);
+            for (int i = 0; i < ids.length; i++) {
+                ResModelBean resModelBean = resModelDao.getDatById(ids[i]);
+                if (resModelBean != null) {
+                    resModelList.add(resModelBean);
+                    String formData = resModelBean.getfJsonData();
+                    formBeanList.clear();
+                    try {
+                        Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm").create();
+                        List<DongTaiFormBean> dictList = mGson.fromJson(formData,
+                                new TypeToken<List<DongTaiFormBean>>() {
+                                }.getType());
+                        formBeanList.addAll(dictList);
+                    } catch (JsonIOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+
+        }
+        if (resModelList == null || resModelList.size() == 0) {
+            new GetResModelAPI(userInfo.getAccess_token(), TreeFormModelId, new GetResModelAPI.GetResModelIF() {
+                @Override
+                public void ongetResModelIFResult(boolean isOk, ResModelBean resModelBean) {
+
+                    if (isOk) {
+                        ResModelDao resModelDao = new ResModelDao(mContext);
+                        resModelList.clear();
+                        resModelList.add(resModelBean);
+                        resModelDao.addOrUpdate(resModelList);
+                        String formData = resModelBean.getfJsonData();
+                        formBeanList.clear();
+                        try {
+                            Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm").create();
+                            List<DongTaiFormBean> dictList = mGson.fromJson(formData,
+                                    new TypeToken<List<DongTaiFormBean>>() {
+                                    }.getType());
+                            formBeanList.addAll(dictList);
+                        } catch (JsonIOException e) {
+                            e.printStackTrace();
+                        }
+
+                        getResTaskById();
+
+                    }
+
+
+                }
+            }).request();
+        } else {
+            getResTaskById();
+        }
+    }
+
+    private ProjectBean createProject() {
+        projectBean = new ProjectBean();
+        projectBean.setRemarks("");
+        projectBean.setfTaskname(map.get("name"));
+        projectBean.setfTaskmodel(map.get("type"));
+        projectBean.setfBegindate(map.get("btime"));
+        projectBean.setfEnddate(map.get("etime"));
+        projectBean.setfState("2");
+        projectBean.setfRange("");
+        projectBean.setId(map.get("id"));
+        projectBean.setfOfficeId(userInfo.getOffice().getId());
+        projectBean.setfTaskmodelnames(map.get("typename"));
+        projectBean.setfDescription("");
+        return projectBean;
     }
 
     private void showGrid() {
 
 
         LayoutInflater inflater = LayoutInflater.from(this);
-        View layout =  inflater.inflate(R.layout.dialog_layout_gridle, null);
+        View layout = inflater.inflate(R.layout.dialog_layout_gridle, null);
         //新建对话框对象
-        Dialog mDialog= new AlertDialog.Builder(this).create();
+        Dialog mDialog = new AlertDialog.Builder(this).create();
         mDialog.setCancelable(true);
         mDialog.show();
         // 设置弹出框的透明度
@@ -239,13 +327,11 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
 
                 Intent intentbak = new Intent();
                 intentbak.putExtra("position", position);
-                intentbak.putExtra("blockBean", blockBean);
                 setResult(7, intentbak);
                 finish();
                 break;
             case R.id.tv_maplsit:
                 Intent mapintent = new Intent(mContext, ResListShowOnGDMapActivity.class);
-                mapintent.putExtra("blockBean", blockBean);
                 mapintent.putExtra("projectBean", projectBean);
                 mapintent.putExtra("exter", (Serializable) map);
                 mapintent.putExtra("ischeck", ischeck);
@@ -263,7 +349,6 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                 Intent searchIntent = new Intent(mContext, SearchTreeActivity.class);
                 searchIntent.putExtra("TreeFormModelId", TreeFormModelId);
                 searchIntent.putExtra("projectBean", projectBean);
-                searchIntent.putExtra("blockBean", blockBean);
                 searchIntent.putExtra("ischeck", ischeck);
                 startActivity(searchIntent);
 
@@ -273,11 +358,11 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                 showGrid();
 
                 break;
-            case R.id.tv_success:
-
-                blocksComplate();
-
-                break;
+//            case R.id.tv_success:
+//
+//                blocksComplate();
+//
+//                break;
             case R.id.tv_shibie:
                 verifyStoragePermissions(this);
 
@@ -426,26 +511,26 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
         }
     }
 
-    private void blocksComplate() {
-
-        new BlocksComplateAPI(userInfo, map.get("id"), blockBean, new BlocksComplateAPI.BlocksScomplateIF() {
-            @Override
-            public void blocksScomplateResult(boolean isOk) {
-
-                if (isOk) {
-                    Utils.showToast(mContext, "采集完成");
-                    setResult(1);
-                    finish();
-                } else {
-                    Utils.showToast(mContext, "修改状态失败");
-                }
-
-            }
-        }).request();
-
-
-
-    }
+//    private void blocksComplate() {
+//
+//        new BlocksComplateAPI(userInfo, map.get("id"), blockBean, new BlocksComplateAPI.BlocksScomplateIF() {
+//            @Override
+//            public void blocksScomplateResult(boolean isOk) {
+//
+//                if (isOk) {
+//                    Utils.showToast(mContext, "采集完成");
+//                    setResult(1);
+//                    finish();
+//                } else {
+//                    Utils.showToast(mContext, "修改状态失败");
+//                }
+//
+//            }
+//        }).request();
+//
+//
+//
+//    }
 
     private void addTrees() {
         Intent intent = new Intent(mContext, TreeDetailsActivity.class);
@@ -460,7 +545,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
             }
         }
 
-        String code = blockBean.getFdBlockCode();
+        String code = "0";
 
         if (treeslist != null && treeslist.size() > 0) {
             ResDataBean resDataBean = treeslist.get(0);
@@ -511,10 +596,10 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                         formBean.setPropertyLabel("");
 
                     }
-                    if (formBean.getJavaField().equals("fieldName")) {
-
-                        formBean.setPropertyLabel(blockBean.getFdBlockNum());
-                    }
+//                    if (formBean.getJavaField().equals("fieldName")) {
+//
+//                        formBean.setPropertyLabel(blockBean.getFdBlockNum());
+//                    }
                     if (formBean.getJavaField().equals("tree_number")) {
 
                         formBean.setPropertyLabel("1");
@@ -561,7 +646,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
             resDataBean.setFd_resdate(createTime);
             resDataBean.setFd_resmodelname(resModelBean.getfModelName());
             resDataBean.setFd_restaskname(projectBean.getfTaskname());
-            resDataBean.setFd_parentid(blockBean.getId());
+            resDataBean.setFd_parentid("0");
             resDataBean.setFdTaskId(projectBean.getId());
 
             intent.putExtra("formBeanList", (Serializable) formBeanList);
@@ -570,7 +655,6 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
             intent.putExtra("sportEditFlag", true);
             formPicMap.clear();
             intent.putExtra("formPicMap", (Serializable) formPicMap);
-            intent.putExtra("roadbean", (Serializable) blockBean);
             intent.putExtra("projectBean", (Serializable) projectBean);
             intent.putExtra("isNewAdd",  true);
             intent.putExtra("PcToken",  PcToken);
@@ -595,7 +679,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
             resDataBean.setFd_resdate(createTime);
             resDataBean.setFd_resmodelname(resModelBean.getfModelName());
             resDataBean.setFd_restaskname(projectBean.getfTaskname());
-            resDataBean.setFd_parentid(blockBean.getId());
+            resDataBean.setFd_parentid("0");
             resDataBean.setFdTaskId(projectBean.getId());
 
             intent.putExtra("formBeanList", (Serializable) formBeanList);
@@ -604,7 +688,6 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
             formPicMap.clear();
             intent.putExtra("formPicMap", (Serializable) formPicMap);
             intent.putExtra("treeList", (Serializable) treeslist);
-            intent.putExtra("roadbean", (Serializable) blockBean);
             intent.putExtra("projectBean", (Serializable) projectBean);
 
             intent.putExtra("isNewAdd",  true);
@@ -637,11 +720,11 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         lv_treeList.setLayoutManager(layoutManager);
 
-        treeListAdapter = new TreeListAdapter(mContext,TreeFormModelId, projectBean, blockBean, treeslist, ischeck);
+        treeListAdapter = new TreeListAdapter(mContext, TreeFormModelId, projectBean, null, treeslist, ischeck);
 
         lv_treeList.setAdapter(treeListAdapter);
 
-        new FindListPageAPI(userInfo,TreeFormModelId, projectBean, blockBean.getId(), new FindListPageAPI.DatadicListIF() {
+        new FindListPageAPI(userInfo, TreeFormModelId, projectBean, "0", new FindListPageAPI.DatadicListIF() {
             @Override
             public void datadicListResult(boolean isOk, List<ResDataBean> netDataList) {
                 List<String> idList = new ArrayList<>();
@@ -683,9 +766,9 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                     }
                 }
 
-                selectDB(blockBean.getId());
 
                 lpd.cancel();
+                treeListAdapter.notifyDataSetChanged();
 
             }
         }).request();
@@ -749,8 +832,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                         }
 
 
-
-                        new FindListPageAPI(userInfo, TreeFormModelId,projectBean, blockBean.getId(), new FindListPageAPI.DatadicListIF() {
+                        new FindListPageAPI(userInfo, TreeFormModelId, projectBean, "0", new FindListPageAPI.DatadicListIF() {
                             @Override
                             public void datadicListResult(boolean isOk, List<ResDataBean> netDataList) {
 
@@ -857,7 +939,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
             }
 
 
-            new FindListPageAPI(userInfo,TreeFormModelId, projectBean, blockBean.getId(), new FindListPageAPI.DatadicListIF() {
+            new FindListPageAPI(userInfo, TreeFormModelId, projectBean, "0", new FindListPageAPI.DatadicListIF() {
                 @Override
                 public void datadicListResult(boolean isOk, List<ResDataBean> netDataList) {
 
@@ -950,7 +1032,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
             if (resultCode == 1) {
 
 
-                selectDB(blockBean.getId());
+                selectDB("0");
 
             }
         }
@@ -960,7 +1042,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
             if (resultCode == 1) {
 
 
-                selectDB(blockBean.getId());
+                selectDB("0");
 
             }
         }
@@ -998,17 +1080,17 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
 
     private void getData() {
 
-        new FindListPageAPI(page, pageSize, userInfo, TreeFormModelId, projectBean, blockBean.getId(), new FindListPageAPI.DatadicListCountIF() {
+        new FindListPageAPI(page, pageSize, userInfo, TreeFormModelId, projectBean, "0", new FindListPageAPI.DatadicListCountIF() {
             @Override
             public void datadicListResult(boolean isOk, List<ResDataBean> list, int allCount) {
 
-            if (isOk) {
-                if (isRefresh) {
-                    treeslist.clear();
-                }
-                if (treeslist.size() > 0 || list.size() >0 ){
-                    lay_fragment_ProdutEmpty.setVisibility(View.GONE);
-                }else {
+                if (isOk) {
+                    if (isRefresh) {
+                        treeslist.clear();
+                    }
+                    if (treeslist.size() > 0 || list.size() > 0) {
+                        lay_fragment_ProdutEmpty.setVisibility(View.GONE);
+                    } else {
                     lay_fragment_ProdutEmpty.setVisibility(View.VISIBLE);
                 }
 
@@ -1034,7 +1116,6 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                 refreshLayout.finishLoadMore();
                 loadMore = false;
             }
-                blockBean.setChildTreeCount(treeslist.size());
 
 
             }

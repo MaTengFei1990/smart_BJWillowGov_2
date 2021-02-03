@@ -315,10 +315,10 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
 
     private List<LatLng> createRectangle(BlockBean blockBean) {
         List<LatLng> latLngs = new ArrayList<>();
-        latLngs.add(new LatLng(blockBean.getFdLbLat(), blockBean.getFdRtLng()));
-        latLngs.add(new LatLng(blockBean.getFdRtLat(), blockBean.getFdRtLng()));
-        latLngs.add(new LatLng(blockBean.getFdRtLat(), blockBean.getFdLbLng()));
-        latLngs.add(new LatLng(blockBean.getFdLbLat(), blockBean.getFdLbLng()));
+//        latLngs.add(new LatLng(blockBean.getFdLbLat(), blockBean.getFdRtLng()));
+//        latLngs.add(new LatLng(blockBean.getFdRtLat(), blockBean.getFdRtLng()));
+//        latLngs.add(new LatLng(blockBean.getFdRtLat(), blockBean.getFdLbLng()));
+//        latLngs.add(new LatLng(blockBean.getFdLbLat(), blockBean.getFdLbLng()));
         return latLngs;
     }
 
@@ -792,17 +792,16 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
         if (latLng == null) {
             return;
         }
-        List<LatLng> rectangles = createRectangle(roadbean);
-
-        if (rectangles != null) {
-            boolean contents = polygonCon(mGaoDeMap, rectangles, latLng);
-            if (!contents) {
-                Utils.showDialog(mContext, "选择点不在网格范围内，请重新选择");
-               return;
-            }
-
-        }
-
+//        List<LatLng> rectangles = createRectangle(roadbean);
+//
+//        if (rectangles != null) {
+//            boolean contents = polygonCon(mGaoDeMap, rectangles, latLng);
+//            if (!contents) {
+//                Utils.showDialog(mContext, "选择点不在网格范围内，请重新选择");
+//               return;
+//            }
+//
+//        }
 
 
         switch (flagtype) {

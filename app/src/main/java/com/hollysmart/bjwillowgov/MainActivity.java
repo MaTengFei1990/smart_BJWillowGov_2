@@ -63,7 +63,7 @@ import com.hollysmart.db.UserInfo;
 import com.hollysmart.dialog.ButtomDialogView;
 import com.hollysmart.formlib.activitys.Cai_AddPicActivity;
 import com.hollysmart.formlib.activitys.EditPicActivity;
-import com.hollysmart.gridslib.GridsListActivity;
+import com.hollysmart.gridslib.TreeListActivity;
 import com.hollysmart.imgdownLoad.DownLoadImageService;
 import com.hollysmart.imgdownLoad.ImageDownLoadCallBack;
 import com.hollysmart.popuwindow.MoreWindow;
@@ -316,11 +316,11 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
             }
 
 
-
         }
 
         Mlog.d("---startResourceListActivity-----Url" + url);
-        Intent intent = new Intent(mContext, GridsListActivity.class);
+//        Intent intent = new Intent(mContext, GridsListActivity.class);
+        Intent intent = new Intent(mContext, TreeListActivity.class);
         intent.putExtra("exter", (Serializable) map);
         intent.putExtra("ischeck", true);
         startActivity(intent);
@@ -364,12 +364,12 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
             }
 
 
-
         }
 
         Mlog.d("startFormActivity-----Url" + url);
 
-        Intent intent = new Intent(mContext, GridsListActivity.class);
+//        Intent intent = new Intent(mContext, GridsListActivity.class);
+        Intent intent = new Intent(mContext, TreeListActivity.class);
         intent.putExtra("exter", (Serializable) map);
         intent.putExtra("ischeck", false);
         startActivity(intent);

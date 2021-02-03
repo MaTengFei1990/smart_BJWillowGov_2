@@ -549,6 +549,7 @@ public class TreeListAdapter extends CommonAdapter<ResDataBean> {
 
 
     private void getFormPicMap(List<DongTaiFormBean> formBeans) {
+        formPicMap.clear();
 
         for (int i = 0; i < formBeans.size(); i++) {
             DongTaiFormBean formBean = formBeans.get(i);
