@@ -612,9 +612,25 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                         formBean.setPropertyLabel(code);
                     }
                     if (formBean.getJavaField().equals("tree_dangerous")) {
-
                         formBean.setPropertyLabel("");
+                    }
+                    if (formBean.getJavaField().equals("road_area")) {
+                        String name = null;
+                        UserInfo.Office office = userInfo.getOffice();
+                        if (office != null) {
+                            UserInfo.Area area = office.getArea();
+                            if (area != null) {
+                                String areaName = area.getName();
+                                if (areaName != null) {
+                                    name = areaName + " 请选择";
+                                }
+                            }
+                        }
 
+                        if (!Utils.isEmpty(name)) {
+                            formBean.setPropertyLabel(name);
+
+                        }
 
 
                     }
@@ -671,6 +687,25 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                 if (formBean.getJavaField().equals("number")) {
 
                     formBean.setPropertyLabel(code);
+                }
+                if (formBean.getJavaField().equals("road_area")) {
+                    String name = null;
+                    UserInfo.Office office = userInfo.getOffice();
+                    if (office != null) {
+                        UserInfo.Area area = office.getArea();
+                        if (area != null) {
+                            String areaName = area.getName();
+                            if (areaName != null) {
+                                name = areaName + " 请选择";
+                            }
+                        }
+                    }
+
+                    if (!Utils.isEmpty(name)) {
+                        formBean.setPropertyLabel(name);
+
+                    }
+
                 }
             }
 

@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -69,6 +70,9 @@ public class EditTextActivity extends StyleAnimActivity
     private GridView gridView;
     private boolean flag_discoverProblem = false;
     private RadioGroup radgroup;
+    private RadioButton rb_severe;
+    private RadioButton rb_moderate;
+    private RadioButton rb_mild;
     private int degree;
 
     @Override
@@ -82,6 +86,9 @@ public class EditTextActivity extends StyleAnimActivity
         tv_delete = findViewById(R.id.tv_delete);
         ll_gongkainei = findViewById(R.id.ll_gongkainei);
         radgroup = findViewById(R.id.radioGroup);
+        rb_severe = findViewById(R.id.rb_severe);
+        rb_moderate = findViewById(R.id.rb_moderate);
+        rb_mild = findViewById(R.id.rb_mild);
         radgroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -333,13 +340,13 @@ public class EditTextActivity extends StyleAnimActivity
     public void setSeriousDegree(int degree) {
         switch (degree) {
             case 1:
-                radgroup.getChildAt(R.id.rb_mild).setSelected(true);
+                rb_mild.setChecked(true);
                 break;
             case 2:
-                radgroup.getChildAt(R.id.rb_moderate).setSelected(true);
+                rb_moderate.setChecked(true);
                 break;
             case 3:
-                radgroup.getChildAt(R.id.rb_severe).setSelected(true);
+                rb_severe.setChecked(true);
                 break;
 
         }

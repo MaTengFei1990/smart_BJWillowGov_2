@@ -298,7 +298,7 @@ public class TreeDetailsActivity extends StyleAnimActivity {
 
                                         DongTaiFormBean dongTaiFormBean = formBeanList.get(i);
 
-                                        if (dongTaiFormBean.getShowType().equals("list")||dongTaiFormBean.getShowType().equals("checkbox")) {
+                                        if (dongTaiFormBean.getShowType().equals("list") || dongTaiFormBean.getShowType().equals("checkbox") || dongTaiFormBean.getShowType().equals("multistageList")) {
 
                                             if (!Utils.isEmpty(dongTaiFormBean.getDictText())) {
                                                 if (!showTypelist.contains(dongTaiFormBean.getDictText())) {
