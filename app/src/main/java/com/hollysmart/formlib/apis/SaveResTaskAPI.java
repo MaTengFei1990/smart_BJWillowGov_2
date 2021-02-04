@@ -64,7 +64,7 @@ public class SaveResTaskAPI implements INetModel {
             @Override
             public void onError(Call call, Exception e, int id) {
                 e.printStackTrace();
-                saveResTaskIF.onSaveResTaskResult(false, null);
+                saveResTaskIF.onSaveResTaskResult(false, null, "网络错误");
             }
 
             @Override
@@ -78,12 +78,13 @@ public class SaveResTaskAPI implements INetModel {
                         ProjectBean bean = mGson.fromJson(jsonObject.getString("data"),
                                 new TypeToken<ProjectBean>() {}.getType());
                         projectBean = bean;
-                        saveResTaskIF.onSaveResTaskResult(true, projectBean);
+                        saveResTaskIF.onSaveResTaskResult(true, projectBean, null);
                     }else {
-                        saveResTaskIF.onSaveResTaskResult(false, null);
+                        saveResTaskIF.onSaveResTaskResult(false, null, jsonObject.getString("msg"));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    saveResTaskIF.onSaveResTaskResult(false, null, "数据异常");
                 }
 
             }
@@ -92,7 +93,7 @@ public class SaveResTaskAPI implements INetModel {
     }
 
     public interface SaveResTaskIF{
-        void onSaveResTaskResult(boolean isOk, ProjectBean projectBean);
+        void onSaveResTaskResult(boolean isOk, ProjectBean projectBean, String msg);
     }
 
 }

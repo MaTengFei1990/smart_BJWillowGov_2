@@ -482,7 +482,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
         lpd.show();
         new SaveResTaskAPI(userInfo.getAccess_token(), newprojectBean, new SaveResTaskAPI.SaveResTaskIF() {
             @Override
-            public void onSaveResTaskResult(boolean isOk, ProjectBean projectBean1) {
+            public void onSaveResTaskResult(boolean isOk, ProjectBean projectBean1, String errMsg) {
 
                 if (isOk) {
 
@@ -490,6 +490,7 @@ public class GridsListActivity extends StyleAnimActivity implements OnRefreshLoa
 
                 } else {
                     lpd.cancel();
+                    Utils.showDialog(mContext, errMsg);
                 }
 
             }

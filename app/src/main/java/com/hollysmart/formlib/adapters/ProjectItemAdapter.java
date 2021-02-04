@@ -578,13 +578,15 @@ public class ProjectItemAdapter extends CommonAdapter<ProjectBean> {
 
                         new SaveResTaskAPI(userInfo.getAccess_token(), item, new SaveResTaskAPI.SaveResTaskIF() {
                             @Override
-                            public void onSaveResTaskResult(boolean isOk, ProjectBean projectBean) {
+                            public void onSaveResTaskResult(boolean isOk, ProjectBean projectBean, String errmsg) {
                                 if (isOk) {
-                                    Utils.showDialog(mContext,"项目已完成");
+                                    Utils.showDialog(mContext, "项目已完成");
 
                                     if (refreshDataChangeListener != null) {
                                         refreshDataChangeListener.refreshDataChange();
                                     }
+                                } else {
+                                    Utils.showDialog(mContext, errmsg);
                                 }
 
                             }

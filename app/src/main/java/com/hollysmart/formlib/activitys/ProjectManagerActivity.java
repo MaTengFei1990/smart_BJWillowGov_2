@@ -202,11 +202,13 @@ public class ProjectManagerActivity extends StyleAnimActivity implements TextCli
 
         new SaveResTaskAPI(userInfo.getAccess_token(), projectBean, new SaveResTaskAPI.SaveResTaskIF() {
             @Override
-            public void onSaveResTaskResult(boolean isOk, ProjectBean projectBean) {
+            public void onSaveResTaskResult(boolean isOk, ProjectBean projectBean, String errmsg) {
 
                 if (isOk) {
-                    new getResTaskListAPI( userInfo.getAccess_token(),map,ProjectManagerActivity.this).request();
+                    new getResTaskListAPI(userInfo.getAccess_token(), map, ProjectManagerActivity.this).request();
 
+                } else {
+                    Utils.showDialog(mContext, errmsg);
                 }
 
 

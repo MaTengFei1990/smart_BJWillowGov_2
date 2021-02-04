@@ -194,12 +194,14 @@ public class ResDataListActivity extends StyleAnimActivity {
 
         new SaveResTaskAPI(userInfo.getAccess_token(), newprojectBean, new SaveResTaskAPI.SaveResTaskIF() {
             @Override
-            public void onSaveResTaskResult(boolean isOk, ProjectBean projectBean1) {
+            public void onSaveResTaskResult(boolean isOk, ProjectBean projectBean1, String errMsg) {
 
                 if (isOk) {
 
                     getResTaskById();
 
+                } else {
+                    Utils.showDialog(mContext, errMsg);
                 }
 
             }

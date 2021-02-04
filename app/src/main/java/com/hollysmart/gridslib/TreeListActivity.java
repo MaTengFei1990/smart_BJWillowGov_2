@@ -172,6 +172,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
         projectBean = project;
         if (ischeck) {
             bn_add.setVisibility(View.GONE);
+            lpd.show();
             new getResTaskListAPI(userInfo.getAccess_token(), map, new getResTaskListAPI.ResTaskListIF() {
                 @Override
                 public void onResTaskListResult(boolean isOk, ProjectBean protBean, String msg) {
@@ -183,9 +184,10 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                 }
             }).request();
         } else {
+            lpd.show();
             new SaveResTaskAPI(userInfo.getAccess_token(), projectBean, new SaveResTaskAPI.SaveResTaskIF() {
                 @Override
-                public void onSaveResTaskResult(boolean isOk, ProjectBean projectBean1) {
+                public void onSaveResTaskResult(boolean isOk, ProjectBean projectBean1, String msg) {
 
                     if (isOk) {
                         new getResTaskListAPI(userInfo.getAccess_token(), map, new getResTaskListAPI.ResTaskListIF() {
@@ -200,6 +202,7 @@ public class TreeListActivity extends StyleAnimActivity  implements OnRefreshLoa
                         }).request();
                     } else {
                         lpd.cancel();
+                        Utils.showDialog(mContext, msg);
                     }
 
                 }
