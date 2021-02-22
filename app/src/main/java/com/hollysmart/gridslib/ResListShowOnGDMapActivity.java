@@ -1,6 +1,7 @@
 package com.hollysmart.gridslib;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
@@ -44,6 +45,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.hollysmart.beans.JDPicInfo;
 import com.hollysmart.bjwillowgov.R;
+import com.hollysmart.cluster.ClusterClickListener;
+import com.hollysmart.cluster.ClusterItem;
+import com.hollysmart.cluster.ClusterOverlay;
+import com.hollysmart.cluster.RegionItem;
 import com.hollysmart.db.UserInfo;
 import com.hollysmart.formlib.apis.ResDataGetAPI;
 import com.hollysmart.formlib.beans.DongTaiFormBean;
@@ -72,7 +77,7 @@ import butterknife.ButterKnife;
 public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMapLocationListener,
         LocationSource, AMap.OnMarkerClickListener, AMap.OnInfoWindowClickListener,
         AMap.InfoWindowAdapter, AMap.OnMapLoadedListener, AMap.OnCameraChangeListener,
-        Animation.AnimationListener, View.OnClickListener, AMap.OnMapClickListener {
+        Animation.AnimationListener, View.OnClickListener, AMap.OnMapClickListener, ClusterClickListener {
 
 
     AMap mGaoDeMap;
@@ -190,7 +195,10 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
             }
         }
 
-        drawRangeInMap(flagtype);
+//        if (isCheck = false) {
+//            drawRangeInMap(flagtype);
+//        }
+
     }
 
     @Override
@@ -360,6 +368,7 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
         mGaoDeMap.setInfoWindowAdapter(this);// 设置自定义InfoWindow样式
         mGaoDeMap.setOnMapClickListener(this);
 //        centerMarker.setAnimationListener(this);
+
     }
 
 
@@ -521,6 +530,7 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
     protected void onDestroy() {
 
         mMapView.onDestroy();
+        mClusterOverlay.onDestroy();
         super.onDestroy();
     }
 
@@ -710,8 +720,48 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
 
     }
 
+    private ClusterOverlay mClusterOverlay;
+
+    private int clusterRadius = 100; //半径
+
     @Override
     public void onMapLoaded() {
+
+        new Thread() {
+            public void run() {
+                List<ClusterItem> items = new ArrayList<ClusterItem>();
+                //随机10000个点
+//                for (int i = 0; i < 10000; i++) {
+//                    double lat = Math.random() + 39.474923;
+//                    double lon = Math.random() + 116.027116;
+//                    LatLng latLng = new LatLng(lat, lon, false);
+//                    RegionItem regionItem = new RegionItem(latLng, "test" + i);
+//                    items.add(regionItem);
+//                }
+
+
+                if (treeslist != null && (treeslist.size() > 0)) {
+
+                    for (ResDataBean resDataBean : treeslist) {
+                        Double lat = Double.parseDouble(resDataBean.getLatitude());
+                        Double lng = Double.parseDouble(resDataBean.getLongitude());
+                        LatLng latLng = new LatLng(lat, lng, false);
+
+                        RegionItem regionItem1 = new RegionItem(latLng, resDataBean.getFd_resname());
+                        items.add(regionItem1);
+
+                    }
+                }
+
+                mClusterOverlay = new ClusterOverlay(mGaoDeMap, items,
+                        dp2px(getApplicationContext(), clusterRadius),
+                        getApplicationContext());
+//                mClusterOverlay.setClusterRenderer(MainActivity.this);
+                mClusterOverlay.setOnClusterClickListener(ResListShowOnGDMapActivity.this);
+
+            }
+
+        }.start();
 
     }
 
@@ -897,5 +947,29 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
     @Override
     public void onAnimationEnd() {
 
+    }
+
+    /**
+     * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
+     */
+    public int dp2px(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
+
+    @Override
+    public void onClick(Marker marker, List<ClusterItem> clusterItems) {
+
+        if (clusterItems.size() == 1) {
+            RegionItem regionItem = (RegionItem) clusterItems.get(0);
+            Toast.makeText(this, "点击的是" + regionItem.getTitle(), Toast.LENGTH_SHORT).show();
+        } else {
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            for (ClusterItem clusterItem : clusterItems) {
+                builder.include(clusterItem.getPosition());
+            }
+            LatLngBounds latLngBounds = builder.build();
+            mGaoDeMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 1000));
+        }
     }
 }
