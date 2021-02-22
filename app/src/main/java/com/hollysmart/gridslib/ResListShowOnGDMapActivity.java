@@ -969,7 +969,7 @@ public class ResListShowOnGDMapActivity extends StyleAnimActivity implements AMa
                 builder.include(clusterItem.getPosition());
             }
             LatLngBounds latLngBounds = builder.build();
-            mGaoDeMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 1000));
+            mGaoDeMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 200));
         }
     }
 }

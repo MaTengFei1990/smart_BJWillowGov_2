@@ -31,6 +31,7 @@
     <permission android:name="android.permission.READ_LOGS" />
     <permission android:name="android.permission.WRITE_APN_SETTINGS" /> <!-- 允许程序打开网络套接字 -->
     <permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
 
     <application
