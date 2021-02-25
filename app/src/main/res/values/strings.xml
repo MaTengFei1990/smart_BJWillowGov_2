@@ -110,30 +110,9 @@
 
     <string name="to">请输入号码</string>
 
-    <!-- 拍传 -->
-
-    <!--<string name="dispatch_No.">调度台号码</string>-->
-
-    <!-- 会议 -->
-
-    <!-- 设置 -->
-
-    <!-- 通知栏  ， 登陆成功 -->
-
-
-    <!-- 数组 -->
-
-
-    <!-- ptime -->
-
-
-    <!-- applet -->
-
-    <!-- verify -->
-
-    <!-- format -->
-
-    <!-- WXMediaMessage -->
+    <string name="str_agree">同意</string>
+    <string name="str_disagree">不同意</string>
+    <string name="str_terms_policy">服务协议和隐私政策</string>
 
 </resources>
 

@@ -61,6 +61,8 @@ import com.hollysmart.beans.CallUserBean;
 import com.hollysmart.beans.PicBean;
 import com.hollysmart.db.UserInfo;
 import com.hollysmart.dialog.ButtomDialogView;
+import com.hollysmart.dialog.ScreenAgainViewDialog;
+import com.hollysmart.dialog.ScreenViewDialog;
 import com.hollysmart.formlib.activitys.Cai_AddPicActivity;
 import com.hollysmart.formlib.activitys.EditPicActivity;
 import com.hollysmart.gridslib.TreeListActivity;
@@ -75,6 +77,7 @@ import com.hollysmart.utils.BaiDuLatLng;
 import com.hollysmart.utils.CCM_Bitmap;
 import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.OtherMap;
+import com.hollysmart.utils.SharedPreferencedUtils;
 import com.hollysmart.utils.UMengShareUtil;
 import com.hollysmart.utils.Utils;
 import com.hollysmart.utils.fastBlur.FastBlur;
@@ -213,7 +216,7 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
 
         });
 
-       type = getIntent().getIntExtra("type", 0);
+        type = getIntent().getIntExtra("type", 0);
         if (type == 3) {
             String link = getIntent().getStringExtra("link");
             jumpto(webView, link);
@@ -222,6 +225,58 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
 
         iv_yindao.setVisibility(View.VISIBLE);
 
+
+        agreedTag = SharedPreferencedUtils.getBoolean(this, "agreed", false);
+
+        if (!agreedTag) {
+            agreed();
+            dialog.show();
+        }
+
+
+    }
+
+    private boolean agreedTag;
+
+    ScreenViewDialog dialog;
+
+    private void agreed() {
+        dialog = new ScreenViewDialog(this, R.style.dialog);
+        dialog.setOnClickOkListener(new ScreenViewDialog.OnClickListener() {
+            @Override
+            public void OnClickOK(View view) {
+                SharedPreferencedUtils.setBoolean(MainActivity.this, "agreed", true);
+            }
+
+            @Override
+            public void OnClickBack(View view) {
+                dialog.dismiss();
+                againAgreed();
+
+            }
+        });
+        dialog.setCancelable(false);
+
+    }
+
+    ScreenAgainViewDialog againViewDialog;
+
+    private void againAgreed() {
+        againViewDialog = new ScreenAgainViewDialog(this, R.style.dialog);
+        againViewDialog.setOnClickOkListener(new ScreenAgainViewDialog.OnClickListener() {
+            @Override
+            public void OnClickOK(View view) {
+                SharedPreferencedUtils.setBoolean(MainActivity.this, "agreed", true);
+            }
+
+            @Override
+            public void OnClickBack(View view) {
+                finish();
+
+            }
+        });
+        againViewDialog.setCancelable(false);
+        againViewDialog.show();
 
     }
 

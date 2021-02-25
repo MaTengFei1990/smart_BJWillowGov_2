@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/ll_content"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_yuanjiao_white_10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minHeight="120dp"
+            android:orientation="vertical"
+            android:padding="20dp"
+            tools:ignore="WebViewLayout">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/str_terms_policy"
+                android:textSize="@dimen/text_zhong"
+                android:textColor="@color/black3" />
+
+
+            <TextView
+                android:id="@+id/web_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:maxHeight="200dp"
+                android:lineSpacingExtra="5dp"
+                android:textSize="15dp"
+                android:autoLink="web" />
+
+            <TextView
+                android:id="@+id/tv_ok"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_yuanjiao_red_20dp"
+                android:text="@string/str_agree"
+                android:textSize="@dimen/text_xiao"
+                android:textColor="@color/baise"
+                android:gravity="center"
+                android:layout_marginTop="30dp" />
+
+            <TextView
+                android:id="@+id/tv_back"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="@string/str_disagree"
+                android:textSize="@dimen/text_xiao"
+                android:textColor="@color/black6"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
