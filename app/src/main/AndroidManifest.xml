@@ -42,7 +42,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".XieYiActivity"></activity>
+        <activity
+            android:name=".XieYiActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name="com.hollysmart.formlib.activitys.GaoDeMapRangeActivity">
 
             <!-- <intent-filter> -->

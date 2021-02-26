@@ -1137,7 +1137,7 @@ public class Utils {
                 //返回移动网络
                 return NETWORK_MOBILE;
             }
-        }else {
+        } else {
             //没有网络
             return NETWORK_NONE;
         }
@@ -1146,6 +1146,16 @@ public class Utils {
     }
 
 
+    private static long lastClickTime;
+
+    public synchronized static boolean isFastClick() {
+        long time = System.currentTimeMillis();
+        if (time - lastClickTime < 500) {
+            return true;
+        }
+        lastClickTime = time;
+        return false;
+    }
 
 
 }

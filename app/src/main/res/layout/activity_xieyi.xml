@@ -1,8 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".XieYiActivity">
+    android:fitsSystemWindows="true"
+    android:background="@color/baise"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/titleBg"
+        android:layout_height="50dp">
+
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:padding="11dp"
+            android:layout_marginLeft="5dp"
+            android:src="@mipmap/fanhui" />
+
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/black3"
+            android:singleLine="true"
+            android:maxWidth="220dp"
+            android:textSize="@dimen/text_da" />
+
+        <TextView
+            android:id="@+id/tv_right"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:minWidth="60dp"
+            android:paddingRight="8dp"
+            android:textColor="@color/black3"
+            android:textSize="@dimen/text_zhong"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/iv_right"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:padding="15dp"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
+
+
+    <WebView
+        android:id="@+id/wv_web"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        android:layout_gravity="center_horizontal" />
+
+
+</LinearLayout>

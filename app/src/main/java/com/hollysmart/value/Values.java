@@ -6,10 +6,15 @@ import android.os.Environment;
 
 public class Values {
 
-    public static final String SERVIXE_SHOUYE = "http://test.hollysmart.com.cn:9001/ylfxapi/html/xx.html";     // 北京绿地 正式
-    public static final String SERVICE_URL = "http://test.hollysmart.com.cn:9001/ylfxapi/";              //北京绿地 正式
+//    public static final String SERVIXE_SHOUYE = "http://test.hollysmart.com.cn:9001/ylfxapi/html/xx.html";     // 北京绿地 正式
+//    public static final String SERVICE_URL = "http://test.hollysmart.com.cn:9001/ylfxapi/";              //北京绿地 正式
+//    //集成表单需要的接口；
+//    public static final String SERVICE_URL_FORM = "http://test.hollysmart.com.cn:3011";// 北京绿地 正式
+
+    public static final String SERVIXE_SHOUYE = "http://43.229.185.164/html/xx.html";     // 北京绿地 正式
+    public static final String SERVICE_URL = "http://43.229.185.164/";              //北京绿地 正式
     //集成表单需要的接口；
-    public static final String SERVICE_URL_FORM = "http://test.hollysmart.com.cn:3011";// 北京绿地 正式
+    public static final String SERVICE_URL_FORM = "http://43.229.185.164:8081";// 北京绿地 正式
 
 
 //    public static final String SERVIXE_SHOUYE = "http://test.hollysmart.com.cn:9001/ylfxapi/html/xx.html";     // 北京绿地  测试
