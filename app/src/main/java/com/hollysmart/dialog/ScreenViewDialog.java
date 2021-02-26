@@ -33,6 +33,7 @@ public class ScreenViewDialog extends Dialog implements View.OnClickListener {
     private TextView web_message;
     private TextView tv_ok;
     private TextView tv_back;
+    private TextView tv_title;
 
     private String message;
     private OnClickListener onClickListener;
@@ -43,20 +44,58 @@ public class ScreenViewDialog extends Dialog implements View.OnClickListener {
         View mView = LayoutInflater.from(mContext).inflate(R.layout.dialog_screen, null);
         setContentView(mView);
 
-        message = "<p style=\"text-indent:2em;\"><span><span style=\"font-size:14px;line-height:2;\">" +
-                "欢迎您使用杨柳飞絮防治，为了加强对您个人信息的保护，依据最新的监管要求，\n" +
-                "我们更新了隐私政策，以向您说明我们在收集和使用您的相关个人信息时的处理规则。 \n" +
-                "1.为给您提供基本服务,我们可能会申请手机存储权限、摄像头权限、麦克风权限;\n" +
-                "2.为了基于您所在的位置向您推荐内容,我们可能会申请您的位置权限;\n" +
-                "3.为了信息推送和账号安全,我们会申请系统设备权限收集设备信息、日志信息;\n" +
-                "4.为了帮助您发现更多好友,我们可能会申请通讯录权限;\n" +
-                "您可以阅读完整版</span><span style=\"color:#337FE5;\"><a href=\"ncsti.fuwu\" target=\"_blank\"><span style=\"font-size:14px;line-height:2;\">" +
-                "“服务协议”</span></a></span><span style=\"font-size:14px;line-height:2;\">及</span><span style=\"color:#337FE5;\"><a href=\"ncsti.yinsi\" target=\"_blank\">" +
-                "<span style=\"font-size:14px;line-height:2;\"> “隐私政策”</span></a></span>" +
-                "<span style=\"font-size:14px;\"><span style=\"font-size:14px;line-height:2;\"></span>" +
-                "<span></span><span style=\"font-size:14px;line-height:2;\"></span></span></span></p>";
+        message = "<p style=\"text-align:center;\">\n" +
+                "\t<span><span></span></span> \n" +
+                "</p>\n" +
+                "<p class=\"MsoNormal\">\n" +
+                "\t<span><span>欢迎您使用杨柳飞絮絮，刹车加强对您个人信息的保护，依据最新的监管要求，</span></span>\n" +
+                "</p>\n" +
+                "<p class=\"MsoNormal\" style=\"text-align:left;\">\n" +
+                "\t<span><span><span><span><span><span><span>我们更新了隐私政策，以向您说明我们在收集和使用您的相关个人信息时的处理规则。</span></span></span></span></span></span></span> \n" +
+                "</p>\n" +
+                "<p class=\"MsoNormal\" style=\"text-align:left;\">\n" +
+                "\t<span><span><span><span><span><span>1.为给您提供基本服务，我们可能会申请手机存储权限，摄像头权限，麦克风权限；</span></span></span></span></span></span> \n" +
+                "</p>\n" +
+                "<p class=\"MsoNormal\" style=\"text-align:left;\">\n" +
+                "\t<span><span><span><span><span><span>2.为了根据您所在的位置向您推荐的内容，我们可能会申请您的位置权限；</span></span></span></span></span></span> \n" +
+                "</p>\n" +
+                "<p class=\"MsoNormal\" style=\"text-align:left;\">\n" +
+                "\t<span><span><span><span><span><span>3.为了信息推送和账号安全，我们会申请系统设备权限收集设备信息，日志信息；</span></span></span></span></span></span> \n" +
+                "</p>\n" +
+                "<p class=\"MsoNormal\" style=\"text-align:left;\">\n" +
+                "\t<span><span><span><span><span><span>4.为了帮助您发现更多好友，我们可能会申请通讯录权限；</span></span></span></span></span></span> \n" +
+                "</p>\n" +
+                "<p class=\"MsoNormal\" style=\"text-align:left;\">\n" +
+                "\t<span><span><span><span><span><span>5.我们会努力釆取各种安全技术保护您的个人信息，声明您同意，我们不会从第三方获取，共享或对外提供您的信息；</span></span></span></span></span></span> \n" +
+                "</p>\n" +
+                "<p class=\"MsoNormal\" style=\"text-align:left;\">\n" +
+                "\t<span><span><span><span><span><span>6.您还可以访问，更正，删除您的个人信息，我们也将提供替代，投诉方式。</span></span></span></span></span></span> \n" +
+                "</p>\n" +
+                "<p class=\"MsoNormal\" style=\"text-align:left;\">\n" +
+                "\t<span><span><span><span><span><span>7.您可以查询，更正，删除您的个人信息，我们也提供帐户重置的渠道。</span></span></span></span></span></span> \n" +
+                "</p>\n" +
+                "<p class=\"MsoNormal\" style=\"text-align:left;\">\n" +
+                "\t<span><span><br />\n" +
+                "</span></span> \n" +
+                "</p>\n" +
+                "<p class=\"MsoNormal\" style=\"text-align:left;\">\n" +
+                "\t<span><span><span><span><span><span>您可以阅读完整版</span></span></span></span></span></span><strong><span><span><span><span><a href=\"http://fuwu\"><span><span>用户协议</span></span></a></span></span></span></span></strong><span><span><span><span><span><span>和</span></span></span></span></span></span><strong><span><span><span><span><a href=\"http://yinsi\"><span><span>隐私政策</span></span></a></span></span></span></span></strong> \n" +
+                "</p>\n" +
+                "<p>\n" +
+                "\t<br />\n" +
+                "</p>\n" +
+                "<div style=\"text-align:left;\">\n" +
+                "</div>\n" +
+                "<p>\n" +
+                "\t<br />\n" +
+                "</p>\n" +
+                "<p style=\"text-align:center;\">\n" +
+                "\t<span><span></span></span> \n" +
+                "</p>";
 
         web_message = mView.findViewById(R.id.web_message);
+        tv_title = mView.findViewById(R.id.tv_title);
+        tv_title.setText("温馨提示");
         tv_ok = mView.findViewById(R.id.tv_ok);
         tv_ok.setOnClickListener(this);
         tv_back = mView.findViewById(R.id.tv_back);

@@ -33,6 +33,7 @@ public class ScreenAgainViewDialog extends Dialog implements View.OnClickListene
     private TextView web_message;
     private TextView tv_ok;
     private TextView tv_back;
+    private TextView tv_title;
 
     private String message;
     private OnClickListener onClickListener;
@@ -43,16 +44,32 @@ public class ScreenAgainViewDialog extends Dialog implements View.OnClickListene
         View mView = LayoutInflater.from(mContext).inflate(R.layout.dialog_screen, null);
         setContentView(mView);
 
-        message = "<p style=\"text-indent:2em;\"><span><span style=\"font-size:14px;line-height:2;\">" +
-                "欢迎使用中国冰雪，为了加强对您个人信息的保护，根据最新法律法规要求，我们更新了隐私政策，以向您说明我们在收集和使用您的相关个人信息时的处理规则。" +
-                "请您仔细阅读并确认中国冰雪</span><span style=\"color:#337FE5;\"><a href=\"ncsti.fuwu\" target=\"_blank\"><span style=\"font-size:14px;line-height:2;\">" +
-                "“服务协议”</span></a></span><span style=\"font-size:14px;line-height:2;\">及</span><span style=\"color:#337FE5;\"><a href=\"ncsti.yinsi\" target=\"_blank\">" +
-                "<span style=\"font-size:14px;line-height:2;\"> “隐私政策”</span></a></span>" +
-                "<span style=\"font-size:14px;\"><span style=\"font-size:14px;line-height:2;\">，我们将严格按照前述协议，为您提供更好的服务。如您同意前述协议，请点击“同意”并开始使用</span>" +
-                "<span></span><span style=\"font-size:14px;line-height:2;\">我们的产品和服务，我们尽全力保护您的个人信息安全。</span></span></span></p>";
+        message = "<span><span>\n" +
+                "<p class=\"MsoNormal\">\n" +
+                "\t<span>\n" +
+                "\t<p class=\"MsoNormal\">\n" +
+                "\t\t<span>您</span>的信息仅用于为您提供服务,小红书会坚决保障您的隐私信息安全。\n" +
+                "\t</p>\n" +
+                "</span>\n" +
+                "</p>\n" +
+                "<p class=\"MsoNormal\">\n" +
+                "\t<span>如果您仍不同意本隐私协议</span>,<span>很遗憾我们将无法继续为您提供服务。</span>\n" +
+                "</p>\n" +
+                "<p class=\"MsoNormal\">\n" +
+                "\t<span>您可以阅读完整版用户协议和隐私政策</span>\n" +
+                "</p>\n" +
+                "<p class=\"MsoNormal\">\n" +
+                "\t&nbsp;\n" +
+                "</p>\n" +
+                "<p class=\"MsoNormal\">\n" +
+                "\t您可以阅读完整版<strong><a href=\"http://fuwu\">用户协议</a></strong>和<a href=\"http://yinsi\">隐私政策</a>\n" +
+                "</p>\n" +
+                "</span></span>";
 
         web_message = mView.findViewById(R.id.web_message);
         tv_ok = mView.findViewById(R.id.tv_ok);
+        tv_title = mView.findViewById(R.id.tv_title);
+        tv_title.setText("隐私协议提示");
         tv_ok.setText("同意并继续");
         tv_ok.setOnClickListener(this);
         tv_back = mView.findViewById(R.id.tv_back);
