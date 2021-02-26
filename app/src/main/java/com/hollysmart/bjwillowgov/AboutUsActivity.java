@@ -36,6 +36,8 @@ public class AboutUsActivity extends StyleAnimActivity implements UpDateVersionA
 
         findViewById(R.id.rl_updateVersion).setOnClickListener(this);
         findViewById(R.id.tv_fanhui).setOnClickListener(this);
+        findViewById(R.id.rl_yinsi).setOnClickListener(this);
+        findViewById(R.id.rl_fuwu).setOnClickListener(this);
 
     }
 
@@ -90,6 +92,18 @@ public class AboutUsActivity extends StyleAnimActivity implements UpDateVersionA
             case R.id.tv_fanhui:
 
                 finish();
+                break;
+            case R.id.rl_yinsi:
+                Intent intent = new Intent(mContext, XieYiActivity.class);
+                intent.putExtra("id", "2191");
+                intent.putExtra("title", "隐私政策");
+                mContext.startActivity(intent);
+                break;
+            case R.id.rl_fuwu:
+                Intent fuwuintent = new Intent(mContext, XieYiActivity.class);
+                fuwuintent.putExtra("id", "2190");
+                fuwuintent.putExtra("title", "服务协议");
+                mContext.startActivity(fuwuintent);
                 break;
         }
 

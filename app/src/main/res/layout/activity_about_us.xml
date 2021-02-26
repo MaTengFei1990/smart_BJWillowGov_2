@@ -152,12 +152,66 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
                 android:textColor="@color/hongse_text"
-                android:textSize="@dimen/text_zhong"/>
-
+                android:textSize="@dimen/text_zhong" />
 
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:id="@+id/rl_yinsi"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@color/baise"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textSize="@dimen/text_zhong"
+                android:textColor="@color/heise_text"
+                android:text="隐私政策" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:visibility="invisible"
+                android:textSize="@dimen/text_zhong"
+                android:text="北京市园林绿化局" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:id="@+id/rl_fuwu"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@color/baise"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textSize="@dimen/text_zhong"
+                android:textColor="@color/heise_text"
+                android:text="用户协议" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:visibility="invisible"
+                android:textSize="@dimen/text_zhong"
+                android:text="北京市园林绿化局" />
+
+        </RelativeLayout>
 
 
     </LinearLayout>
