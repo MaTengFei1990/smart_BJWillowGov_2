@@ -44,27 +44,9 @@ public class ScreenAgainViewDialog extends Dialog implements View.OnClickListene
         View mView = LayoutInflater.from(mContext).inflate(R.layout.dialog_screen, null);
         setContentView(mView);
 
-        message = "<span><span>\n" +
-                "<p class=\"MsoNormal\">\n" +
-                "\t<span>\n" +
-                "\t<p class=\"MsoNormal\">\n" +
-                "\t\t<span>您</span>的信息仅用于为您提供服务,小红书会坚决保障您的隐私信息安全。\n" +
-                "\t</p>\n" +
-                "</span>\n" +
-                "</p>\n" +
-                "<p class=\"MsoNormal\">\n" +
-                "\t<span>如果您仍不同意本隐私协议</span>,<span>很遗憾我们将无法继续为您提供服务。</span>\n" +
-                "</p>\n" +
-                "<p class=\"MsoNormal\">\n" +
-                "\t<span>您可以阅读完整版用户协议和隐私政策</span>\n" +
-                "</p>\n" +
-                "<p class=\"MsoNormal\">\n" +
-                "\t&nbsp;\n" +
-                "</p>\n" +
-                "<p class=\"MsoNormal\">\n" +
-                "\t您可以阅读完整版<strong><a href=\"http://fuwu\">用户协议</a></strong>和<a href=\"http://yinsi\">隐私政策</a>\n" +
-                "</p>\n" +
-                "</span></span>";
+        message = "<div style=\"text-align:justify;\">\n" +
+                "\t您的信息仅用于为您提供服务,我们会坚决保障您的隐私信息安全。如果您仍不同意本隐私协议,很遗憾我们将无法继续为您提供服务。您可以阅读完整版<strong><a href=\"http://fuwu\" target=\"_blank\">用户协议</a></strong>和<strong><a href=\"http://yinsi\" target=\"_blank\">隐私政策</a></strong>\n" +
+                "</div>";
 
         web_message = mView.findViewById(R.id.web_message);
         tv_ok = mView.findViewById(R.id.tv_ok);
