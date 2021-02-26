@@ -31,11 +31,13 @@ public class ScreenAgainViewDialog extends Dialog implements View.OnClickListene
     }
 
     private TextView web_message;
+    private TextView web_notice;
     private TextView tv_ok;
     private TextView tv_back;
     private TextView tv_title;
 
     private String message;
+    private String notice;
     private OnClickListener onClickListener;
 
     @Override
@@ -48,7 +50,11 @@ public class ScreenAgainViewDialog extends Dialog implements View.OnClickListene
                 "\t您的信息仅用于为您提供服务,我们会坚决保障您的隐私信息安全。如果您仍不同意本隐私协议,很遗憾我们将无法继续为您提供服务。您可以阅读完整版<strong><a href=\"http://fuwu\" target=\"_blank\">用户协议</a></strong>和<strong><a href=\"http://yinsi\" target=\"_blank\">隐私政策</a></strong>\n" +
                 "</div>";
 
+
+        notice = "<span style=\"color:#000000;\">您可以阅读完整版</span><strong><a href=\"http://fuwu/\" target=\"_blank\">用户协议</a></strong><span style=\"color:#000000;\">和</span><strong><a href=\"http://yinsi/\" target=\"_blank\">隐私政策</a></strong>";
+
         web_message = mView.findViewById(R.id.web_message);
+        web_notice = mView.findViewById(R.id.web_notice);
         tv_ok = mView.findViewById(R.id.tv_ok);
         tv_title = mView.findViewById(R.id.tv_title);
         tv_title.setText("隐私协议提示");
@@ -59,8 +65,10 @@ public class ScreenAgainViewDialog extends Dialog implements View.OnClickListene
         tv_back.setOnClickListener(this);
 
         web_message.setText(getClickableHtml(message));
+        web_notice.setText(getClickableHtml(notice));
         //这一句很重要，否则ClickableSpan内的onClick方法将无法触发！！
         web_message.setMovementMethod(LinkMovementMethod.getInstance());
+        web_notice.setMovementMethod(LinkMovementMethod.getInstance());
 
     }
 

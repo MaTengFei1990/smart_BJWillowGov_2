@@ -31,11 +31,13 @@ public class ScreenViewDialog extends Dialog implements View.OnClickListener {
     }
 
     private TextView web_message;
+    private TextView web_notice;
     private TextView tv_ok;
     private TextView tv_back;
     private TextView tv_title;
 
     private String message;
+    private String notice;
     private OnClickListener onClickListener;
 
     @Override
@@ -44,35 +46,35 @@ public class ScreenViewDialog extends Dialog implements View.OnClickListener {
         View mView = LayoutInflater.from(mContext).inflate(R.layout.dialog_screen, null);
         setContentView(mView);
 
-        message = "<p>\n" +
-                "\t<span>欢迎您使用杨柳飞絮防治，为了加强对您个人信息的保护，依据最新的监管要求，</span><span>我们更新了隐私政策，以向您说明我们在收集和使用您的相关个人信息时的处理规则。</span>\n" +
+        message = "<p class=\"MsoNormal\">\n" +
+                "\t<span style=\"font-size:9px;line-height:1;\">欢迎您使用杨柳飞絮防治，为了加强对您个人信息的保护，依据最新的监管要求，</span><span style=\"font-size:9px;\">我们更新了隐私政策，以向您说明我们在收集和使用您的相关个人信息时的处理规则。</span>\n" +
                 "</p>\n" +
-                "<p class=\"MsoNormal\" style=\"text-align:justify;\">\n" +
-                "\t1.为给您提供基本服务,我们可能会申请手机存储权限、摄像头权限、麦克风权限;\n" +
+                "<p class=\"MsoNormal\">\n" +
+                "\t<span style=\"font-size:9px;line-height:1;\">1.为给您提供基本服务,我们可能会申请手机存储权限、摄像头权限、麦克风权限;</span>\n" +
                 "</p>\n" +
-                "<p class=\"MsoNormal\" style=\"text-align:justify;\">\n" +
-                "\t2.为了基于您所在的位置向您推荐内容,我们可能会申请您的位置权限;\n" +
+                "<p class=\"MsoNormal\">\n" +
+                "\t<span style=\"font-size:9px;line-height:1;\">2.为了基于您所在的位置向您推荐内容,我们可能会申请您的位置权限;</span>\n" +
                 "</p>\n" +
-                "<p class=\"MsoNormal\" style=\"text-align:justify;\">\n" +
-                "\t3.为了信息推送和账号安全,我们会申请系统设备权限收集设备信息、日志信息;\n" +
+                "<p class=\"MsoNormal\">\n" +
+                "\t<span style=\"font-size:9px;line-height:1;\">3.为了信息推送和账号安全,我们会申请系统设备权限收集设备信息、日志信息;</span>\n" +
                 "</p>\n" +
-                "<p class=\"MsoNormal\" style=\"text-align:justify;\">\n" +
-                "\t4.为了帮助您发现更多好友,我们可能会申请通讯录权限;\n" +
+                "<p class=\"MsoNormal\">\n" +
+                "\t<span style=\"font-size:9px;line-height:1;\">4.为了帮助您发现更多好友,我们可能会申请通讯录权限;</span>\n" +
                 "</p>\n" +
-                "<p class=\"MsoNormal\" style=\"text-align:justify;\">\n" +
-                "\t5.我们会努力釆取各种安全技术保护您的个人信息,未经您同意,我们不会从第三方获取、共享或对外提供您的信息;\n" +
+                "<p class=\"MsoNormal\">\n" +
+                "\t<span style=\"font-size:9px;line-height:1;\">5.我们会努力釆取各种安全技术保护您的个人信息,未经您同意,我们不会从第三方获取、共享或对外提供您的信息;</span>\n" +
                 "</p>\n" +
-                "<p class=\"MsoNormal\" style=\"text-align:justify;\">\n" +
-                "\t6.您还可以访问、更正、删除您的个人信息,我们也将提供注销、投诉方式。\n" +
+                "<p class=\"MsoNormal\">\n" +
+                "\t<span style=\"font-size:9px;line-height:1;\">6.您还可以访问、更正、删除您的个人信息,我们也将提供注销、投诉方式。</span>\n" +
                 "</p>\n" +
-                "<p class=\"MsoNormal\" style=\"text-align:justify;\">\n" +
-                "\t7.您可以查询、更正、删除您的个人信息，我们也提供账户注销的渠道。\n" +
-                "</p>\n" +
-                "<p class=\"MsoNormal\" style=\"text-align:justify;\">\n" +
-                "\t您可以阅读完整版<strong><a href=\"http://fuwu\" target=\"_blank\">用户协议</a></strong>和<strong><a href=\"http://yinsi\" target=\"_blank\">隐私政策</a></strong> \n" +
-                "</p>\n";
+                "<p class=\"MsoNormal\">\n" +
+                "\t<span style=\"font-size:9px;line-height:1;\">7.您可以查询、更正、删除您的个人信息，我们也提供账户注销的渠道。</span>\n" +
+                "</p>";
+
+        notice = "<span style=\"color:#000000;\">您可以阅读完整版</span><strong><a href=\"http://fuwu/\" target=\"_blank\">用户协议</a></strong><span style=\"color:#000000;\">和</span><strong><a href=\"http://yinsi/\" target=\"_blank\">隐私政策</a></strong>";
 
         web_message = mView.findViewById(R.id.web_message);
+        web_notice = mView.findViewById(R.id.web_notice);
         tv_title = mView.findViewById(R.id.tv_title);
         tv_title.setText("温馨提示");
         tv_ok = mView.findViewById(R.id.tv_ok);
@@ -81,8 +83,10 @@ public class ScreenViewDialog extends Dialog implements View.OnClickListener {
         tv_back.setOnClickListener(this);
 
         web_message.setText(getClickableHtml(message));
+        web_notice.setText(getClickableHtml(notice));
         //这一句很重要，否则ClickableSpan内的onClick方法将无法触发！！
         web_message.setMovementMethod(LinkMovementMethod.getInstance());
+        web_notice.setMovementMethod(LinkMovementMethod.getInstance());
 
     }
 
