@@ -24,6 +24,8 @@ public class CaoGaoBean {
     private String ispublic;
     private String imgs;
     private int degree; // 严重程度
+    private String startDate;
+    private String endDate;
 
     public String getId() {
         return id;
@@ -87,5 +89,21 @@ public class CaoGaoBean {
 
     public void setDegree(int degree) {
         this.degree = degree;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 }

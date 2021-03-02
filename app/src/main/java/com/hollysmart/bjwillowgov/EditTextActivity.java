@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.text.format.Time;
 import android.view.Display;
 import android.view.View;
 import android.view.Window;
@@ -28,6 +29,9 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.codbking.widget.DatePickDialog;
+import com.codbking.widget.OnSureLisener;
+import com.codbking.widget.bean.DateType;
 import com.hollysmart.apis.DeleteInfoAPI;
 import com.hollysmart.apis.GetarticleInfoAPI;
 import com.hollysmart.apis.LoadTagListAPI;
@@ -42,7 +46,10 @@ import com.hollysmart.style.StyleAnimActivity;
 import com.hollysmart.utils.Utils;
 import com.hollysmart.value.Values;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class EditTextActivity extends StyleAnimActivity
@@ -89,6 +96,8 @@ public class EditTextActivity extends StyleAnimActivity
         rb_severe = findViewById(R.id.rb_severe);
         rb_moderate = findViewById(R.id.rb_moderate);
         rb_mild = findViewById(R.id.rb_mild);
+        findViewById(R.id.rl_starttime).setOnClickListener(this);
+        findViewById(R.id.rl_endtime).setOnClickListener(this);
         radgroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -148,6 +157,11 @@ public class EditTextActivity extends StyleAnimActivity
         mLocationClient.start();
 
         setBaiDudituDingWei();
+        Time t = new Time();
+        t.setToNow();
+        currentYear = t.year;
+        currentMonth = t.month + 1;
+        currentDay = t.monthDay;
 
         mSearch = GeoCoder.newInstance();
         initData();
@@ -156,7 +170,7 @@ public class EditTextActivity extends StyleAnimActivity
             new GetarticleInfoAPI(id, this).request();
         } else {
             gridView.setVisibility(View.GONE);
-            picBeans.add(new PicBean(null, null,null, 1,"false"));
+            picBeans.add(new PicBean(null, null, null, 1, "false"));
 
 
         }
@@ -448,9 +462,118 @@ public class EditTextActivity extends StyleAnimActivity
                 Intent intent = new Intent(mContext, MapActivity.class);
                 startActivityForResult(intent, 3);
                 break;
+            case R.id.rl_starttime:
+                openStartTimePicker();
+                break;
+            case R.id.rl_endtime:
+                openEndTimePicker();
+                break;
 
         }
     }
+
+
+    private int currentYear;
+    private int currentMonth;
+    private int currentDay;
+
+
+    void openStartTimePicker() {
+        getStartTimePickerDialog();
+    }
+
+
+    void openEndTimePicker() {
+        getEndTimePickerDialog();
+    }
+
+
+    /**
+     * 获取开始时间选择器
+     */
+    Date startDate;
+
+    private void getStartTimePickerDialog() {
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(Calendar.MONTH, currentMonth - 1);
+        calendar.set(Calendar.YEAR, currentYear);
+        calendar.set(Calendar.DATE, currentDay);
+
+
+        Date date = calendar.getTime();
+
+
+        mStartTimePicker = new DatePickDialog(this);
+        //设置上下年分限制
+        mStartTimePicker.setYearLimt(5);
+        //设置标题
+        mStartTimePicker.setTitle("选择时间");
+        mStartTimePicker.setStartDate(date);
+        if (startDate != null) mStartTimePicker.setStartDate(startDate);
+        //设置类型
+        mStartTimePicker.setType(DateType.TYPE_YMDHM);
+        //设置消息体的显示格式，日期格式
+        mStartTimePicker.setMessageFormat("yyyy-MM-dd HH:mm");
+        //设置选择回调
+        mStartTimePicker.setOnChangeLisener(null);
+        //设置点击确定按钮回调
+        mStartTimePicker.setOnSureLisener(new OnSureLisener() {
+            @Override
+            public void onSure(Date date) {
+                startDate = date;
+                SimpleDateFormat dsf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                Str_endDate = dsf.format(date);
+
+            }
+        });
+        mStartTimePicker.show();
+    }
+
+
+    /**
+     * 获取结束时间选择器
+     */
+    Date endDate;
+
+    private DatePickDialog mStartTimePicker, mEndTimePicker;
+
+    private String Str_startDate, Str_endDate;
+
+    private void getEndTimePickerDialog() {
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(Calendar.MONTH, currentMonth - 1);
+        calendar.set(Calendar.YEAR, currentYear);
+        calendar.set(Calendar.DATE, currentDay);
+        Date time = calendar.getTime();
+
+        mEndTimePicker = new DatePickDialog(this);
+        //设置上下年分限制
+        mEndTimePicker.setYearLimt(5);
+        //设置标题
+        mEndTimePicker.setTitle("选择时间");
+        mEndTimePicker.setStartDate(time);
+        if (endDate != null) mEndTimePicker.setStartDate(endDate);
+        //设置类型
+        mEndTimePicker.setType(DateType.TYPE_YMDHM);
+        //设置消息体的显示格式，日期格式
+        mEndTimePicker.setMessageFormat("yyyy-MM-dd HH:mm");
+        //设置选择回调
+        mEndTimePicker.setOnChangeLisener(null);
+        //设置点击确定按钮回调
+        mEndTimePicker.setOnSureLisener(new OnSureLisener() {
+            @Override
+            public void onSure(Date date) {
+                endDate = date;
+                SimpleDateFormat dsf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                Str_startDate = dsf.format(date);
+
+            }
+        });
+        mEndTimePicker.show();
+    }
+
 
     /****
      * 删除草稿箱
@@ -489,7 +612,7 @@ public class EditTextActivity extends StyleAnimActivity
             public void onClick(DialogInterface dialog, int which) {
                 state = "-1";
                 lpd.show();
-                new SaveInfoAPI(id, TYPE_ID, content, latitude + "", longitude + "", position, ispublic, state, tagId, Imags, degree, EditTextActivity.this).request();
+                new SaveInfoAPI(id, TYPE_ID, content, latitude + "", longitude + "", position, ispublic, state, tagId, Imags, degree, Str_startDate, Str_endDate, EditTextActivity.this).request();
 
 
             }
@@ -547,14 +670,22 @@ public class EditTextActivity extends StyleAnimActivity
             Utils.showToast(mContext, "选择严重程度");
             return;
         }
+        if (Utils.isEmpty(Str_startDate)) {
+            Utils.showToast(mContext, "请选择开始时间");
+            return;
+        }
+        if (Utils.isEmpty(Str_endDate)) {
+            Utils.showToast(mContext, "请选择结束时间");
+            return;
+        }
         lpd.show();
         findViewById(R.id.tv_save).setEnabled(false);
         if (isUpLoadWeiZhi) {
-            new SaveInfoAPI(id, TYPE_ID, content, latitude + "", longitude + "", position + "[" + districtstr + "]", ispublic, state, tagId, null, degree, this).request();
+            new SaveInfoAPI(id, TYPE_ID, content, latitude + "", longitude + "", position + "[" + districtstr + "]", ispublic, state, tagId, null, degree, Str_startDate, Str_endDate, this).request();
 
         } else {
 
-            new SaveInfoAPI(id, TYPE_ID, content, null, null, null, ispublic, state, tagId, null, degree, this).request();
+            new SaveInfoAPI(id, TYPE_ID, content, null, null, null, ispublic, state, tagId, null, degree, Str_startDate, Str_endDate, this).request();
         }
 
     }

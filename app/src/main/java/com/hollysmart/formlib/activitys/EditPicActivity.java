@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.format.Time;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,9 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.codbking.widget.DatePickDialog;
+import com.codbking.widget.OnSureLisener;
+import com.codbking.widget.bean.DateType;
 import com.hollysmart.apis.DeleteInfoAPI;
 import com.hollysmart.apis.EditPicYaoSuoAPI;
 import com.hollysmart.apis.GetarticleInfoAPI;
@@ -71,7 +75,10 @@ import com.hollysmart.value.Values;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class EditPicActivity extends StyleAnimActivity implements
@@ -143,6 +150,13 @@ public class EditPicActivity extends StyleAnimActivity implements
         findViewById(R.id.ll_localMap).setOnClickListener(this);
         findViewById(R.id.tv_save).setOnClickListener(this);
         findViewById(R.id.tv_delete).setOnClickListener(this);
+        findViewById(R.id.rl_starttime).setOnClickListener(this);
+        findViewById(R.id.rl_endtime).setOnClickListener(this);
+        Time t = new Time();
+        t.setToNow();
+        currentYear = t.year;
+        currentMonth = t.month + 1;
+        currentDay = t.monthDay;
     }
 
     private List<SelectIF> biaoQianBeanList;
@@ -382,10 +396,10 @@ public class EditPicActivity extends StyleAnimActivity implements
 
         }
         if (isUpLoadWeiZhi) {
-            new SaveInfoAPI(id, TYPE_ID, content, latitude + "", longitude + "", position + "[" + districtstr + "]", ispublic, state, tagId, Imags, degree, this).request();
+            new SaveInfoAPI(id, TYPE_ID, content, latitude + "", longitude + "", position + "[" + districtstr + "]", ispublic, state, tagId, Imags, degree, Str_startDate, Str_endDate, this).request();
 
         } else {
-            new SaveInfoAPI(id, TYPE_ID, content, null, null, null, ispublic, state, tagId, Imags, degree, this).request();
+            new SaveInfoAPI(id, TYPE_ID, content, null, null, null, ispublic, state, tagId, Imags, degree, Str_startDate, Str_endDate, this).request();
 
         }
 
@@ -545,9 +559,117 @@ public class EditPicActivity extends StyleAnimActivity implements
                 Intent intent = new Intent(mContext, MapActivity.class);
                 startActivityForResult(intent, 4);
                 break;
+            case R.id.rl_starttime:
+                openStartTimePicker();
+                break;
+            case R.id.rl_endtime:
+                openEndTimePicker();
+                break;
 
         }
     }
+
+    private int currentYear;
+    private int currentMonth;
+    private int currentDay;
+
+
+    void openStartTimePicker() {
+        getStartTimePickerDialog();
+    }
+
+
+    void openEndTimePicker() {
+        getEndTimePickerDialog();
+    }
+
+
+    /**
+     * 获取开始时间选择器
+     */
+    Date startDate;
+
+    private void getStartTimePickerDialog() {
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(Calendar.MONTH, currentMonth - 1);
+        calendar.set(Calendar.YEAR, currentYear);
+        calendar.set(Calendar.DATE, currentDay);
+
+
+        Date date = calendar.getTime();
+
+
+        mStartTimePicker = new DatePickDialog(this);
+        //设置上下年分限制
+        mStartTimePicker.setYearLimt(5);
+        //设置标题
+        mStartTimePicker.setTitle("选择时间");
+        mStartTimePicker.setStartDate(date);
+        if (startDate != null) mStartTimePicker.setStartDate(startDate);
+        //设置类型
+        mStartTimePicker.setType(DateType.TYPE_YMDHM);
+        //设置消息体的显示格式，日期格式
+        mStartTimePicker.setMessageFormat("yyyy-MM-dd HH:mm");
+        //设置选择回调
+        mStartTimePicker.setOnChangeLisener(null);
+        //设置点击确定按钮回调
+        mStartTimePicker.setOnSureLisener(new OnSureLisener() {
+            @Override
+            public void onSure(Date date) {
+                startDate = date;
+                SimpleDateFormat dsf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                Str_endDate = dsf.format(date);
+
+            }
+        });
+        mStartTimePicker.show();
+    }
+
+
+    /**
+     * 获取结束时间选择器
+     */
+    Date endDate;
+
+    private DatePickDialog mStartTimePicker, mEndTimePicker;
+
+    private String Str_startDate, Str_endDate;
+
+    private void getEndTimePickerDialog() {
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(Calendar.MONTH, currentMonth - 1);
+        calendar.set(Calendar.YEAR, currentYear);
+        calendar.set(Calendar.DATE, currentDay);
+        Date time = calendar.getTime();
+
+        mEndTimePicker = new DatePickDialog(this);
+        //设置上下年分限制
+        mEndTimePicker.setYearLimt(5);
+        //设置标题
+        mEndTimePicker.setTitle("选择时间");
+        mEndTimePicker.setStartDate(time);
+        if (endDate != null) mEndTimePicker.setStartDate(endDate);
+        //设置类型
+        mEndTimePicker.setType(DateType.TYPE_YMDHM);
+        //设置消息体的显示格式，日期格式
+        mEndTimePicker.setMessageFormat("yyyy-MM-dd HH:mm");
+        //设置选择回调
+        mEndTimePicker.setOnChangeLisener(null);
+        //设置点击确定按钮回调
+        mEndTimePicker.setOnSureLisener(new OnSureLisener() {
+            @Override
+            public void onSure(Date date) {
+                endDate = date;
+                SimpleDateFormat dsf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                Str_startDate = dsf.format(date);
+
+            }
+        });
+        mEndTimePicker.show();
+    }
+
     /****
      * 删除草稿箱
      */

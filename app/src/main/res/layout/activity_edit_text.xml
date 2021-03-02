@@ -130,6 +130,156 @@
         android:layout_marginBottom="10dp"
         android:orientation="vertical">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/baise"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="联系人手机号："
+                    android:textColor="@color/text_hei"
+                    android:textSize="@dimen/text_zhong" />
+
+                <TextView
+                    android:id="@+id/tv_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black3"
+                    android:text="1223333"
+                    android:textSize="@dimen/text_zhong" />
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_starttime"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/baise"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+
+            <TextView
+                android:id="@+id/tv_startTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:textColor="@color/huise_hint"
+                android:textSize="@dimen/text_zhong" />
+
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="14dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:src="@mipmap/search_arrow_right"
+                android:textSize="@dimen/text_zhong" />
+
+
+            <LinearLayout
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_alignParentLeft="true"
+                    android:src="@mipmap/icon_rcks"
+                    android:textSize="@dimen/text_zhong" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="15dp"
+                    android:text="开始时间"
+                    android:textColor="@color/text_hei"
+                    android:textSize="@dimen/text_zhong" />
+
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_endtime"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/baise"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+
+            <LinearLayout
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_alignParentLeft="true"
+                    android:src="@mipmap/icon_rcjs"
+                    android:textSize="@dimen/text_zhong" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="15dp"
+                    android:text="结束时间"
+                    android:textColor="@color/text_hei"
+                    android:textSize="@dimen/text_zhong" />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_endTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:textColor="@color/huise_hint"
+                android:textSize="@dimen/text_zhong" />
+
+
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="14dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:src="@mipmap/search_arrow_right"
+                android:textSize="@dimen/text_zhong" />
+
+
+        </RelativeLayout>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:id="@+id/ll_severity"
