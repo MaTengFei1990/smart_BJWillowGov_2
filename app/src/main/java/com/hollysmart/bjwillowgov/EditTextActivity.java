@@ -347,9 +347,17 @@ public class EditTextActivity extends StyleAnimActivity
             }
 
             setSeriousDegree(bean.getDegree());
+            setTaskEndDate(bean.getTaskEndTime());
 
         }
 
+    }
+
+    private void setTaskEndDate(String taskEndDate) {
+        if (!Utils.isEmpty(taskEndDate)) {
+            tv_endTime.setText(taskEndDate);
+
+        }
     }
 
     public void setSeriousDegree(int degree) {

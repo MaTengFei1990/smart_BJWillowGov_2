@@ -460,6 +460,14 @@ public class EditPicActivity extends StyleAnimActivity implements
             }
 
             setSeriousDegree(bean.getDegree());
+            setTaskEndDate(bean.getTaskEndTime());
+
+        }
+    }
+
+    private void setTaskEndDate(String taskEndDate) {
+        if (!Utils.isEmpty(taskEndDate)) {
+            tv_endTime.setText(taskEndDate);
 
         }
     }

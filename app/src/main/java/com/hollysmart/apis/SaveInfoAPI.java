@@ -36,11 +36,11 @@ public class SaveInfoAPI implements INetModel {
     private String state;
     private String tagid;
     private String imgs;
-    private String endDate;
+    private String taskEndTime;
     private int degree;// 严重程度
     private SaveInfoIF saveInfoIFIF;
 
-    public SaveInfoAPI(String id, String type_id, String content, String latitude, String longitude, String position, String ispublic, String state, String tagid, String imgs, int degree, String endDate, SaveInfoIF saveInfoIFIF) {
+    public SaveInfoAPI(String id, String type_id, String content, String latitude, String longitude, String position, String ispublic, String state, String tagid, String imgs, int degree, String taskEndTime, SaveInfoIF saveInfoIFIF) {
         this.id = id;
         this.type_id = type_id;
         this.content = content;
@@ -52,7 +52,7 @@ public class SaveInfoAPI implements INetModel {
         this.tagid = tagid;
         this.imgs = imgs;
         this.degree = degree;
-        this.endDate = endDate;
+        this.taskEndTime = taskEndTime;
         this.saveInfoIFIF = saveInfoIFIF;
     }
 
@@ -94,8 +94,8 @@ public class SaveInfoAPI implements INetModel {
         if (degree != 0) {
             postFormBuilder.addParams("degree", degree + "");
         }
-        if (!Utils.isEmpty(endDate)) {
-            postFormBuilder.addParams("endDate", endDate);
+        if (!Utils.isEmpty(taskEndTime)) {
+            postFormBuilder.addParams("taskEndTime", taskEndTime);
         }
 
         postFormBuilder.build().execute(new StringCallback() {
