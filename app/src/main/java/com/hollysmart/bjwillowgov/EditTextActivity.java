@@ -80,6 +80,7 @@ public class EditTextActivity extends StyleAnimActivity
     private RadioButton rb_severe;
     private RadioButton rb_moderate;
     private RadioButton rb_mild;
+    private TextView tv_endTime;
     private int degree;
 
     @Override
@@ -96,7 +97,7 @@ public class EditTextActivity extends StyleAnimActivity
         rb_severe = findViewById(R.id.rb_severe);
         rb_moderate = findViewById(R.id.rb_moderate);
         rb_mild = findViewById(R.id.rb_mild);
-        findViewById(R.id.rl_starttime).setOnClickListener(this);
+        tv_endTime = findViewById(R.id.tv_endTime);
         findViewById(R.id.rl_endtime).setOnClickListener(this);
         radgroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -462,9 +463,6 @@ public class EditTextActivity extends StyleAnimActivity
                 Intent intent = new Intent(mContext, MapActivity.class);
                 startActivityForResult(intent, 3);
                 break;
-            case R.id.rl_starttime:
-                openStartTimePicker();
-                break;
             case R.id.rl_endtime:
                 openEndTimePicker();
                 break;
@@ -478,9 +476,6 @@ public class EditTextActivity extends StyleAnimActivity
     private int currentDay;
 
 
-    void openStartTimePicker() {
-        getStartTimePickerDialog();
-    }
 
 
     void openEndTimePicker() {
@@ -489,56 +484,13 @@ public class EditTextActivity extends StyleAnimActivity
 
 
     /**
-     * 获取开始时间选择器
-     */
-    Date startDate;
-
-    private void getStartTimePickerDialog() {
-        Calendar calendar = Calendar.getInstance();
-
-        calendar.set(Calendar.MONTH, currentMonth - 1);
-        calendar.set(Calendar.YEAR, currentYear);
-        calendar.set(Calendar.DATE, currentDay);
-
-
-        Date date = calendar.getTime();
-
-
-        mStartTimePicker = new DatePickDialog(this);
-        //设置上下年分限制
-        mStartTimePicker.setYearLimt(5);
-        //设置标题
-        mStartTimePicker.setTitle("选择时间");
-        mStartTimePicker.setStartDate(date);
-        if (startDate != null) mStartTimePicker.setStartDate(startDate);
-        //设置类型
-        mStartTimePicker.setType(DateType.TYPE_YMDHM);
-        //设置消息体的显示格式，日期格式
-        mStartTimePicker.setMessageFormat("yyyy-MM-dd HH:mm");
-        //设置选择回调
-        mStartTimePicker.setOnChangeLisener(null);
-        //设置点击确定按钮回调
-        mStartTimePicker.setOnSureLisener(new OnSureLisener() {
-            @Override
-            public void onSure(Date date) {
-                startDate = date;
-                SimpleDateFormat dsf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                Str_endDate = dsf.format(date);
-
-            }
-        });
-        mStartTimePicker.show();
-    }
-
-
-    /**
      * 获取结束时间选择器
      */
     Date endDate;
 
-    private DatePickDialog mStartTimePicker, mEndTimePicker;
+    private DatePickDialog mEndTimePicker;
 
-    private String Str_startDate, Str_endDate;
+    private String Str_endDate;
 
     private void getEndTimePickerDialog() {
         Calendar calendar = Calendar.getInstance();
@@ -567,8 +519,8 @@ public class EditTextActivity extends StyleAnimActivity
             public void onSure(Date date) {
                 endDate = date;
                 SimpleDateFormat dsf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                Str_startDate = dsf.format(date);
-
+                Str_endDate = dsf.format(date);
+                tv_endTime.setText(Str_endDate);
             }
         });
         mEndTimePicker.show();
@@ -612,7 +564,7 @@ public class EditTextActivity extends StyleAnimActivity
             public void onClick(DialogInterface dialog, int which) {
                 state = "-1";
                 lpd.show();
-                new SaveInfoAPI(id, TYPE_ID, content, latitude + "", longitude + "", position, ispublic, state, tagId, Imags, degree, Str_startDate, Str_endDate, EditTextActivity.this).request();
+                new SaveInfoAPI(id, TYPE_ID, content, latitude + "", longitude + "", position, ispublic, state, tagId, Imags, degree, Str_endDate, EditTextActivity.this).request();
 
 
             }
@@ -670,10 +622,6 @@ public class EditTextActivity extends StyleAnimActivity
             Utils.showToast(mContext, "选择严重程度");
             return;
         }
-        if (Utils.isEmpty(Str_startDate)) {
-            Utils.showToast(mContext, "请选择开始时间");
-            return;
-        }
         if (Utils.isEmpty(Str_endDate)) {
             Utils.showToast(mContext, "请选择结束时间");
             return;
@@ -681,11 +629,11 @@ public class EditTextActivity extends StyleAnimActivity
         lpd.show();
         findViewById(R.id.tv_save).setEnabled(false);
         if (isUpLoadWeiZhi) {
-            new SaveInfoAPI(id, TYPE_ID, content, latitude + "", longitude + "", position + "[" + districtstr + "]", ispublic, state, tagId, null, degree, Str_startDate, Str_endDate, this).request();
+            new SaveInfoAPI(id, TYPE_ID, content, latitude + "", longitude + "", position + "[" + districtstr + "]", ispublic, state, tagId, null, degree, Str_endDate, this).request();
 
         } else {
 
-            new SaveInfoAPI(id, TYPE_ID, content, null, null, null, ispublic, state, tagId, null, degree, Str_startDate, Str_endDate, this).request();
+            new SaveInfoAPI(id, TYPE_ID, content, null, null, null, ispublic, state, tagId, null, degree, Str_endDate, this).request();
         }
 
     }

@@ -111,6 +111,7 @@ public class EditPicActivity extends StyleAnimActivity implements
     private RadioButton rb_severe;
     private RadioButton rb_moderate;
     private RadioButton rb_mild;
+    private TextView tv_endTime;
     private int degree;
 
     @Override
@@ -127,6 +128,7 @@ public class EditPicActivity extends StyleAnimActivity implements
         rb_severe = findViewById(R.id.rb_severe);
         rb_moderate = findViewById(R.id.rb_moderate);
         rb_mild = findViewById(R.id.rb_mild);
+        tv_endTime = findViewById(R.id.tv_endTime);
         radgroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -150,7 +152,6 @@ public class EditPicActivity extends StyleAnimActivity implements
         findViewById(R.id.ll_localMap).setOnClickListener(this);
         findViewById(R.id.tv_save).setOnClickListener(this);
         findViewById(R.id.tv_delete).setOnClickListener(this);
-        findViewById(R.id.rl_starttime).setOnClickListener(this);
         findViewById(R.id.rl_endtime).setOnClickListener(this);
         Time t = new Time();
         t.setToNow();
@@ -396,10 +397,10 @@ public class EditPicActivity extends StyleAnimActivity implements
 
         }
         if (isUpLoadWeiZhi) {
-            new SaveInfoAPI(id, TYPE_ID, content, latitude + "", longitude + "", position + "[" + districtstr + "]", ispublic, state, tagId, Imags, degree, Str_startDate, Str_endDate, this).request();
+            new SaveInfoAPI(id, TYPE_ID, content, latitude + "", longitude + "", position + "[" + districtstr + "]", ispublic, state, tagId, Imags, degree, Str_endDate, this).request();
 
         } else {
-            new SaveInfoAPI(id, TYPE_ID, content, null, null, null, ispublic, state, tagId, Imags, degree, Str_startDate, Str_endDate, this).request();
+            new SaveInfoAPI(id, TYPE_ID, content, null, null, null, ispublic, state, tagId, Imags, degree, Str_endDate, this).request();
 
         }
 
@@ -559,9 +560,6 @@ public class EditPicActivity extends StyleAnimActivity implements
                 Intent intent = new Intent(mContext, MapActivity.class);
                 startActivityForResult(intent, 4);
                 break;
-            case R.id.rl_starttime:
-                openStartTimePicker();
-                break;
             case R.id.rl_endtime:
                 openEndTimePicker();
                 break;
@@ -574,9 +572,6 @@ public class EditPicActivity extends StyleAnimActivity implements
     private int currentDay;
 
 
-    void openStartTimePicker() {
-        getStartTimePickerDialog();
-    }
 
 
     void openEndTimePicker() {
@@ -584,47 +579,6 @@ public class EditPicActivity extends StyleAnimActivity implements
     }
 
 
-    /**
-     * 获取开始时间选择器
-     */
-    Date startDate;
-
-    private void getStartTimePickerDialog() {
-        Calendar calendar = Calendar.getInstance();
-
-        calendar.set(Calendar.MONTH, currentMonth - 1);
-        calendar.set(Calendar.YEAR, currentYear);
-        calendar.set(Calendar.DATE, currentDay);
-
-
-        Date date = calendar.getTime();
-
-
-        mStartTimePicker = new DatePickDialog(this);
-        //设置上下年分限制
-        mStartTimePicker.setYearLimt(5);
-        //设置标题
-        mStartTimePicker.setTitle("选择时间");
-        mStartTimePicker.setStartDate(date);
-        if (startDate != null) mStartTimePicker.setStartDate(startDate);
-        //设置类型
-        mStartTimePicker.setType(DateType.TYPE_YMDHM);
-        //设置消息体的显示格式，日期格式
-        mStartTimePicker.setMessageFormat("yyyy-MM-dd HH:mm");
-        //设置选择回调
-        mStartTimePicker.setOnChangeLisener(null);
-        //设置点击确定按钮回调
-        mStartTimePicker.setOnSureLisener(new OnSureLisener() {
-            @Override
-            public void onSure(Date date) {
-                startDate = date;
-                SimpleDateFormat dsf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                Str_endDate = dsf.format(date);
-
-            }
-        });
-        mStartTimePicker.show();
-    }
 
 
     /**
@@ -632,9 +586,9 @@ public class EditPicActivity extends StyleAnimActivity implements
      */
     Date endDate;
 
-    private DatePickDialog mStartTimePicker, mEndTimePicker;
+    private DatePickDialog mEndTimePicker;
 
-    private String Str_startDate, Str_endDate;
+    private String Str_endDate;
 
     private void getEndTimePickerDialog() {
         Calendar calendar = Calendar.getInstance();
@@ -663,7 +617,8 @@ public class EditPicActivity extends StyleAnimActivity implements
             public void onSure(Date date) {
                 endDate = date;
                 SimpleDateFormat dsf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                Str_startDate = dsf.format(date);
+                Str_endDate = dsf.format(date);
+                tv_endTime.setText(Str_endDate);
 
             }
         });
