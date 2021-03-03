@@ -59,13 +59,17 @@
     </declare-styleable>
 
 
-
     <declare-styleable name="CircleView">
         <attr name="textSize" format="dimension" />
         <attr name="text" format="string" />
         <attr name="circleColor" format="color" />
         <attr name="textColor" format="color" />
     </declare-styleable>
+
+    <!--自定义CheckBox样式-->
+    <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/mycustome_radio_selctor</item>
+    </style>
 
 
 </resources>
