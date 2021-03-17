@@ -40,6 +40,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -63,6 +64,7 @@ import com.hollysmart.db.UserInfo;
 import com.hollysmart.dialog.ButtomDialogView;
 import com.hollysmart.dialog.ScreenAgainViewDialog;
 import com.hollysmart.dialog.ScreenViewDialog;
+import com.hollysmart.formlib.HisTreeListShowOnMapActivity;
 import com.hollysmart.formlib.activitys.Cai_AddPicActivity;
 import com.hollysmart.formlib.activitys.EditPicActivity;
 import com.hollysmart.gridslib.TreeListActivity;
@@ -148,10 +150,11 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
     public void findView() {
         iv_yindao = (ImageView) findViewById(R.id.iv_yindao);
         findViewById(R.id.view_top).setOnClickListener(this);
+        FrameLayout framelayout = findViewById(R.id.framelayout);
 
         iv_yindao.setOnClickListener(this);
         iv_yindao.setVisibility(View.GONE);
-        webView = findViewById(R.id.webview);
+        webView = new WebView(getApplicationContext());
         webView.getSettings().setDomStorageEnabled(true);
 
         //设置编码
@@ -159,7 +162,7 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
 
         // 设置与Js交互的权限
         webView.getSettings().setJavaScriptEnabled(true);
-
+        framelayout.addView(webView);
         webView.loadUrl(URL);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
@@ -332,13 +335,38 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
         } else if (url.contains("resource.html?")) {
             startResourceListActivity(url);
 
+        } else if (url.contains("openHisMap.html")) {
+            //打开地图的点聚合模式；
+            startHisMap();
+
         } else {
             webView.loadUrl(url);
-
         }
 
 
     }
+
+    /**
+     * 在地图页面显示数据聚合点
+     */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void startHisMap() {
+        webView.evaluateJavascript("javascript:app.gettoken()", new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String value) {
+                if (!Utils.isEmpty(value)) {
+                    String substring = value.substring(1, value.length() - 1);
+                    String token = "Bearer " + substring;
+                    UserToken.getUserToken().setToken(token);
+
+                    Intent intent = new Intent(MainActivity.this, HisTreeListShowOnMapActivity.class);
+                    startActivity(intent);
+                }
+
+            }
+        });
+    }
+
     /**
      * 进入资源列表页面;
      */
@@ -346,8 +374,8 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
     private void startResourceListActivity(String url) {
 
         String[] scada = url.split("resource.html\\?");
-        Map<String, String> map = new HashMap<String , String>();
-        if (scada!=null&&scada.length>1) {
+        Map<String, String> map = new HashMap<String, String>();
+        if (scada != null && scada.length > 1) {
 
             if (scada.length > 0) {
 

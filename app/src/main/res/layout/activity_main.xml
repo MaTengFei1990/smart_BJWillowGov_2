@@ -16,13 +16,12 @@
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:visibility="gone"
-            android:background="@color/titleBg"/>
+            android:background="@color/titleBg" />
 
-        <WebView
-            android:id="@+id/webview"
+        <FrameLayout
+            android:id="@+id/framelayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </WebView>
+            android:layout_height="match_parent"></FrameLayout>
 
     </LinearLayout>
 

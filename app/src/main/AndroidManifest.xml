@@ -251,6 +251,11 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.hollysmart.formlib.HisTreeListShowOnMapActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.hollysmart.formlib.activitys.NewAddFormResDataActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />

@@ -195,3 +195,5 @@
 /library/Common/build/intermediates/symbol_list_with_package_name/release/package-aware-r.txt
 /library/Common/build/outputs/logs/manifest-merger-release-report.txt
 /library/Common/build/tmp/compileReleaseJavaWithJavac/source-classes-mapping.txt
+/library/Common/build/.transforms/cb5b316205387e86a116272330cadb46/classes/classes.dex
+/library/Common/build/.transforms/cb5b316205387e86a116272330cadb46.bin
