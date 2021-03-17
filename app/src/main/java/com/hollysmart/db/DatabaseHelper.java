@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.hollysmart.beans.DictionaryBean;
+import com.hollysmart.beans.HistTreeBean;
 import com.hollysmart.beans.JDPicInfo;
 import com.hollysmart.beans.LuXianInfo;
 import com.hollysmart.beans.ResModelBean;
@@ -26,7 +27,7 @@ import java.util.Map;
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
-    private static final int VERSION = 2;
+    private static final int VERSION = 3;
     private static final String TABLE_NAME = "data.db";
     public static final String LUXIAN_NAME="luxian";
 
@@ -49,6 +50,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, SoundInfo.class);
             TableUtils.createTable(connectionSource, DictionaryBean.class);
             TableUtils.createTable(connectionSource, LastTreeDataBean.class);
+            TableUtils.createTable(connectionSource, HistTreeBean.class);
             Mlog.d("创建表完成");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -71,6 +73,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     break;
                 case 2://数据库版本2 升级到 版本3
                     Mlog.d("数据库字段升级  2  -  3");
+                    //新增数据表
+                    try {
+                        TableUtils.createTable(connectionSource, HistTreeBean.class);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                     break;
 
             }

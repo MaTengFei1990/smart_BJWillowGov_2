@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -33,19 +32,21 @@ import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
-import com.amap.api.maps.model.PolygonOptions;
 import com.amap.api.maps.model.animation.Animation;
 import com.baidu.mapapi.map.Overlay;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.hollysmart.beans.HistTreeBean;
 import com.hollysmart.beans.JDPicInfo;
 import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.cluster.ClusterClickListener;
 import com.hollysmart.cluster.ClusterItem;
 import com.hollysmart.cluster.ClusterOverlay;
 import com.hollysmart.cluster.RegionItem;
+import com.hollysmart.db.HisTreeDao;
 import com.hollysmart.db.UserInfo;
+import com.hollysmart.dialog.LoadingProgressDialog;
 import com.hollysmart.formlib.apis.GetHisTreeListAPI;
 import com.hollysmart.formlib.apis.ResDataGetAPI;
 import com.hollysmart.formlib.beans.DongTaiFormBean;
@@ -93,12 +94,7 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
 
     private boolean isCheck;
     private BlockBean roadbean;
-    private ResDataBean tree_resDataBean;
     private ProjectBean projectBean;
-    private DongTaiFormBean dongTaiFormBean;
-
-    private int flagtype = 0;
-    private LatLng centerlatlng = null;
 
     //多边形顶点位置
     private List<LatLng> points = new ArrayList<>();
@@ -154,10 +150,21 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
 
     ClusterOverlay mClusterOverlay;
 
+    private LoadingProgressDialog lpd;
+
+    private HisTreeDao hisTreeDao;
+
+    private void setLpd() {
+        lpd = new LoadingProgressDialog();
+        lpd.setMessage("正在获取数据，请稍等...");
+        lpd.create(this, lpd.STYLE_SPINNER);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setLpd();
         initMap(savedInstanceState);
 
         requestPermisson();
@@ -188,41 +195,88 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
         }
 
 
+        lpd.show();
+
+        hisTreeDao = new HisTreeDao(getApplicationContext());
+        List<HistTreeBean> histTreeBeanList = hisTreeDao.getData();
+        if (histTreeBeanList != null && histTreeBeanList.size() > 0) {
+            Mlog.d("db---------histTreeBeanList.size===" + histTreeBeanList.size());
+
+            dealDataInPool(histTreeBeanList);
+
+        } else {
+            getDatabyNet();
+        }
+
+
+    }
+
+    /***
+     * 在网络获取数据；
+     */
+
+    private void getDatabyNet() {
         String token = UserToken.getUserToken().getToken();
         Mlog.d("---------token" + token);
         new GetHisTreeListAPI(token, new GetHisTreeListAPI.GetHisTreeLsitIF() {
             @Override
-            public void onResTaskListResult(boolean isOk, List<String> ListDatas, String msg) {
-                Vector<ClusterItem> items = new Vector<ClusterItem>();
-                ExecutorService executor = Executors.newFixedThreadPool(7);
-                int size = ListDatas.size();
-                if (size > 10000) {
-                    int batch = size % 10000 == 0 ? size / 10000 : size / 10000 + 1;
-                    for (int j = 0; j < batch; j++) {
-                        int end = (j + 1) * 10000;
-                        if (end > size) {
-                            end = size;
-                        }
-                        List<String> subList = ListDatas.subList(j * 10000, end);
-                        DealRunable callable = new DealRunable(subList, items, getApplicationContext(), mGaoDeMap, HisTreeListShowOnMapActivity.this::onClick);
-                        executor.execute(callable);
-                    }
-                }
-                executor.shutdown();
-                while (true) {
-                    if (executor.isTerminated()) {
-                        break;
-                    }
-                }
-
-                mClusterOverlay = new ClusterOverlay(mGaoDeMap, items,
-                        dp2px(getApplicationContext(), clusterRadius),
-                        getApplicationContext());
-                mClusterOverlay.setOnClusterClickListener(HisTreeListShowOnMapActivity.this::onClick);
-
+            public void onResTaskListResult(boolean isOk, List<HistTreeBean> ListDatas, String msg) {
+                dealDataInPool(ListDatas);
+                addtoDB(ListDatas);
+                lpd.cancel();
 
             }
+
+
         }).request();
+    }
+
+    /***
+     * 在线程池中处理数据；
+     * @param ListDatas
+     * @return
+     */
+
+    private void dealDataInPool(List<HistTreeBean> ListDatas) {
+        Vector<ClusterItem> items = new Vector<ClusterItem>();
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+        int size = ListDatas.size();
+        if (size > 10000) {
+            int batch = size % 10000 == 0 ? size / 10000 : size / 10000 + 1;
+            for (int j = 0; j < batch; j++) {
+                int end = (j + 1) * 10000;
+                if (end > size) {
+                    end = size;
+                }
+                List<HistTreeBean> subList = ListDatas.subList(j * 10000, end);
+                DealRunable callable = new DealRunable(subList, items);
+                executor.execute(callable);
+            }
+        }
+        executor.shutdown();
+        while (true) {
+            if (executor.isTerminated()) {
+                break;
+            }
+        }
+
+        mClusterOverlay = new ClusterOverlay(mGaoDeMap, items,
+                dp2px(getApplicationContext(), clusterRadius),
+                getApplicationContext());
+        mClusterOverlay.setOnClusterClickListener(HisTreeListShowOnMapActivity.this::onClick);
+
+        lpd.cancel();
+    }
+
+
+    private void addtoDB(List<HistTreeBean> items) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HisTreeDao hisTreeDao = new HisTreeDao(getApplicationContext());
+                hisTreeDao.SaveBookInTransaction(items);
+            }
+        }).start();
 
 
     }
@@ -259,45 +313,6 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
 
     }
 
-    /***
-     * 绘制表格
-     */
-
-    private void drawGrid(BlockBean blockBean) {
-
-//        if (blockBean == null) {
-//            return;
-//        }
-
-        List<com.amap.api.maps.model.LatLng> rectangles = createRectangle(blockBean);
-
-        if (rectangles != null) {
-//            mGaoDeMap.addPolygon(new PolygonOptions()
-//                    .addAll(rectangles)
-//                    .fillColor(getResources().getColor(R.color.touming))
-//                    .strokeColor(R.color.bg_lan)
-//                    .strokeWidth(2)
-//            );
-
-            mGaoDeMap.addPolygon(new PolygonOptions()
-                    .addAll(rectangles)
-                    .fillColor(Color.argb(130, 158, 230, 252))
-                    .strokeColor(Color.argb(130, 177, 152, 198))
-                    .strokeWidth(5)
-            );
-        }
-
-        setMapBounds(rectangles);
-        drawMarkerTrees();
-    }
-
-    private void drawMarkerTrees() {
-//        mClusterOverlay = new ClusterOverlay(mGaoDeMap, items,
-//                dp2px(getApplicationContext(), clusterRadius),
-//                getApplicationContext());
-////                mClusterOverlay.setClusterRenderer(MainActivity.this);
-//        mClusterOverlay.setOnClusterClickListener(HisTreeListShowOnMapActivity.this);
-    }
 
     private void setMapBounds(List<com.amap.api.maps.model.LatLng> latLngs) {
         com.amap.api.maps.model.LatLngBounds.Builder builder = com.amap.api.maps.model.LatLngBounds.builder();
@@ -327,10 +342,6 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
 
     private List<com.amap.api.maps.model.LatLng> createRectangle(BlockBean blockBean) {
         List<com.amap.api.maps.model.LatLng> latLngs = new ArrayList<>();
-//        latLngs.add(new LatLng(blockBean.getFdLbLat(), blockBean.getFdRtLng()));
-//        latLngs.add(new LatLng(blockBean.getFdRtLat(), blockBean.getFdRtLng()));
-//        latLngs.add(new LatLng(blockBean.getFdRtLat(), blockBean.getFdLbLng()));
-//        latLngs.add(new LatLng(blockBean.getFdLbLat(), blockBean.getFdLbLng()));
         return latLngs;
     }
 
@@ -348,7 +359,7 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
         mGaoDeMap.setMapType(AMap.MAP_TYPE_NORMAL);
 
         //初始化定位
-        mLocationClient = new AMapLocationClient(this);
+        mLocationClient = new AMapLocationClient(getApplicationContext());
         //设置定位回调监听
         mLocationClient.setLocationListener(mLocationListener);
         mLocationOption = new AMapLocationClientOption();
@@ -562,7 +573,6 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
         mMapView.onSaveInstanceState(outState);
     }
 
-    private boolean isRefresh = false;
 
 
     @Override
@@ -572,10 +582,6 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
 
             if (resultCode == 1) {
                 mGaoDeMap.clear();
-
-//                initResDataList(projectBean.getId());
-
-                isRefresh = true;
 
             }
 
@@ -612,14 +618,11 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
                 finish();
                 break;
             case R.id.btn_chexiao:
-//                cheXiao();
                 break;
             case R.id.bn_weixing:
                 mapChaged();
                 break;
             case R.id.bn_dingwei:
-//                MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(mLatLng);
-//                mGaoDeMap.animateMapStatus(u);
                 break;
             case R.id.imagbtn_enlarge:
                 ZoomChange(true);
@@ -643,18 +646,6 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
     }
 
 
-    private void drawRangeInMap(int type) {
-        mGaoDeMap.clear();
-
-        if (points == null || points.size() == 0) {
-            return;
-        }
-
-
-        drawGrid(roadbean);
-
-
-    }
 
 
     /**
@@ -687,8 +678,6 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
                 zoomLevel = zoomLevel - 1;
             }
         }
-//        MapStatusUpdate u = MapStatusUpdateFactory.zoomTo(zoomLevel);
-//        mGaoDeMap.animateMapStatus(u);
 
         mGaoDeMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
 
@@ -727,7 +716,6 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
         com.amap.api.maps.model.LatLng target = cameraPosition.target;
 
         Mlog.d("onCameraChangeFinish........>" + target.latitude + "......." + target.longitude);
-        centerlatlng = target;
 
     }
 
@@ -745,46 +733,6 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
 
     private int clusterRadius = 100; //半径
 
-    @Override
-    public void onMapLoaded() {
-
-//        new Thread() {
-//            public void run() {
-//                List<ClusterItem> items = new ArrayList<ClusterItem>();
-//                //随机10000个点
-////                for (int i = 0; i < 10000; i++) {
-////                    double lat = Math.random() + 39.474923;
-////                    double lon = Math.random() + 116.027116;
-////                    LatLng latLng = new LatLng(lat, lon, false);
-////                    RegionItem regionItem = new RegionItem(latLng, "test" + i);
-////                    items.add(regionItem);
-////                }
-//
-//
-//                if (treeslist != null && (treeslist.size() > 0)) {
-//
-//                    for (ResDataBean resDataBean : treeslist) {
-//                        Double lat = Double.parseDouble(resDataBean.getLatitude());
-//                        Double lng = Double.parseDouble(resDataBean.getLongitude());
-//                        com.amap.api.maps.model.LatLng latLng = new LatLng(lat, lng, false);
-//
-//                        RegionItem regionItem1 = new RegionItem(latLng, resDataBean.getFd_resname());
-//                        items.add(regionItem1);
-//
-//                    }
-//                }
-//
-//                mClusterOverlay = new ClusterOverlay(mGaoDeMap, items,
-//                        dp2px(getApplicationContext(), clusterRadius),
-//                        getApplicationContext());
-////                mClusterOverlay.setClusterRenderer(MainActivity.this);
-//                mClusterOverlay.setOnClusterClickListener(HisTreeListShowOnMapActivity.this);
-//
-//            }
-//
-//        }.start();
-
-    }
 
     @Override
     public boolean onMarkerClick(com.amap.api.maps.model.Marker marker) {
@@ -949,14 +897,6 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
     @Override
     public void deactivate() {
 
-//        mListener = null;
-//        if (aMapManager != null) {
-//            aMapManager.removeUpdates(this);
-//            aMapManager.destory();
-//        }
-//        aMapManager = null;
-
-
     }
 
     @Override
@@ -991,6 +931,11 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
             LatLngBounds latLngBounds = builder.build();
             mGaoDeMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 200));
         }
+    }
+
+    @Override
+    public void onMapLoaded() {
+
     }
 }
 

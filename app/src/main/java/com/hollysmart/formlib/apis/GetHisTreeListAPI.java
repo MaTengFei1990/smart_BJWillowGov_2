@@ -1,8 +1,6 @@
 package com.hollysmart.formlib.apis;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import com.hollysmart.beans.HistTreeBean;
 import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.taskpool.INetModel;
 import com.hollysmart.value.Values;
@@ -13,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
@@ -51,12 +50,15 @@ public class GetHisTreeListAPI implements INetModel {
                     JSONObject jsonObject = new JSONObject(response);
                     int status = jsonObject.getInt("status");
                     if (status == 1) {
-                        Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm").create();
                         JSONArray dataOBJ = new JSONArray(jsonObject.getString("data"));
-                        List<String> ListDatas = mGson.fromJson(dataOBJ.toString(),
-                                new TypeToken<List<String>>() {
-                                }.getType());
-                        getHisTreeLsitIF.onResTaskListResult(true, ListDatas, null);
+                        List<HistTreeBean> netDatas = new ArrayList<>();
+                        for (int i = 0; i < dataOBJ.length(); i++) {
+                            Object o = dataOBJ.get(i);
+                            HistTreeBean histTreeBean = new HistTreeBean();
+                            histTreeBean.setContent(o.toString());
+                            netDatas.add(histTreeBean);
+                        }
+                        getHisTreeLsitIF.onResTaskListResult(true, netDatas, null);
                     } else {
                         String msg = jsonObject.getString("msg");
 
@@ -73,7 +75,7 @@ public class GetHisTreeListAPI implements INetModel {
     }
 
     public interface GetHisTreeLsitIF {
-        void onResTaskListResult(boolean isOk, List<String> ListDatas, String msg);
+        void onResTaskListResult(boolean isOk, List<HistTreeBean> ListDatas, String msg);
     }
 
 }
