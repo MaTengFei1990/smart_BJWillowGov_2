@@ -60,6 +60,7 @@ import com.hollysmart.apis.UploadParkCoverPicAPI;
 import com.hollysmart.apis.UserLoginAPI;
 import com.hollysmart.beans.CallUserBean;
 import com.hollysmart.beans.PicBean;
+import com.hollysmart.db.HisTreeDao;
 import com.hollysmart.db.UserInfo;
 import com.hollysmart.dialog.ButtomDialogView;
 import com.hollysmart.dialog.ScreenAgainViewDialog;
@@ -673,6 +674,9 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
             @Override
             public void onReceiveValue(String value) {
                 value.toString();
+                // 每次新登录的用户要将之前用户缓存的历史数据进行清除；
+                HisTreeDao hisTreeDao = new HisTreeDao(getApplicationContext());
+                hisTreeDao.clearAllData();
 
                 if (value.contains("roleid")) {
                     roleid = 0;

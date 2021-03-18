@@ -225,14 +225,15 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
         Vector<ClusterItem> items = new Vector<ClusterItem>();
         ExecutorService executor = Executors.newFixedThreadPool(10);
         int size = ListDatas.size();
-        if (size > 10000) {
-            int batch = size % 10000 == 0 ? size / 10000 : size / 10000 + 1;
+        int cunt = getsizeLength(size);
+        if (size > cunt) {
+            int batch = size % cunt == 0 ? size / cunt : size / cunt + 1;
             for (int j = 0; j < batch; j++) {
-                int end = (j + 1) * 10000;
+                int end = (j + 1) * cunt;
                 if (end > size) {
                     end = size;
                 }
-                List<HistTreeBean> subList = ListDatas.subList(j * 10000, end);
+                List<HistTreeBean> subList = ListDatas.subList(j * cunt, end);
                 DealRunable callable = new DealRunable(subList, items);
                 executor.execute(callable);
             }
@@ -252,13 +253,26 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
         lpd.cancel();
     }
 
+    private int getsizeLength(int se) {
+        int count = 1;
+        int size = se;
+
+        while (size > 10) {
+            size = size / 10;
+            count = count * 10;
+        }
+        return count;
+
+
+    }
+
 
     private void addtoDB(List<HistTreeBean> items) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 HisTreeDao hisTreeDao = new HisTreeDao(getApplicationContext());
-                hisTreeDao.SaveBookInTransaction(items);
+                hisTreeDao.SaveTreeInTransaction(items);
             }
         }).start();
 

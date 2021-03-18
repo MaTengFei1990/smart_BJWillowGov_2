@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.hollysmart.beans.HistTreeBean;
-import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.Utils;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.misc.TransactionManager;
@@ -33,31 +32,8 @@ public class HisTreeDao {
     }
 
 
-    /**
-     * 修改或增加数据 列表
-     */
-    public boolean addOrUpdate(List<?> beans) {
 
-        for (int i = 0; i < beans.size(); i++) {
-            HistTreeBean bean = (HistTreeBean) beans.get(i);
-            bean.setId(i);
-            try {
-                if (Utils.isEmpty(bean.getId() + "")) {
-                    resBeanListDao.update(bean);
-                } else {
-                    resBeanListDao.create(bean);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-                Mlog.d("--------SQLException---" + e.toString());
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public boolean SaveBookInTransaction(final List<?> beans) {
+    public boolean SaveTreeInTransaction(final List<?> beans) {
         boolean result = false;
         //创建事务管理器
         TransactionManager transactionManager = new TransactionManager(helper.getConnectionSource());
@@ -65,7 +41,7 @@ public class HisTreeDao {
         Callable<Boolean> callable = new Callable<Boolean>() {  //java.util.concurrent.Callable;
             @Override
             public Boolean call() throws Exception {//如果异常被抛出 事件管理 就知道保存数据失败要回滚
-                saveBoookAndStudent(beans);
+                saveTreeAndUser(beans);
                 return true;
             }
         };
@@ -80,7 +56,7 @@ public class HisTreeDao {
     }
 
 
-    public void saveBoookAndStudent(List<?> beans) throws Exception {
+    public void saveTreeAndUser(List<?> beans) throws Exception {
         /**这里面千万不要捕获掉异常 必须上抛 这样TransactionManager才知道有没有产生异常**/
         for (int i = 0; i < beans.size(); i++) {
             HistTreeBean bean = (HistTreeBean) beans.get(i);
@@ -102,17 +78,16 @@ public class HisTreeDao {
         return null;
     }
 
-    public HistTreeBean getDatById(String id) {
 
+    public boolean clearAllData() {
         try {
-            return resBeanListDao.queryBuilder().where()
-                    .eq("id", id).queryForFirst();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+            resBeanListDao.deleteBuilder().delete();
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+            return false;
         }
+        return true;
     }
-
 }
 
 
