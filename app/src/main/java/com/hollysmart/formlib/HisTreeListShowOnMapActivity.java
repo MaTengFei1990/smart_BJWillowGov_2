@@ -312,37 +312,6 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
     }
 
 
-    private void setMapBounds(List<com.amap.api.maps.model.LatLng> latLngs) {
-        com.amap.api.maps.model.LatLngBounds.Builder builder = com.amap.api.maps.model.LatLngBounds.builder();
-
-        for (com.amap.api.maps.model.LatLng latlng : latLngs) {
-
-            builder.include(latlng);
-
-        }
-
-        if (points != null && points.size() > 0) {
-
-            for (int i = 0; i < points.size(); i++) {
-                com.amap.api.maps.model.LatLng latLng = points.get(i);
-                builder.include(latLng);
-            }
-
-        }
-
-
-        com.amap.api.maps.model.LatLngBounds bounds = builder.build();
-
-        mGaoDeMap.animateCamera(CameraUpdateFactory.newLatLngBoundsRect(bounds, 50, 50, 50, 50));
-
-
-    }
-
-    private List<com.amap.api.maps.model.LatLng> createRectangle(BlockBean blockBean) {
-        List<com.amap.api.maps.model.LatLng> latLngs = new ArrayList<>();
-        return latLngs;
-    }
-
     /***
      * 初始化地图
      */
