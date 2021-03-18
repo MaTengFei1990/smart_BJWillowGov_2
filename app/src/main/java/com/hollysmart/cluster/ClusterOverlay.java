@@ -23,6 +23,7 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.animation.AlphaAnimation;
 import com.amap.api.maps.model.animation.Animation;
 import com.hollysmart.bjwillowgov.R;
+import com.hollysmart.utils.Mlog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -207,6 +208,7 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener,
         }
 
         //然后再把所有的聚合元素重新添加
+        Mlog.d("clusters.size()=========" + clusters.size());
         for (int i = 0; i < clusters.size(); i++) {
             addSingleClusterToMap(clusters.get(i));
         }
@@ -245,7 +247,7 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener,
         //判断现在地图上的区域是不是应该包含这个点，如果包含，就把点加到聚合数据里边，然后去通知mMarkerhandler更新一下。
 
         LatLngBounds visibleBounds = mAMap.getProjection().getVisibleRegion().latLngBounds;//由可视区域的四个顶点形成的经纬度范围
-
+        Mlog.d("sendMessage==mClusterItems.size=====" + mClusterItems.size());
         for (int i = 0; i < mClusterItems.size(); i++) {
             if (mIsCanceled) {
                 return;
@@ -274,6 +276,7 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener,
         //给后给控制marher的headler发送消息。把所有的聚合点信息发过去
         Message message = Message.obtain();
         message.what = 0;
+        Mlog.d("sendMessage==clusters.size=====" + clusters.size());
         message.obj = clusters;
         if (mIsCanceled) {
             return;
@@ -431,14 +434,18 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener,
         public void handleMessage(Message message) {
             switch (message.what) {
                 case 0://接收到在当前区域内应该显示的所有的聚合点，把聚合点加到地图上
+                    Mlog.d("handleMessage==========" + 0);
                     List<Cluster> clusters = (List<Cluster>) message.obj;
+                    Mlog.d("handleMessage=clusters.size=========" + clusters.size());
                     addClusterToMap(clusters);
                     break;
                 case 1://接收单个聚合点
+                    Mlog.d("handleMessage==========" + 1);
                     Cluster cluster = (Cluster) message.obj;
                     addSingleClusterToMap(cluster);
                     break;
                 case 2:
+                    Mlog.d("handleMessage==========" + 2);
                     Cluster updateCluster = (Cluster) message.obj;
                     updateCluster(updateCluster);
                     break;

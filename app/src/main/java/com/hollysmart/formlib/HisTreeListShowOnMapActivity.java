@@ -197,16 +197,16 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
 
         lpd.show();
 
-        hisTreeDao = new HisTreeDao(getApplicationContext());
-        List<HistTreeBean> histTreeBeanList = hisTreeDao.getData();
-        if (histTreeBeanList != null && histTreeBeanList.size() > 0) {
-            Mlog.d("db---------histTreeBeanList.size===" + histTreeBeanList.size());
-
-            dealDataInPool(histTreeBeanList);
-
-        } else {
-            getDatabyNet();
-        }
+//        hisTreeDao = new HisTreeDao(getApplicationContext());
+//        List<HistTreeBean> histTreeBeanList = hisTreeDao.getData();
+//        if (histTreeBeanList != null && histTreeBeanList.size() > 0) {
+//            Mlog.d("db---------histTreeBeanList.size===" + histTreeBeanList.size());
+//
+//            dealDataInPool(histTreeBeanList);
+//
+//        } else {
+//            getDatabyNet();
+//        }
 
 
     }
@@ -935,7 +935,15 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
 
     @Override
     public void onMapLoaded() {
-
+        lpd.show();
+        hisTreeDao = new HisTreeDao(getApplicationContext());
+        List<HistTreeBean> histTreeBeanList = hisTreeDao.getData();
+        if (histTreeBeanList != null && histTreeBeanList.size() > 0) {
+            Mlog.d("db---------histTreeBeanList.size===" + histTreeBeanList.size());
+            dealDataInPool(histTreeBeanList);
+        } else {
+            getDatabyNet();
+        }
     }
 }
 
