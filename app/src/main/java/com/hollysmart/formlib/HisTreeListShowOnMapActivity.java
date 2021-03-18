@@ -193,22 +193,6 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
             tv_projectName.setText("树木地图");
             roadbean = (BlockBean) getIntent().getSerializableExtra("blockBean");
         }
-
-
-        lpd.show();
-
-//        hisTreeDao = new HisTreeDao(getApplicationContext());
-//        List<HistTreeBean> histTreeBeanList = hisTreeDao.getData();
-//        if (histTreeBeanList != null && histTreeBeanList.size() > 0) {
-//            Mlog.d("db---------histTreeBeanList.size===" + histTreeBeanList.size());
-//
-//            dealDataInPool(histTreeBeanList);
-//
-//        } else {
-//            getDatabyNet();
-//        }
-
-
     }
 
     /***
