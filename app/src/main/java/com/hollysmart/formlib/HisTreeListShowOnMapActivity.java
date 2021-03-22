@@ -47,6 +47,7 @@ import com.hollysmart.cluster.RegionItem;
 import com.hollysmart.db.HisTreeDao;
 import com.hollysmart.db.UserInfo;
 import com.hollysmart.dialog.LoadingProgressDialog;
+import com.hollysmart.formlib.apis.GetHisTreeInfoAPI;
 import com.hollysmart.formlib.apis.GetHisTreeListAPI;
 import com.hollysmart.formlib.apis.ResDataGetAPI;
 import com.hollysmart.formlib.beans.DongTaiFormBean;
@@ -890,6 +891,7 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
         if (clusterItems.size() == 1) {
             RegionItem regionItem = (RegionItem) clusterItems.get(0);
             Toast.makeText(this, "点击的是" + regionItem.getTitle(), Toast.LENGTH_SHORT).show();
+            enterTreeInfo(regionItem.getTitle());
         } else {
             com.amap.api.maps.model.LatLngBounds.Builder builder = new com.amap.api.maps.model.LatLngBounds.Builder();
             for (ClusterItem clusterItem : clusterItems) {
@@ -898,6 +900,25 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
             LatLngBounds latLngBounds = builder.build();
             mGaoDeMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 200));
         }
+    }
+
+
+    /***
+     * 在网络获取数据；
+     */
+
+    private void enterTreeInfo(String treeId) {
+        String token = UserToken.getUserToken().getToken();
+        Mlog.d("---------token" + token);
+        Mlog.d("---------treeId" + treeId);
+        new GetHisTreeInfoAPI(token, treeId, new GetHisTreeInfoAPI.GetHisTreeLsitIF() {
+            @Override
+            public void onResTaskListResult(boolean isOk, List<HistTreeBean> ListDatas, String msg) {
+
+            }
+
+
+        }).request();
     }
 
     @Override
