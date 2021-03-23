@@ -9,6 +9,7 @@ import android.os.Message;
 import android.util.LruCache;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
@@ -210,7 +211,7 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener,
         //然后再把所有的聚合元素重新添加
         Mlog.d("clusters.size()=========" + clusters.size());
         for (int i = 0; i < clusters.size(); i++) {
-            addSingleClusterToMap(clusters.get(i));
+            addSingleClusterToMapMinZoo(clusters.get(i));
         }
 
     }
@@ -235,6 +236,35 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener,
         marker.startAnimation();
         cluster.setMarker(marker);
         mAddMarkers.add(marker);
+    }
+
+    /**
+     * 将单个聚合元素添加至地图显示
+     *
+     * @param cluster
+     */
+    private void addSingleClusterToMapMinZoo(Cluster cluster) {
+        float zoom = mAMap.getCameraPosition().zoom;
+        float maxZoomLevel = mAMap.getMaxZoomLevel();
+        BitmapDescriptor bdA = BitmapDescriptorFactory.fromResource(R.mipmap.resflag_add);
+        if (zoom > maxZoomLevel - 1) {
+            for (int i = 0; i < cluster.getClusterItems().size(); i++) {
+                ClusterItem clusterItem = cluster.getClusterItems().get(i);
+                LatLng position = clusterItem.getPosition();
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.anchor(0.5f, 0.5f).icon(bdA).position(position);
+                Marker marker = mAMap.addMarker(markerOptions);
+                Cluster clusterList = new Cluster(position);
+                clusterList.addClusterItem(clusterItem);
+                marker.setObject(clusterList);
+                mAddMarkers.add(marker);
+            }
+        } else {
+            addSingleClusterToMap(cluster);
+
+        }
+
+
     }
 
 
@@ -370,17 +400,20 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener,
             RegionItem mRegionItem = (RegionItem) mCluster.getClusterItems().get(0);
             bitmapDescriptor = mLruCacheName.get(mRegionItem.getTitle());
             if (bitmapDescriptor == null) {
-                TextView textView = new TextView(mContext);
-                textView.setText(mRegionItem.getTitle());
-                textView.setGravity(Gravity.CENTER);
-                textView.setTextColor(Color.WHITE);
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-                if (mClusterRender != null && mClusterRender.getDrawAble(mCluster.getClusterCount()) != null) {
-                    textView.setBackgroundDrawable(mClusterRender.getDrawAble(mCluster.getClusterCount()));
-                } else {
-                    textView.setBackgroundResource(R.drawable.yuan);
-                }
-                bitmapDescriptor = BitmapDescriptorFactory.fromView(textView);
+//                TextView textView = new TextView(mContext);
+//                textView.setText(mRegionItem.getTitle());
+//                textView.setGravity(Gravity.CENTER);
+//                textView.setTextColor(Color.WHITE);
+//                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+//                if (mClusterRender != null && mClusterRender.getDrawAble(mCluster.getClusterCount()) != null) {
+//                    textView.setBackgroundDrawable(mClusterRender.getDrawAble(mCluster.getClusterCount()));
+//                } else {
+//                    textView.setBackgroundResource(R.drawable.yuan);
+//                }
+
+                ImageView imageView = new ImageView(mContext);
+                imageView.setBackgroundResource(R.mipmap.resflag_add);
+                bitmapDescriptor = BitmapDescriptorFactory.fromView(imageView);
                 mLruCacheName.put(mRegionItem.getTitle(), bitmapDescriptor);
             }
         }
@@ -442,7 +475,7 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener,
                 case 1://接收单个聚合点
                     Mlog.d("handleMessage==========" + 1);
                     Cluster cluster = (Cluster) message.obj;
-                    addSingleClusterToMap(cluster);
+                    addSingleClusterToMapMinZoo(cluster);
                     break;
                 case 2:
                     Mlog.d("handleMessage==========" + 2);
