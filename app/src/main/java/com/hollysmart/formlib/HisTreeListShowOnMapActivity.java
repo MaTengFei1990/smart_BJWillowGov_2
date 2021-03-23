@@ -47,7 +47,6 @@ import com.hollysmart.cluster.RegionItem;
 import com.hollysmart.db.HisTreeDao;
 import com.hollysmart.db.UserInfo;
 import com.hollysmart.dialog.LoadingProgressDialog;
-import com.hollysmart.formlib.apis.GetHisTreeInfoAPI;
 import com.hollysmart.formlib.apis.GetHisTreeListAPI;
 import com.hollysmart.formlib.apis.ResDataGetAPI;
 import com.hollysmart.formlib.beans.DongTaiFormBean;
@@ -911,14 +910,9 @@ public class HisTreeListShowOnMapActivity extends StyleAnimActivity implements A
         String token = UserToken.getUserToken().getToken();
         Mlog.d("---------token" + token);
         Mlog.d("---------treeId" + treeId);
-        new GetHisTreeInfoAPI(token, treeId, new GetHisTreeInfoAPI.GetHisTreeLsitIF() {
-            @Override
-            public void onResTaskListResult(boolean isOk, List<HistTreeBean> ListDatas, String msg) {
-
-            }
-
-
-        }).request();
+        Intent intent = new Intent(mContext, HisTreeInfoActivity.class);
+        intent.putExtra("treeid", treeId);
+        startActivity(intent);
     }
 
     @Override

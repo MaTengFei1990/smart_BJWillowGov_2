@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/ll_shang"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:background="@color/bg_lan"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/ib_back"
+            android:layout_width="60dp"
+            android:layout_height="fill_parent"
+            android:src="@mipmap/fanhui"
+            android:padding="16dp"
+            android:background="@color/touming" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="树木详情"
+            android:textColor="@color/baise"
+            android:textSize="@dimen/tv_size_big" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_id"
+        android:padding="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_zhong"
+        android:textColor="@color/text_hei" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:padding="5dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_zhong"
+            android:text="生长情况："
+            android:textColor="@color/heise_text" />
+
+        <TextView
+            android:id="@+id/tv_fdTreeState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_zhong"
+            android:textColor="@color/huise_text" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:padding="5dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_zhong"
+            android:text="数种："
+            android:textColor="@color/heise_text" />
+
+        <TextView
+            android:id="@+id/tv_fdTreeType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_zhong"
+            android:textColor="@color/huise_text" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

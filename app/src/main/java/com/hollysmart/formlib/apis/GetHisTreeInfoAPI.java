@@ -1,18 +1,17 @@
 package com.hollysmart.formlib.apis;
 
-import com.hollysmart.beans.HistTreeBean;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.hollysmart.formlib.beans.HisTreeInfo;
 import com.hollysmart.utils.Mlog;
 import com.hollysmart.utils.taskpool.INetModel;
 import com.hollysmart.value.Values;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.Call;
 
@@ -47,20 +46,21 @@ public class GetHisTreeInfoAPI implements INetModel {
 
             @Override
             public void onResponse(String response, int id) {
+
+//                {"status":1,"data":{"id":60391,"fdTreeCode":"3649-011-001","fdLng":116.11784065798115,"fdLat":39.95210611853332,"fdTreeType":"杨树","fdTreeState":"好","fdTreeCount":1}}
+
                 Mlog.d("GetHisTreeInfoAPI====:" + response);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     int status = jsonObject.getInt("status");
                     if (status == 1) {
-                        JSONArray dataOBJ = new JSONArray(jsonObject.getString("data"));
-                        List<HistTreeBean> netDatas = new ArrayList<>();
-                        for (int i = 0; i < dataOBJ.length(); i++) {
-                            Object o = dataOBJ.get(i);
-                            HistTreeBean histTreeBean = new HistTreeBean();
-                            histTreeBean.setContent(o.toString());
-                            netDatas.add(histTreeBean);
-                        }
-                        getHisTreeLsitIF.onResTaskListResult(true, netDatas, null);
+
+                        Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm").create();
+                        JSONObject dataOBJ = new JSONObject(jsonObject.getString("data"));
+                        HisTreeInfo hisTreeInfo = mGson.fromJson(dataOBJ.toString(),
+                                new TypeToken<HisTreeInfo>() {
+                                }.getType());
+                        getHisTreeLsitIF.onResTaskListResult(true, hisTreeInfo, null);
                     } else {
                         String msg = jsonObject.getString("msg");
 
@@ -77,7 +77,7 @@ public class GetHisTreeInfoAPI implements INetModel {
     }
 
     public interface GetHisTreeLsitIF {
-        void onResTaskListResult(boolean isOk, List<HistTreeBean> ListDatas, String msg);
+        void onResTaskListResult(boolean isOk, HisTreeInfo hisTreeInfo, String msg);
     }
 
 }
