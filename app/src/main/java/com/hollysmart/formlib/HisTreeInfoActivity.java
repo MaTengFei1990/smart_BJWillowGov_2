@@ -24,12 +24,22 @@ public class HisTreeInfoActivity extends StyleAnimActivity {
     @BindView(R.id.ib_back)
     ImageView ib_back;
 
-    @BindView(R.id.tv_id)
-    TextView tv_id;
+    @BindView(R.id.tv_code)
+    TextView tv_code;
+
     @BindView(R.id.tv_fdTreeState)
     TextView tv_fdTreeState;
+
     @BindView(R.id.tv_fdTreeType)
     TextView tv_fdTreeType;
+
+    @BindView(R.id.tv_area)
+    TextView tv_area;
+
+    @BindView(R.id.tv_treeinJect)
+    TextView tv_treeinJect;
+    @BindView(R.id.tv_TDiamree)
+    TextView tv_TDiamree;
 
 
     @Override
@@ -50,9 +60,12 @@ public class HisTreeInfoActivity extends StyleAnimActivity {
             @Override
             public void onResTaskListResult(boolean isOk, HisTreeInfo hisTreeInfo, String msg) {
                 if (isOk) {
-                    tv_id.setText(hisTreeInfo.getId());
+                    tv_code.setText(hisTreeInfo.getFdTreeCode());
                     tv_fdTreeType.setText(hisTreeInfo.getFdTreeType());
                     tv_fdTreeState.setText(hisTreeInfo.getFdTreeState());
+                    tv_area.setText(hisTreeInfo.getFdAreaName());
+                    tv_treeinJect.setText(hisTreeInfo.getFdTreeInject());
+                    tv_TDiamree.setText(hisTreeInfo.getFdTreeDiam());
                 }
 
             }
