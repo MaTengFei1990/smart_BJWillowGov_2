@@ -20,6 +20,7 @@ import com.hollysmart.bjwillowgov.R;
 import com.hollysmart.bjwillowgov.TipSoundPlayer;
 import com.hollysmart.tools.GQTUtils;
 import com.hollysmart.utils.Mlog;
+import com.hollysmart.utils.SSLSocketClient;
 import com.squareup.leakcanary.LeakCanary;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.message.IUmengRegisterCallback;
@@ -124,6 +125,8 @@ public class App_Cai extends MultiDexApplication implements NetChecker.NetCallba
                 .addInterceptor(new LoggerInterceptor("com.http"))
                 .connectTimeout(60000L, TimeUnit.MILLISECONDS)
                 .readTimeout(60000L, TimeUnit.MILLISECONDS)
+                .sslSocketFactory(SSLSocketClient.getSSLSocketFactory())
+                .hostnameVerifier(SSLSocketClient.getHostnameVerifier())
                 //其他配置
                 .build();
         OkHttpUtils.initClient(okHttpClient);
