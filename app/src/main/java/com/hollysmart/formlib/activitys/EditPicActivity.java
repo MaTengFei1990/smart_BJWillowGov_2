@@ -529,6 +529,9 @@ public class EditPicActivity extends StyleAnimActivity implements
 
     @Override
     public void onClick(View v) {
+        if (Utils.isFastClick()) {
+            return;
+        }
         switch (v.getId()) {
             case R.id.tv_fanhui:
                 if (close()) {
