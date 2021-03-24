@@ -20,6 +20,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -35,6 +36,7 @@ import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -170,6 +172,11 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
 
         }
 
+        webView.getSettings().setLoadWithOverviewMode(true);
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setBlockNetworkImage(false);
+        webView.getSettings().setUseWideViewPort(true);
+
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -184,7 +191,12 @@ public class MainActivity extends StyleAnimActivity implements UpDateVersionAPI.
                 return super.shouldOverrideUrlLoading(view, url);
 
 
+            }
 
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                //handler.cancel(); 默认的处理方式，WebView变成空白页
+                //handleMessage(Message msg); 其他处理
+                handler.proceed();
             }
 
 //            @Override
