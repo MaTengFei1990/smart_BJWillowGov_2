@@ -727,8 +727,8 @@ public class EditPicActivity extends StyleAnimActivity implements
             }
         }
 
-        if (picBeans == null || picBeans.size() ==1) {
-            Utils.showToast(mContext,"请选择图片");
+        if (picBeans == null || picBeans.size() == 1) {
+            Utils.showToast(mContext, "请选择图片");
             return;
         }
         if (Utils.isEmpty(position)) {
@@ -736,6 +736,10 @@ public class EditPicActivity extends StyleAnimActivity implements
             return;
         }
 
+        if (Utils.isEmpty(districtstr)) {
+            Utils.showToast(mContext, "暂未获取到您的定位信息，请打开定位");
+            return;
+        }
 
 
         if (isGongkai) {

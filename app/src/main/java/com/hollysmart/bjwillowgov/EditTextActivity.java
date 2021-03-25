@@ -608,7 +608,7 @@ public class EditTextActivity extends StyleAnimActivity
         } else {
             if (flag_discoverProblem) {
                 if (!isUpLoadWeiZhi) {
-                    Utils.showToast(mContext,"标签为发现问题时，位置信息必须上传");
+                    Utils.showToast(mContext, "标签为发现问题时，位置信息必须上传");
                     return;
                 }
 
@@ -616,6 +616,10 @@ public class EditTextActivity extends StyleAnimActivity
         }
         if (Utils.isEmpty(position)) {
             Utils.showToast(mContext, "请选择位置");
+            return;
+        }
+        if (Utils.isEmpty(districtstr)) {
+            Utils.showToast(mContext, "暂未获取到您的定位信息，请打开定位");
             return;
         }
 
