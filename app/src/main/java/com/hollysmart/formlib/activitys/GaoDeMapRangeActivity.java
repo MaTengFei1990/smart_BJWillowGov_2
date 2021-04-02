@@ -257,7 +257,7 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
 
         drawTreesInMap(treesPoints);
 
-        setMapBounds();
+//        setMapBounds();
     }
 
     private void setMapBounds() {
@@ -606,7 +606,7 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
         mGaoDeMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
         //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
         mGaoDeMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
-        mGaoDeMap.moveCamera(CameraUpdateFactory.zoomTo(17));
+        mGaoDeMap.moveCamera(CameraUpdateFactory.zoomTo(mGaoDeMap.getMaxZoomLevel()));
     }
 
 

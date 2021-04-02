@@ -46,26 +46,16 @@
             android:name=".XieYiActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name="com.hollysmart.formlib.activitys.GaoDeMapRangeActivity">
+        <activity
+            android:name="com.hollysmart.formlib.activitys.GaoDeMapRangeActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <activity
+            android:name="com.hollysmart.gridslib.ResListShowOnGDMapActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-
-        </activity>
-        <activity android:name="com.hollysmart.gridslib.ResListShowOnGDMapActivity">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-
-        </activity>
         <activity
             android:name="com.hollysmart.gridslib.SearchTreeActivity"
             android:screenOrientation="portrait" />
@@ -187,8 +177,14 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".ZhuanFaActivity" />
-        <activity android:name=".MapActivity" />
+        <activity
+            android:name=".ZhuanFaActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".MapActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name="com.umeng.socialize.media.WBShareCallBackActivity"
             android:configChanges="keyboardHidden|orientation"
