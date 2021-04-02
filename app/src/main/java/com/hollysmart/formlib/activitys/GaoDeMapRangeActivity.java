@@ -339,6 +339,8 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
 
         initMapListener();
 
+        dingWei();
+
 
     }
 
