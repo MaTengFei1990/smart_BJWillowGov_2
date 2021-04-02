@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -255,40 +254,15 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
 
     private void drawGrid(BlockBean blockBean) {
 
-        if (blockBean == null) {
-            return;
-        }
 
-        List<LatLng> rectangles = createRectangle(blockBean);
-
-        if (rectangles != null) {
-
-//            PolygonOptions polygonOptions = new PolygonOptions()
-//                    .addAll(rectangles)
-//                    .fillColor(Color.argb(100, 158, 230, 252))
-//                    .strokeColor(Color.argb(255, 177, 152, 198))
-//                    .strokeWidth(4);
-
-            mGaoDeMap.addPolygon(new PolygonOptions()
-                    .addAll(rectangles)
-                    .fillColor(Color.argb(130, 158, 230, 252))
-                    .strokeColor(Color.argb(130, 177, 152, 198))
-                    .strokeWidth(5)
-            );
-        }
         drawTreesInMap(treesPoints);
 
-        setMapBounds(rectangles);
+        setMapBounds();
     }
 
-    private void setMapBounds(List<LatLng> latLngs) {
+    private void setMapBounds() {
         LatLngBounds.Builder builder = LatLngBounds.builder();
 
-        for (LatLng latlng : latLngs) {
-
-            builder.include(latlng);
-
-        }
 
         if (points != null && points.size() > 0) {
             for (int i = 0; i < points.size(); i++) {
@@ -352,6 +326,7 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
         mLocationOption.setMockEnable(false);
         //设置定位间隔,单位毫秒,默认为2000ms
         mLocationOption.setInterval(2000);
+        mLocationOption.setOnceLocationLatest(true);
         //给定位客户端对象设置定位参数
         mLocationClient.setLocationOption(mLocationOption);
         //启动定位
