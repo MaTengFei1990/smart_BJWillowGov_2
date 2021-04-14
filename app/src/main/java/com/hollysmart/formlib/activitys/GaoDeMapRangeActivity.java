@@ -20,6 +20,7 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapOptions;
+import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.UiSettings;
@@ -338,8 +339,16 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
         settingZoom();
 
         initMapListener();
+        AMapOptions aOptions = new AMapOptions();
+        aOptions.tiltGesturesEnabled(false);// 禁止通过手势倾斜地图
 
-        dingWei();
+
+        MyLocationStyle myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+        myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW_NO_CENTER);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）默认执行此种模式。
+        mGaoDeMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
+        //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
+        mGaoDeMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
 
 
     }
@@ -383,39 +392,59 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
                 if (aMapLocation.getErrorCode() == 0) {
 
                     //定位成功回调信息，设置相关消息
-
-                    aMapLocation.getLocationType();//获取当前定位结果来源，如网络定位结果，详见定位类型表
-
-                    aMapLocation.getLatitude();//获取纬度
-
-                    aMapLocation.getLongitude();//获取经度
-
-                    aMapLocation.getAccuracy();//获取精度信息
-
-                    java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-
-                    aMapLocation.getAddress();//地址，如果option中设置isNeedAddress为false，则没有此结果，网络定位结果中会有地址信息，GPS定位不返回地址信息。
-
-                    aMapLocation.getCountry();//国家信息
-
-                    aMapLocation.getProvince();//省信息
-
-                    aMapLocation.getCity();//城市信息
-
-                    aMapLocation.getDistrict();//城区信息
-
-                    aMapLocation.getStreet();//街道信息
-
-                    aMapLocation.getStreetNum();//街道门牌号信息
-
-                    aMapLocation.getCityCode();//城市编码
-
-                    aMapLocation.getAdCode();//地区编码
+//
+//                    aMapLocation.getLocationType();//获取当前定位结果来源，如网络定位结果，详见定位类型表
+//
+//                    aMapLocation.getLatitude();//获取纬度
+//
+//                    aMapLocation.getLongitude();//获取经度
+//
+//                    aMapLocation.getAccuracy();//获取精度信息
+//
+//                    java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//
+//
+//                    aMapLocation.getAddress();//地址，如果option中设置isNeedAddress为false，则没有此结果，网络定位结果中会有地址信息，GPS定位不返回地址信息。
+//
+//                    aMapLocation.getCountry();//国家信息
+//
+//                    aMapLocation.getProvince();//省信息
+//
+//                    aMapLocation.getCity();//城市信息
+//
+//                    aMapLocation.getDistrict();//城区信息
+//
+//                    aMapLocation.getStreet();//街道信息
+//
+//                    aMapLocation.getStreetNum();//街道门牌号信息
+//
+//                    aMapLocation.getCityCode();//城市编码
+//
+//                    aMapLocation.getAdCode();//地区编码
 
                     Log.i("zjc", aMapLocation.getCity());
 
-                    mLocationClient.stopLocation();//停止定位
+                    double latitude = aMapLocation.getLatitude();
+                    double longitude = aMapLocation.getLongitude();
+                    dingWeiDian = new LatLng(latitude, longitude);
+
+                    if (isFirstLoc) {
+                        isFirstLoc = false;
+                        CameraPosition cameraPosition = new CameraPosition.Builder()
+                                .target(dingWeiDian).zoom(mGaoDeMap.getMaxZoomLevel()).bearing(0).tilt(30).build();
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
+                        mGaoDeMap.animateCamera(cameraUpdate, new AMap.CancelableCallback() {
+                            @Override
+                            public void onFinish() {
+
+                            }
+
+                            @Override
+                            public void onCancel() {
+
+                            }
+                        });
+                    }
 
                 } else {
 
@@ -585,9 +614,24 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
                 mapChaged();
                 break;
             case R.id.bn_dingwei:
-//                MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(mLatLng);
-//                mGaoDeMap.animateMapStatus(u);
-                dingWei();
+                if (dingWeiDian == null) {
+                    return;
+                }
+
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(dingWeiDian).zoom(mGaoDeMap.getMaxZoomLevel()).bearing(0).tilt(30).build();
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
+                mGaoDeMap.animateCamera(cameraUpdate, new AMap.CancelableCallback() {
+                    @Override
+                    public void onFinish() {
+
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                });
                 break;
             case R.id.imagbtn_enlarge:
                 ZoomChange(true);
@@ -602,13 +646,13 @@ public class GaoDeMapRangeActivity extends StyleAnimActivity implements AMapLoca
 
     private void dingWei() {
 
-        MyLocationStyle myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
-        myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）默认执行此种模式。
-        mGaoDeMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
-        //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
-        mGaoDeMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
-        mGaoDeMap.moveCamera(CameraUpdateFactory.zoomTo(mGaoDeMap.getMaxZoomLevel()));
+//        MyLocationStyle myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+//        myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
+//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）默认执行此种模式。
+//        mGaoDeMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
+//        //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
+//        mGaoDeMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
+//        mGaoDeMap.moveCamera(CameraUpdateFactory.zoomTo(mGaoDeMap.getMaxZoomLevel()));
     }
 
 
