@@ -748,13 +748,22 @@ public class EditPicActivity extends StyleAnimActivity implements
             ispublic = "0";
 
         }
+
+        if (degree == 0) {
+            Utils.showToast(mContext, "选择严重程度");
+            return;
+        }
+        if (Utils.isEmpty(Str_endDate)) {
+            Utils.showToast(mContext, "请选择结束时间");
+            return;
+        }
         for (PicBean bean : picBeans) {
             String pic = bean.getPath();
             if (!Utils.isEmpty(pic) && Utils.isEmpty(bean.getUrlpath())) {
 //                String[] pics = pic.split(",");
 //                for (int i = 0; i < pics.length; i++) {
-                taskPool.addTask(new EditPicYaoSuoAPI(bean,mContext,this));
-                    taskPool.addTask(new UploadPicAPI(bean, this));
+                taskPool.addTask(new EditPicYaoSuoAPI(bean, mContext, this));
+                taskPool.addTask(new UploadPicAPI(bean, this));
 //                }
             }
         }
